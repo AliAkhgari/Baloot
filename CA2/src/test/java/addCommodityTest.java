@@ -1,13 +1,13 @@
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.example.Baloot;
+import entities.Baloot;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.example.defines.ADDED_SUCCESSFULLY_RESPONSE;
-import static org.example.defines.ERROR_NOT_EXISTENT_PROVIDER;
+import static defines.defines.ADDED_SUCCESSFULLY_RESPONSE;
+import static defines.defines.ERROR_NOT_EXISTENT_PROVIDER;
 import static org.junit.Assert.*;
 
 public class addCommodityTest {

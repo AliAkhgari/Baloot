@@ -1,5 +1,5 @@
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.example.Baloot;
+import entities.Baloot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.example.defines.ERROR_NOT_EXISTENT_COMMODITY;
+import static defines.defines.ERROR_NOT_EXISTENT_COMMODITY;
 import static org.junit.Assert.*;
 
 public class getCommodityByIdTest {

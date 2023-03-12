@@ -1,12 +1,12 @@
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.example.Baloot;
+import entities.Baloot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.example.defines.*;
+import static defines.defines.*;
 import static org.junit.Assert.*;
 
 public class addToBuyListTest {

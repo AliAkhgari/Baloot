@@ -1,12 +1,12 @@
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.example.Baloot;
+import entities.Baloot;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.example.defines.ADDED_SUCCESSFULLY_RESPONSE;
+import static defines.defines.ADDED_SUCCESSFULLY_RESPONSE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

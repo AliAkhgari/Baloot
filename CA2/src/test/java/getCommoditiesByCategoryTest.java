@@ -1,5 +1,5 @@
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.example.Baloot;
+import entities.Baloot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
