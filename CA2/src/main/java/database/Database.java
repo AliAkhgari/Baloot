@@ -1,44 +1,19 @@
 package database;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Commodity;
 import entities.Provider;
 import entities.User;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.util.ArrayList;
-import java.net.URL;
-import java.net.HttpURLConnection;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class Database {
-    private final ArrayList<User> users = new ArrayList<User>();
-    private final ArrayList<Provider> providers = new ArrayList<Provider>();
-    private final ArrayList<Commodity> commodities = new ArrayList<Commodity>();
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Provider> providers = new ArrayList<>();
+    private ArrayList<Commodity> commodities = new ArrayList<>();
 
     public Database() {
     }
 
-    public void getUsersList() throws IOException {
-        URL url = new URL("http://5.253.25.110:5000" + "/api/users");
-
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        con.disconnect();
-
-        System.out.println(content.toString());
-    }
 
     public void addUser(User user) {
         users.add(user);
@@ -52,17 +27,28 @@ public class Database {
         commodities.add(commodity);
     }
 
+
     public ArrayList<User> getUsers() {
         return users;
+    }
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
     }
 
     public ArrayList<Provider> getProviders() {
         return providers;
     }
 
+    public void setProviders(ArrayList<Provider> providers) {
+        this.providers = providers;
+    }
+
     public ArrayList<Commodity> getCommodities() {
         return commodities;
     }
 
-
+    public void setCommodities(ArrayList<Commodity> commodities) {
+        this.commodities = commodities;
+    }
 }

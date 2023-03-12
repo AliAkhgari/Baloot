@@ -1,14 +1,16 @@
-package entities;
+package application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
 import database.Database;
+import entities.Commodity;
+import entities.FailureResponse;
+import entities.Provider;
+import entities.User;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import static defines.defines.*;
@@ -19,23 +21,20 @@ public class Baloot {
     Database database = new Database();
 
     public ObjectNode add_user(String user_info) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
-        Map<String, Object> user_info_map = null;
+        Map<String, Object> user_info_map;
         try {
             user_info_map = objectMapper.readValue(user_info, typeRef);
             String username = (String) user_info_map.get("username");
 
-            if (!is_username_valid(username)) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_INVALID_USERNAME);
-                return failureResponse.raise_exception();
-            }
+            if (!is_username_valid(username))
+                return new FailureResponse(ERROR_INVALID_USERNAME).raise_exception();
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode success_response = mapper.createObjectNode();
 
-            User user = get_user(username);
+            User user = getUserById(username);
 
             if (user == null) {
                 User new_user = objectMapper.readValue(user_info, User.class);
@@ -43,8 +42,7 @@ public class Baloot {
 
                 success_response.put("success", true);
                 success_response.put("data", String.format(ADDED_SUCCESSFULLY_RESPONSE, username));
-            }
-            else {
+            } else {
                 update_existing_user_info(user, user_info_map);
 
                 success_response.put("success", true);
@@ -74,13 +72,12 @@ public class Baloot {
     }
 
     public ObjectNode add_commodity(String commodity_info) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
-        Map<String, Object> commodity_info_map = null;
+        Map<String, Object> commodity_info_map;
         try {
             commodity_info_map = objectMapper.readValue(commodity_info, typeRef);
-            if(get_provider((Integer) commodity_info_map.get("providerId")) == null) {
+            if (getProviderById((Integer) commodity_info_map.get("providerId")) == null) {
                 FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_PROVIDER);
                 return failureResponse.raise_exception();
             }
@@ -102,23 +99,22 @@ public class Baloot {
     }
 
     public ObjectNode getCommoditiesList() {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode success_response = mapper.createObjectNode();
+        ObjectNode success_response = objectMapper.createObjectNode();
 
         success_response.put("success", true);
-        ObjectNode data = mapper.createObjectNode();
+        ObjectNode data = objectMapper.createObjectNode();
         success_response.put("data", data);
         ArrayNode commodities_list = data.putArray("commoditiesList");
 
         for (Commodity commodity : database.getCommodities()) {
-            ObjectNode commodity_info = mapper.createObjectNode();
+            ObjectNode commodity_info = objectMapper.createObjectNode();
             commodity_info.put("id", commodity.getId());
             commodity_info.put("name", commodity.getName());
             commodity_info.put("providerId", commodity.getProviderId());
             commodity_info.put("price", commodity.getPrice());
 
             ArrayNode categories = commodity_info.putArray("categories");
-            for (String category: commodity.getCategories()) {
+            for (String category : commodity.getCategories()) {
                 categories.add(category);
             }
 
@@ -132,18 +128,17 @@ public class Baloot {
     }
 
     public ObjectNode rateCommodity(String rate_commodity_info) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
-        Map<String, Object> rate_commodity_info_map = null;
+        Map<String, Object> rate_commodity_info_map;
         try {
             rate_commodity_info_map = objectMapper.readValue(rate_commodity_info, typeRef);
 
             String username = (String) rate_commodity_info_map.get("username");
-            User user = get_user(username);
+            User user = getUserById(username);
 
             int commodity_id = (int) rate_commodity_info_map.get("commodityId");
-            Commodity commodity = get_commodity(commodity_id);
+            Commodity commodity = getCommodityById(commodity_id);
             int score = (int) rate_commodity_info_map.get("score");
 
             if (!is_score_between_one_to_ten(score)) {
@@ -178,18 +173,16 @@ public class Baloot {
     }
 
     public ObjectNode addToBuyList(String add_to_buy_list_info) {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
-        Map<String, Object> add_to_buy_list_info_map = null;
+        Map<String, Object> add_to_buy_list_info_map;
         try {
             add_to_buy_list_info_map = objectMapper.readValue(add_to_buy_list_info, typeRef);
             String username = (String) add_to_buy_list_info_map.get("username");
             int commodity_id = (int) add_to_buy_list_info_map.get("commodityId");
 
-            User user = get_user(username);
-            Commodity commodity = get_commodity(commodity_id);
+            User user = getUserById(username);
+            Commodity commodity = getCommodityById(commodity_id);
 
             if (user == null) {
                 FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
@@ -226,17 +219,16 @@ public class Baloot {
     }
 
     public ObjectNode removeFromBuyList(String remove_from_buy_list_info) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
-        Map<String, Object> remove_from_buy_list_info_map = null;
+        Map<String, Object> remove_from_buy_list_info_map;
         try {
             remove_from_buy_list_info_map = objectMapper.readValue(remove_from_buy_list_info, typeRef);
             String username = (String) remove_from_buy_list_info_map.get("username");
             int commodity_id = (int) remove_from_buy_list_info_map.get("commodityId");
 
-            User user = get_user(username);
-            Commodity commodity = get_commodity(commodity_id);
+            User user = getUserById(username);
+            Commodity commodity = getCommodityById(commodity_id);
 
             if (user == null) {
                 FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
@@ -246,7 +238,7 @@ public class Baloot {
                 FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
                 return failureResponse.raise_exception();
             }
-            if (! is_item_in_buy_list(user, commodity_id)) {
+            if (!is_item_in_buy_list(user, commodity_id)) {
                 FailureResponse failureResponse = new FailureResponse(ERROR_COMMODITY_IS_NOT_IN_BUY_LIST);
                 return failureResponse.raise_exception();
             }
@@ -268,21 +260,20 @@ public class Baloot {
     }
 
     public ObjectNode getCommodityById(String get_commodity_by_id_info) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
-        Map<String, Object> get_commodity_by_id_info_map = null;
+        Map<String, Object> get_commodity_by_id_info_map;
         try {
             get_commodity_by_id_info_map = objectMapper.readValue(get_commodity_by_id_info, typeRef);
             int commodity_id = (int) get_commodity_by_id_info_map.get("id");
 
-            Commodity selected_commodity = get_commodity(commodity_id);
+            Commodity selected_commodity = getCommodityById(commodity_id);
             if (selected_commodity == null) {
                 FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
                 return failureResponse.raise_exception();
             }
 
-            Provider commodity_provider = get_provider(selected_commodity.getProviderId());
+            Provider commodity_provider = getProviderById(selected_commodity.getProviderId());
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode success_response = mapper.createObjectNode();
@@ -312,19 +303,12 @@ public class Baloot {
     }
 
     public ObjectNode getCommoditiesByCategory(String get_commodities_by_category_info) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {};
-        Map<String, Object> get_commodities_by_category_info_map = null;
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
+        };
+        Map<String, Object> get_commodities_by_category_info_map;
         try {
             get_commodities_by_category_info_map = objectMapper.readValue(get_commodities_by_category_info, typeRef);
             String category = (String) get_commodities_by_category_info_map.get("category");
-            ArrayList<String> selected_commodities = new ArrayList<String>();
-
-            for (Commodity commodity : database.getCommodities()) {
-                if (commodity.getCategories().contains(category)) {
-                    selected_commodities.add(new Gson().toJson(commodity));
-                }
-            }
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode success_response = mapper.createObjectNode();
@@ -360,15 +344,14 @@ public class Baloot {
     }
 
     public ObjectNode getBuyList(String get_buy_list_info) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
-        Map<String, Object> get_buy_list_info_map = null;
+        Map<String, Object> get_buy_list_info_map;
         try {
             get_buy_list_info_map = objectMapper.readValue(get_buy_list_info, typeRef);
             String username = (String) get_buy_list_info_map.get("username");
 
-            User user = get_user(username);
+            User user = getUserById(username);
             if (user == null) {
                 FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
                 return failureResponse.raise_exception();
@@ -384,7 +367,7 @@ public class Baloot {
 
             ArrayNode arrayNode = data.putArray("buyList");
 
-            for (Commodity item: user.getBuy_list()) {
+            for (Commodity item : user.getBuy_list()) {
                 ObjectNode buy_list_item = mapper.createObjectNode();
                 buy_list_item.put("id", item.getId());
                 buy_list_item.put("name", item.getName());
@@ -392,7 +375,7 @@ public class Baloot {
                 buy_list_item.put("price", item.getPrice());
 
                 ArrayNode categories = buy_list_item.putArray("categories");
-                for (String category: item.getCategories()) {
+                for (String category : item.getCategories()) {
                     categories.add(category);
                 }
 
@@ -432,16 +415,7 @@ public class Baloot {
         user.setBirthDate((String) user_info.get("birthDate"));
     }
 
-    public boolean check_if_provider_exists(int provider_id) {
-        for (Provider provider : database.getProviders()) {
-            if (provider.getId() == provider_id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public User get_user(String user_name) {
+    public User getUserById(String user_name) {
         for (User user : database.getUsers())
             if (user.getUsername().equals(user_name))
                 return user;
@@ -449,7 +423,7 @@ public class Baloot {
         return null;
     }
 
-    public Provider get_provider(int provider_id) {
+    public Provider getProviderById(int provider_id) {
         for (Provider provider : database.getProviders()) {
             if (provider.getId() == provider_id) {
                 return provider;
@@ -458,13 +432,11 @@ public class Baloot {
         return null;
     }
 
-
-    public Commodity get_commodity(int commodity_id) {
+    public Commodity getCommodityById(int commodity_id) {
         for (Commodity commodity : database.getCommodities())
             if (commodity.getId() == commodity_id)
                 return commodity;
 
         return null;
     }
-
 }
