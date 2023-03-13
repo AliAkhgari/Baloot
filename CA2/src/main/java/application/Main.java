@@ -1,38 +1,45 @@
 package application;
 
+import controllers.commoditiesController;
+import controllers.providerController;
+import controllers.userController;
 import database.Database;
+import entities.Comment;
 import entities.Commodity;
 import entities.Provider;
 import entities.User;
+import io.javalin.Javalin;
 
 import java.io.IOException;
 import java.net.URL;
 
+import static defines.endpoints.SERVER_PORT;
+
+
 public class Main {
     public static void main(String[] args) {
-        Database database = new Database();
-        DataParser dataParser = new DataParser(database);
+        Baloot baloot = new Baloot();
 
-        try {
-            dataParser.getUsersList();
-            dataParser.getProvidersList();
-            dataParser.getCommoditiesList();
+        Javalin app = Javalin.create().start(SERVER_PORT);
 
-//            for (User user: database.getUsers()) {
-//                System.out.println(user.getUsername());
-//            }
+        baloot.setEntities();
+
+
+            app.routes(() -> {
+                // Register the CommodityController
+                try {
+                    new commoditiesController(baloot).getCommodities(app);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // Register the UserController
+//                new userController().register(app);
 //
-//            for (Provider provider: database.getProviders()) {
-//                System.out.println(provider.getName());
-//            }
-//
-//            for (Commodity commodity: database.getCommodities()) {
-//                System.out.println(commodity.getName());
-//            }
+//                // Register the OrderController
+//                new providerController().register(app);
+            });
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
         // showing pages
     }

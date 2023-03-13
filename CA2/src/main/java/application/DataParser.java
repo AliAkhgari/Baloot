@@ -3,6 +3,7 @@ package application;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import database.Database;
+import entities.Comment;
 import entities.User;
 import entities.Provider;
 import entities.Commodity;
@@ -15,10 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static defines.endpoints.HOST;
-import static defines.endpoints.USERS_ENDPOINT;
-import static defines.endpoints.PROVIDERS_ENDPOINT;
-import static defines.endpoints.COMMODITIES_ENDPOINT;
+import static defines.endpoints.*;
 
 //import enti
 
@@ -63,5 +61,11 @@ public class DataParser {
         String commoditiesString = makeGetRequest(HOST + COMMODITIES_ENDPOINT);
         List<Commodity> commodityList = objectMapper.readValue(commoditiesString, new TypeReference<>(){});
         database.setCommodities((ArrayList<Commodity>) commodityList);
+    }
+
+    public void getCommentsList() throws IOException {
+        String CommentsString = makeGetRequest(HOST + COMMENTS_ENDPOINT);
+        List<Comment> commentsList = objectMapper.readValue(CommentsString, new TypeReference<>(){});
+        database.setComments((ArrayList<Comment>) commentsList);
     }
 }

@@ -6,11 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import database.Database;
-import entities.Commodity;
-import entities.FailureResponse;
-import entities.Provider;
-import entities.User;
+import entities.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import static defines.defines.*;
@@ -19,6 +18,21 @@ import static defines.defines.*;
 public class Baloot {
     private final ObjectMapper objectMapper = new ObjectMapper();
     Database database = new Database();
+
+    public void setEntities() {
+        DataParser dataParser = new DataParser(database);
+
+        try {
+            dataParser.getUsersList();
+            dataParser.getProvidersList();
+            dataParser.getCommoditiesList();
+            dataParser.getCommentsList();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     public ObjectNode add_user(String user_info) {
         TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
@@ -438,5 +452,9 @@ public class Baloot {
                 return commodity;
 
         return null;
+    }
+
+    public ArrayList<Commodity> getCommodities() {
+        return database.getCommodities();
     }
 }
