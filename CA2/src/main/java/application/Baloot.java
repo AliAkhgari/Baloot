@@ -457,4 +457,13 @@ public class Baloot {
     public ArrayList<Commodity> getCommodities() {
         return database.getCommodities();
     }
+
+    public ArrayList<Commodity> getCommoditiesProvidedByProvider(int providerId) {
+        ArrayList<Commodity> commodities = new ArrayList<>();
+        for (Commodity commodity : database.getCommodities())
+            if (commodity.getProviderId() == providerId)
+                commodities.add(commodity);
+
+        return commodities;
+    }
 }

@@ -49,6 +49,10 @@ public class DataParser {
         String usersString = makeGetRequest(HOST + USERS_ENDPOINT);
         List<User> userList = objectMapper.readValue(usersString, new TypeReference<List<User>>(){});
         database.setUsers((ArrayList<User>) userList);
+
+        for (User user: database.getUsers()) {
+            System.out.println(user.getUsername());
+        }
     }
 
     public void getProvidersList() throws IOException {

@@ -31,21 +31,21 @@ public class commoditiesController {
         });
     }
 
-    public void getCommodity(Javalin app) throws IOException {
-        app.get("/commodities/:commodity_id", ctx -> {
-            Commodity commodity;
-            try {
-                commodity = baloot.getCommodityById(Integer.parseInt(ctx.pathParam("commodity_id")));
-                String commodityPageHtml = generateCommodityPage(commodity);
-                ctx.contentType("text/html").result(commodityPageHtml);
-            } catch (Exception e) {
-                ctx.redirect("/404");
-            }
-            ArrayList<Commodity> commodities = baloot.getCommodities();
-            String commoditiesHtml = generateCommoditiesTable(commodities);
-            ctx.contentType("text/html").result(commoditiesHtml);
-        });
-    }
+//    public void getCommodity(Javalin app) throws IOException {
+//        app.get("/commodities/:commodity_id", ctx -> {
+//            Commodity commodity;
+//            try {
+//                commodity = baloot.getCommodityById(Integer.parseInt(ctx.pathParam("commodity_id")));
+//                String commodityPageHtml = generateCommodityPage(commodity);
+//                ctx.contentType("text/html").result(commodityPageHtml);
+//            } catch (Exception e) {
+//                ctx.redirect("/404");
+//            }
+//            ArrayList<Commodity> commodities = baloot.getCommodities();
+//            String commoditiesHtml = generateCommoditiesTable(commodities);
+//            ctx.contentType("text/html").result(commoditiesHtml);
+//        });
+//    }
 
     private String generateCommoditiesTable(ArrayList<Commodity> commodities) throws IOException {
         File htmlFile = new File(COMMODITIES_HTML_TEMPLATE_FILE);

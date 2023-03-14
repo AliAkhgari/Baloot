@@ -25,22 +25,17 @@ public class Main {
         baloot.setEntities();
 
 
-            app.routes(() -> {
-                // Register the CommodityController
-                try {
-                    new commoditiesController(baloot).getCommodities(app);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        app.routes(() -> {
+            try {
+                new commoditiesController(baloot).getCommodities(app);
+                new providerController(baloot).getProvider(app);
+                new userController(baloot).getUser(app);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-                // Register the UserController
-//                new userController().register(app);
-//
-//                // Register the OrderController
-//                new providerController().register(app);
-            });
+        });
 
 
-        // showing pages
     }
 }
