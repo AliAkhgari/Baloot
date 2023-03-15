@@ -2,7 +2,9 @@ package controllers;
 
 import application.Baloot;
 import entities.Commodity;
+import entities.ExceptionHandler;
 import entities.Provider;
+import entities.User;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,16 +25,15 @@ public class providerController {
 
     public void getProvider(Javalin app) {
         app.get("/providers/{provider_id}", ctx -> {
-            Provider provider = baloot.getProviderById(Integer.parseInt(ctx.pathParam("provider_id")));
-            if (provider == null) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
-            } else {
+            try {
+                Provider provider = baloot.getProviderById(Integer.parseInt(ctx.pathParam("provider_id")));
                 String providerHtml = generateProviderHtml(provider);
                 ctx.contentType("text/html").result(providerHtml);
+            } catch (ExceptionHandler e) {
+                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+                Document doc = Jsoup.parse(htmlTemplate);
+                ctx.contentType("text/html").result(doc.toString());
             }
         });
     }
@@ -69,8 +70,6 @@ public class providerController {
             Element row = rowToHtml.apply(commodity);
             table.appendChild(row);
         }
-
-        System.out.println(doc.toString());
 
         return doc.toString();
     }

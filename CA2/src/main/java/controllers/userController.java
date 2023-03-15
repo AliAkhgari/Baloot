@@ -2,6 +2,7 @@ package controllers;
 
 import application.Baloot;
 import entities.Commodity;
+import entities.ExceptionHandler;
 import entities.Provider;
 import entities.User;
 import io.javalin.Javalin;
@@ -25,34 +26,42 @@ public class userController {
 
     public void getUser(Javalin app) {
         app.get("/users/{user_id}", ctx -> {
-            User user = baloot.getUserById(ctx.pathParam("user_id"));
-            if (user == null) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
-            } else {
+            try {
+                User user = baloot.getUserById(ctx.pathParam("user_id"));
                 String userHtml = generateUserHtml(user);
                 ctx.contentType("text/html").result(userHtml);
+            } catch (ExceptionHandler e) {
+                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+                Document doc = Jsoup.parse(htmlTemplate);
+                ctx.contentType("text/html").result(doc.toString());
             }
         });
     }
 
     public void addCreditToUser(Javalin app) {
         app.get("/users/{user_id}/{credit}", ctx -> {
-            User user = baloot.getUserById(ctx.pathParam("user_id"));
-            int credit = Integer.parseInt(ctx.pathParam("credit"));
-            if (user == null) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
-            } else {
+            try {
+                User user = baloot.getUserById(ctx.pathParam("user_id"));
                 String userHtml = generateUserHtml(user);
                 ctx.contentType("text/html").result(userHtml);
+            } catch (ExceptionHandler e) {
+                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
             }
+            int credit = Integer.parseInt(ctx.pathParam("credit"));
+
+
+//            if (user == null) {
+//                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+//                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+//
+//                Document doc = Jsoup.parse(htmlTemplate);
+//                ctx.contentType("text/html").result(doc.toString());
+//            } else {
+//                String userHtml = generateUserHtml(user);
+//                ctx.contentType("text/html").result(userHtml);
+//            }
         });
     }
 

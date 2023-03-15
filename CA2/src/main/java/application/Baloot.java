@@ -34,7 +34,7 @@ public class Baloot {
 
     }
 
-    public ObjectNode add_user(String user_info) {
+    public void add_user(String user_info) throws ExceptionHandler {
         TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
         Map<String, Object> user_info_map;
@@ -43,7 +43,7 @@ public class Baloot {
             String username = (String) user_info_map.get("username");
 
             if (!is_username_valid(username))
-                return new FailureResponse(ERROR_INVALID_USERNAME).raise_exception();
+                throw new ExceptionHandler(ERROR_INVALID_USERNAME);
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode success_response = mapper.createObjectNode();
@@ -62,13 +62,12 @@ public class Baloot {
                 success_response.put("success", true);
                 success_response.put("data", String.format(USER_DATA_UPDATED, username));
             }
-            return success_response;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ObjectNode add_provider(String provider_info) {
+    public void add_provider(String provider_info) {
         try {
             Provider new_provider = objectMapper.readValue(provider_info, Provider.class);
             database.addProvider(new_provider);
@@ -79,22 +78,19 @@ public class Baloot {
             success_response.put("success", true);
             success_response.put("data", String.format(ADDED_SUCCESSFULLY_RESPONSE, new_provider.getName()));
 
-            return success_response;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ObjectNode add_commodity(String commodity_info) {
+    public void add_commodity(String commodity_info) throws ExceptionHandler {
         TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
         Map<String, Object> commodity_info_map;
         try {
             commodity_info_map = objectMapper.readValue(commodity_info, typeRef);
-            if (getProviderById((Integer) commodity_info_map.get("providerId")) == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_PROVIDER);
-                return failureResponse.raise_exception();
-            }
+            if (getProviderById((Integer) commodity_info_map.get("providerId")) == null)
+                throw new ExceptionHandler(ERROR_NOT_EXISTENT_PROVIDER);
 
             Commodity new_commodity = objectMapper.readValue(commodity_info, Commodity.class);
             database.addCommodity(new_commodity);
@@ -104,8 +100,6 @@ public class Baloot {
 
             success_response.put("success", true);
             success_response.put("data", String.format(ADDED_SUCCESSFULLY_RESPONSE, new_commodity.getName()));
-
-            return success_response;
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -141,7 +135,7 @@ public class Baloot {
         return success_response;
     }
 
-    public ObjectNode rateCommodity(String rate_commodity_info) {
+    public void rateCommodity(String rate_commodity_info) throws ExceptionHandler {
         TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
         Map<String, Object> rate_commodity_info_map;
@@ -155,20 +149,14 @@ public class Baloot {
             Commodity commodity = getCommodityById(commodity_id);
             int score = (int) rate_commodity_info_map.get("score");
 
-            if (!is_score_between_one_to_ten(score)) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_INVALID_SCORE_RANGE);
-                return failureResponse.raise_exception();
-            }
+            if (!is_score_between_one_to_ten(score))
+                throw new ExceptionHandler(ERROR_INVALID_SCORE_RANGE);
 
-            if (user == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
-                return failureResponse.raise_exception();
-            }
+            if (user == null)
+                throw new ExceptionHandler(ERROR_NOT_EXISTENT_USER);
 
-            if (commodity == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
-                return failureResponse.raise_exception();
-            }
+            if (commodity == null)
+                throw new ExceptionHandler(ERROR_NOT_EXISTENT_COMMODITY);
 
             user.add_rated_commodities(commodity_id, score);
             commodity.add_rate(username, score);
@@ -179,14 +167,12 @@ public class Baloot {
             success_response.put("success", true);
             success_response.put("data", RATE_TO_COMMODITY_RESPONSE);
 
-            return success_response;
-
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ObjectNode addToBuyList(String add_to_buy_list_info) {
+    public void addToBuyList(String add_to_buy_list_info) throws ExceptionHandler {
         TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
         Map<String, Object> add_to_buy_list_info_map;
@@ -198,22 +184,18 @@ public class Baloot {
             User user = getUserById(username);
             Commodity commodity = getCommodityById(commodity_id);
 
-            if (user == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
-                return failureResponse.raise_exception();
-            }
-            if (commodity == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
-                return failureResponse.raise_exception();
-            }
-            if (user.getBuy_list().contains(commodity)) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_COMMODITY_IS_ALREADY_IN_BUY_LIST);
-                return failureResponse.raise_exception();
-            }
-            if (commodity.getInStock() <= 0) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_COMMODITY_IS_NOT_IN_STOCK);
-                return failureResponse.raise_exception();
-            }
+            if (user == null)
+                throw new ExceptionHandler(ERROR_NOT_EXISTENT_USER);
+
+            if (commodity == null)
+                throw new ExceptionHandler(ERROR_NOT_EXISTENT_COMMODITY);
+
+            if (user.getBuy_list().contains(commodity))
+                throw new ExceptionHandler(ERROR_COMMODITY_IS_ALREADY_IN_BUY_LIST);
+
+            if (commodity.getInStock() <= 0)
+                throw new ExceptionHandler(ERROR_COMMODITY_IS_NOT_IN_STOCK);
+
             commodity.decreaseInStock();
 
             user.add_buy_item(commodity);
@@ -224,15 +206,13 @@ public class Baloot {
             success_response.put("success", true);
             success_response.put("data", String.format(ADDED_SUCCESSFULLY_RESPONSE, commodity_id));
 
-            return success_response;
-
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public ObjectNode removeFromBuyList(String remove_from_buy_list_info) {
+    public void removeFromBuyList(String remove_from_buy_list_info) throws ExceptionHandler {
         TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
         };
         Map<String, Object> remove_from_buy_list_info_map;
@@ -244,18 +224,15 @@ public class Baloot {
             User user = getUserById(username);
             Commodity commodity = getCommodityById(commodity_id);
 
-            if (user == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
-                return failureResponse.raise_exception();
-            }
-            if (commodity == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
-                return failureResponse.raise_exception();
-            }
-            if (!is_item_in_buy_list(user, commodity_id)) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_COMMODITY_IS_NOT_IN_BUY_LIST);
-                return failureResponse.raise_exception();
-            }
+            if (user == null)
+                throw new ExceptionHandler(ERROR_NOT_EXISTENT_USER);
+
+            if (commodity == null)
+                throw new ExceptionHandler(ERROR_NOT_EXISTENT_COMMODITY);
+
+            if (!is_item_in_buy_list(user, commodity_id))
+                throw new ExceptionHandler(ERROR_COMMODITY_IS_NOT_IN_BUY_LIST);
+
 
             user.remove_item_from_buy_list(commodity);
 
@@ -264,8 +241,6 @@ public class Baloot {
 
             success_response.put("success", true);
             success_response.put("data", String.format(REMOVE_COMMODITY_FROM_BUY_LIST_RESPONSE, commodity_id, username));
-
-            return success_response;
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -282,10 +257,10 @@ public class Baloot {
             int commodity_id = (int) get_commodity_by_id_info_map.get("id");
 
             Commodity selected_commodity = getCommodityById(commodity_id);
-            if (selected_commodity == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
-                return failureResponse.raise_exception();
-            }
+//            if (selected_commodity == null) {
+//                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
+//                return failureResponse.raise_exception();
+//            }
 
             Provider commodity_provider = getProviderById(selected_commodity.getProviderId());
 
@@ -312,6 +287,9 @@ public class Baloot {
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        } catch (ExceptionHandler e) {
+            FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_COMMODITY);
+            return failureResponse.raise_exception();
         }
 
     }
@@ -366,10 +344,10 @@ public class Baloot {
             String username = (String) get_buy_list_info_map.get("username");
 
             User user = getUserById(username);
-            if (user == null) {
-                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
-                return failureResponse.raise_exception();
-            }
+//            if (user == null) {
+//                FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
+//                return failureResponse.raise_exception();
+//            }
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode success_response = mapper.createObjectNode();
@@ -401,6 +379,9 @@ public class Baloot {
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        } catch (ExceptionHandler e) {
+            FailureResponse failureResponse = new FailureResponse(ERROR_NOT_EXISTENT_USER);
+            return failureResponse.raise_exception();
         }
     }
 
@@ -429,29 +410,28 @@ public class Baloot {
         user.setBirthDate((String) user_info.get("birthDate"));
     }
 
-    public User getUserById(String user_name) {
+    public User getUserById(String user_name) throws ExceptionHandler {
         for (User user : database.getUsers())
             if (user.getUsername().equals(user_name))
                 return user;
 
-        return null;
+        throw new ExceptionHandler(ERROR_NOT_EXISTENT_USER);
     }
 
-    public Provider getProviderById(int provider_id) {
-        for (Provider provider : database.getProviders()) {
-            if (provider.getId() == provider_id) {
+    public Provider getProviderById(int provider_id) throws ExceptionHandler {
+        for (Provider provider : database.getProviders())
+            if (provider.getId() == provider_id)
                 return provider;
-            }
-        }
-        return null;
+
+        throw new ExceptionHandler(ERROR_NOT_EXISTENT_PROVIDER);
     }
 
-    public Commodity getCommodityById(int commodity_id) {
+    public Commodity getCommodityById(int commodity_id) throws ExceptionHandler {
         for (Commodity commodity : database.getCommodities())
             if (commodity.getId() == commodity_id)
                 return commodity;
 
-        return null;
+        throw new ExceptionHandler(ERROR_NOT_EXISTENT_COMMODITY);
     }
 
     public ArrayList<Commodity> getCommodities() {
