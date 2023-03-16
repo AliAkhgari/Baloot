@@ -28,6 +28,7 @@ public class Main {
         app.routes(() -> {
             try {
                 new commoditiesController(baloot).getCommodities(app);
+                new commoditiesController(baloot).getCommodity(app);
                 new providerController(baloot).getProvider(app);
                 new userController(baloot).getUser(app);
             } catch (IOException e) {

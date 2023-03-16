@@ -31,21 +31,18 @@ public class commoditiesController {
         });
     }
 
-//    public void getCommodity(Javalin app) throws IOException {
-//        app.get("/commodities/:commodity_id", ctx -> {
-//            Commodity commodity;
-//            try {
-//                commodity = baloot.getCommodityById(Integer.parseInt(ctx.pathParam("commodity_id")));
-//                String commodityPageHtml = generateCommodityPage(commodity);
-//                ctx.contentType("text/html").result(commodityPageHtml);
-//            } catch (Exception e) {
-//                ctx.redirect("/404");
-//            }
-//            ArrayList<Commodity> commodities = baloot.getCommodities();
-//            String commoditiesHtml = generateCommoditiesTable(commodities);
-//            ctx.contentType("text/html").result(commoditiesHtml);
-//        });
-//    }
+    public void getCommodity(Javalin app) {
+        app.get("/commodities/{commodity_id}", ctx -> {
+            Commodity commodity;
+            try {
+                commodity = baloot.getCommodityById(Integer.parseInt(ctx.pathParam("commodity_id")));
+                String commodityPageHtml = generateCommodityPage(commodity);
+                ctx.contentType("text/html").result(commodityPageHtml);
+            } catch (Exception e) {
+                ctx.redirect("/404");
+            }
+        });
+    }
 
     private String generateCommoditiesTable(ArrayList<Commodity> commodities) throws IOException {
         File htmlFile = new File(COMMODITIES_HTML_TEMPLATE_FILE);
@@ -75,22 +72,28 @@ public class commoditiesController {
         return doc.toString();
     }
 
-//    private String generateCommodityPage(Commodity commodity) throws IOException {
-//        File htmlFile = new File(COMMODITY_HTML_TEMPLATE_FILE);
-//        String htmlTemplate = Jsoup.parse(htmlFile, "UTF-8").toString();
-//
-//        Document doc = Jsoup.parse(htmlTemplate);
-//        Element ul = doc.selectFirst("ul");
-//
-//        List<String> movie_info_ids = Arrays.asList("id", "name", "providerId", "price", "categories",
-//                "rating", "inStock");
-////        List<String> movie_info_items = getMovieInfoItemsList(movie);
-//
-//        int index = 0;
-//        for (String element_id : movie_info_ids) {
-//            ul.getElementById(element_id).append(commodity.get(index));
-//            index += 1;
-//        }
+    private String generateCommodityPage(Commodity commodity) throws IOException {
+        File htmlFile = new File(COMMODITY_HTML_TEMPLATE_FILE);
+        String htmlTemplate = Jsoup.parse(htmlFile, "UTF-8").toString();
 
-//    }
+        Document doc = Jsoup.parse(htmlTemplate);
+
+        Element idElement = doc.getElementById("id");
+        Element nameElement = doc.getElementById("name");
+        Element providerIdElement = doc.getElementById("providerId");
+        Element priceElement = doc.getElementById("price");
+        Element categories = doc.getElementById("categories");
+        Element rating = doc.getElementById("rating");
+        Element inStock = doc.getElementById("inStock");
+
+        idElement.text("Id: " + commodity.getId());
+        nameElement.text("Name: " + commodity.getName());
+        providerIdElement.text("Provider Id: " + commodity.getProviderId());
+        priceElement.text("Price: " + commodity.getPrice());
+        categories.text("Categories: " + commodity.getCategories().toString());
+        rating.text("Rating: " + commodity.getRating());
+        inStock.text("In Stock: " + commodity.getInStock());
+
+        return doc.toString();
+    }
 }
