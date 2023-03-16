@@ -446,4 +446,14 @@ public class Baloot {
 
         return commodities;
     }
+
+    // todo: set comments for commodity when reading from database
+    public ArrayList<Comment> getCommentsForCommodity(int commodityId) {
+        ArrayList<Comment> comments = new ArrayList<>();
+        for (Comment comment: database.getComments())
+            if (comment.getCommodityId() == commodityId)
+                comments.add(comment);
+
+        return comments;
+    }
 }

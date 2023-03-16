@@ -15,6 +15,8 @@ public class Commodity {
     private Map<String,Integer> user_rate = new HashMap<String,Integer>();
     private float init_rate;
 
+    private ArrayList<Comment> comments = new ArrayList<>();
+
     public int getId() {
         return id;
     }
@@ -70,6 +72,14 @@ public class Commodity {
 
     public void setInStock(int inStock) {
         this.inStock = inStock;
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
     }
 
     public void decreaseInStock() { this.inStock -= 1; }

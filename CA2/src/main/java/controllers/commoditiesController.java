@@ -1,6 +1,7 @@
 package controllers;
 
 import application.Baloot;
+import entities.Comment;
 import entities.Commodity;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
@@ -93,6 +94,29 @@ public class commoditiesController {
         categories.text("Categories: " + commodity.getCategories().toString());
         rating.text("Rating: " + commodity.getRating());
         inStock.text("In Stock: " + commodity.getInStock());
+
+
+        Element table = doc.selectFirst("table");
+        Function<Comment, Element> rowToHtml = comment -> {
+            Element row = new Element("tr");
+            row.append("<td>" + comment.getUserEmail() + "</td>");
+            row.append("<td>" + comment.getText() + "</td>");
+            row.append("<td>" + comment.getDate() + "</td>");
+            row.append("<td>" + "<form action='' method='POST'>" + "<label>" + comment.getLike() +
+                    "</label>" + "<input id='comment_like' type='hidden' name='comment_id' value='"
+                    + comment.getId() + "'/>" + "<button type='submit'>like</button>" + "</form>" + "</td>");
+
+            row.append("<td>" + "<form action='' method='POST'>" + "<label>" + comment.getDislike() +
+                    "</label>" + "<input id='comment_like' type='hidden' name='comment_id' value='"
+                    + comment.getId() + "'/>" + "<button type='submit'>dislike</button>" + "</form>" + "</td>");
+
+            return row;
+        };
+
+        for (Comment comment : baloot.getCommentsForCommodity(commodity.getId())) {
+            Element row = rowToHtml.apply(comment);
+            table.appendChild(row);
+        }
 
         return doc.toString();
     }

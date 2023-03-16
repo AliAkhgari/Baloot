@@ -8,6 +8,9 @@ public class Comment {
     private String text;
     private String date;
 
+    private int like;
+    private int dislike;
+
     public int getId() {
         return id;
     }
@@ -46,5 +49,29 @@ public class Comment {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
+    public int getDislike() {
+        return dislike;
+    }
+
+    public void setDislike(int dislike) {
+        this.dislike = dislike;
+    }
+
+    public void addLike() {
+        this.like += 1;
+    }
+
+    public void addDislike() {
+        this.dislike += 1;
     }
 }
