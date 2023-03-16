@@ -456,4 +456,16 @@ public class Baloot {
 
         return comments;
     }
+
+    public Comment getCommentById(int commentId) throws ExceptionHandler {
+        for (Comment comment: database.getComments())
+            if (comment.getId() == commentId)
+                return comment;
+
+        throw new ExceptionHandler(ERROR_NOT_EXISTENT_COMMENT);
+    }
+
+    public void likeComment(int commentId) {
+
+    }
 }

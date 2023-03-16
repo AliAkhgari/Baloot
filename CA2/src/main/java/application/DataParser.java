@@ -18,7 +18,6 @@ import java.util.List;
 
 import static defines.endpoints.*;
 
-//import enti
 
 public class DataParser {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -47,29 +46,36 @@ public class DataParser {
 
     public void getUsersList() throws IOException {
         String usersString = makeGetRequest(HOST + USERS_ENDPOINT);
-        List<User> userList = objectMapper.readValue(usersString, new TypeReference<List<User>>(){});
+        List<User> userList = objectMapper.readValue(usersString, new TypeReference<List<User>>() {
+        });
         database.setUsers((ArrayList<User>) userList);
-
-        for (User user: database.getUsers()) {
-            System.out.println(user.getUsername());
-        }
     }
 
     public void getProvidersList() throws IOException {
         String providersString = makeGetRequest(HOST + PROVIDERS_ENDPOINT);
-        List<Provider> providerList = objectMapper.readValue(providersString, new TypeReference<>(){});
+        List<Provider> providerList = objectMapper.readValue(providersString, new TypeReference<>() {
+        });
         database.setProviders((ArrayList<Provider>) providerList);
     }
 
     public void getCommoditiesList() throws IOException {
         String commoditiesString = makeGetRequest(HOST + COMMODITIES_ENDPOINT);
-        List<Commodity> commodityList = objectMapper.readValue(commoditiesString, new TypeReference<>(){});
+        List<Commodity> commodityList = objectMapper.readValue(commoditiesString, new TypeReference<>() {
+        });
         database.setCommodities((ArrayList<Commodity>) commodityList);
     }
 
     public void getCommentsList() throws IOException {
         String CommentsString = makeGetRequest(HOST + COMMENTS_ENDPOINT);
-        List<Comment> commentsList = objectMapper.readValue(CommentsString, new TypeReference<>(){});
+        List<Comment> commentsList = objectMapper.readValue(CommentsString, new TypeReference<>() {
+        });
         database.setComments((ArrayList<Comment>) commentsList);
+
+        for (Comment comment : commentsList)
+            comment.setId(commentsList.indexOf(comment));
+
+        for (Comment comment : database.getComments()) {
+            System.out.println("comm IDDDDD: " + comment.getCommodityId());
+        }
     }
 }

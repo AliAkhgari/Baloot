@@ -3,6 +3,7 @@ package application;
 import controllers.commoditiesController;
 import controllers.providerController;
 import controllers.userController;
+import controllers.voteCommentController;
 import database.Database;
 import entities.Comment;
 import entities.Commodity;
@@ -22,8 +23,8 @@ public class Main {
 
         Javalin app = Javalin.create().start(SERVER_PORT);
 
+        // todo: better name for setEntities
         baloot.setEntities();
-
 
         app.routes(() -> {
             try {
@@ -31,12 +32,11 @@ public class Main {
                 new commoditiesController(baloot).getCommodity(app);
                 new providerController(baloot).getProvider(app);
                 new userController(baloot).getUser(app);
+                new voteCommentController(baloot).voteComment(app);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
         });
-
-
     }
 }

@@ -14,7 +14,7 @@
     </style>
   </head>
   <body>
-   
+
     <ul>
       <li id="id">Id: 2341</li>
       <li id="name">Name: Galaxy S21</li>
@@ -39,6 +39,7 @@
     </form>
     <br />
 
+    <form action="/voteComment" method="POST">
     <table>
       <tr>
         <th>username</th>
@@ -47,36 +48,33 @@
         <th></th>
         <th></th>
       </tr>
-<!--      <tr>-->
+      <tr>
 <!--        <td>user1</td>-->
 <!--        <td>Good</td>-->
 <!--        <td>2022-07-25</td>-->
 <!--        <td>-->
-<!--          <form action="" method="POST">-->
 <!--            <label for="">2</label>-->
-<!--            <input-->
-<!--              id="comment_like"-->
-<!--              type="hidden"-->
-<!--              name="comment_id"-->
-<!--              value="01"-->
-<!--            />-->
+<!--            <input id="like_comment_id" type="hidden" name="comment_id" value=""/>-->
+<!--            <input id="like_vote" type="hidden" name="vote" value="1"/>-->
 <!--            <button type="submit">like</button>-->
-<!--          </form>-->
 <!--        </td>-->
 <!--        <td>-->
-<!--          <form action="" method="POST">-->
 <!--            <label for="">1</label>-->
-<!--            <input-->
-<!--              id="comment_dislike"-->
-<!--              type="hidden"-->
-<!--              name="comment_id"-->
-<!--              value="01"-->
-<!--            />-->
+<!--            <input id="dislike_comment_id" type="hidden" name="comment_id" value=""/>-->
+<!--            <input id="dislike_vote" type="hidden" name="vote" value="-1"/>-->
 <!--            <button type="submit">dislike</button>-->
-<!--          </form>-->
+<!--          <label>Your ID:</label>-->
+
 <!--        </td>-->
-<!--      </tr>-->
+
+
+
+      </tr>
+
     </table>
-   
+        <label>Your ID:</label>
+        <input type="text" name="user_id" value="" required/>
+    </form>
+
   </body>
 </html>
