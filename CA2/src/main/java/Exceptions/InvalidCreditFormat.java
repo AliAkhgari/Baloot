@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_INVALID_CREDIT_FORMAT;
+import static defines.Errors.ERROR_INVALID_CREDIT_FORMAT;
 
 public class InvalidCreditFormat extends Exception {
     public InvalidCreditFormat() {

@@ -9,11 +9,11 @@ public class Commodity {
     private String name;
     private int providerId;
     private int price;
-    private ArrayList<String> categories = new ArrayList<String>();
+    private ArrayList<String> categories = new ArrayList<>();
     private float rating;
     private int inStock;
-    private Map<String,Integer> user_rate = new HashMap<String,Integer>();
-    private float init_rate;
+    private Map<String, Integer> userRate = new HashMap<>();
+    private float initRate;
 
     private ArrayList<Comment> comments = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class Commodity {
 
     public void setRating(float rating) {
         this.rating = rating;
-        this.init_rate = rating;
+        this.initRate = rating;
     }
 
     public int getInStock() {
@@ -82,20 +82,23 @@ public class Commodity {
         this.comments = comments;
     }
 
-    public void decreaseInStock() { this.inStock -= 1; }
-    public void add_rate(String username, int score) {
-        user_rate.put(username, score);
-
-        this.calc_rating();
+    public void decreaseInStock() {
+        this.inStock -= 1;
     }
 
-    private void calc_rating() {
+    public void addRate(String username, int score) {
+        userRate.put(username, score);
+
+        this.calcRating();
+    }
+
+    private void calcRating() {
         float sum = 0;
-        for (Map.Entry<String, Integer> entry : this.user_rate.entrySet()) {
+        for (Map.Entry<String, Integer> entry : this.userRate.entrySet()) {
             sum += entry.getValue();
         }
 
-        this.rating = ((this.init_rate + sum) / (this.user_rate.size() + 1));
+        this.rating = ((this.initRate + sum) / (this.userRate.size() + 1));
 
     }
 }

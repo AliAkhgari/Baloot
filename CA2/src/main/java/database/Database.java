@@ -13,10 +13,8 @@ public class Database {
     private ArrayList<Commodity> commodities = new ArrayList<>();
     private ArrayList<Comment> comments = new ArrayList<>();
 
-
     public Database() {
     }
-
 
     public void addUser(User user) {
         users.add(user);

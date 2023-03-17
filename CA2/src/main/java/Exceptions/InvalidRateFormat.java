@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_INVALID_RATE_FORMAT;
+import static defines.Errors.ERROR_INVALID_RATE_FORMAT;
 
 public class InvalidRateFormat extends Exception {
     public InvalidRateFormat() {

@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_NOT_EXISTENT_PROVIDER;
+import static defines.Errors.ERROR_NOT_EXISTENT_PROVIDER;
 
 public class NotExistentProvider extends Exception {
     public NotExistentProvider() {

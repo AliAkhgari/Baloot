@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static defines.endpoints.*;
+import static defines.Endpoints.*;
 
 
 public class DataParser {

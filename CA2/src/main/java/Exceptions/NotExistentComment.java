@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_NOT_EXISTENT_COMMENT;
+import static defines.Errors.ERROR_NOT_EXISTENT_COMMENT;
 
 public class NotExistentComment extends Exception {
     public NotExistentComment() {

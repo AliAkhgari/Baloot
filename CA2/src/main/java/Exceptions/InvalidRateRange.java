@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_INVALID_RATE_RANGE;
+import static defines.Errors.ERROR_INVALID_RATE_RANGE;
 
 public class InvalidRateRange extends Exception {
     public InvalidRateRange() {

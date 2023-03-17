@@ -8,31 +8,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String username;
+    private String userId;
     private String password;
     private String email;
     private String birthDate;
     private String address;
     private int credit;
-    private Map<Integer, Integer> commodities_rates = new HashMap<Integer, Integer>();
-    private ArrayList<Commodity> buy_list = new ArrayList<Commodity>();
+    private Map<Integer, Integer> commoditiesRates = new HashMap<>();
+    private ArrayList<Commodity> buyList = new ArrayList<>();
 
-    private ArrayList<Commodity> purchased_list = new ArrayList<>();
+    private ArrayList<Commodity> purchasedList = new ArrayList<>();
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
+    public String getUserId() {
+        return userId;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public ArrayList<Commodity> getBuy_list() {
-        return buy_list;
+    public ArrayList<Commodity> getBuyList() {
+        return buyList;
     }
 
     public String getBirthDate() {
@@ -47,10 +43,13 @@ public class User {
         return credit;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
+    public String getPassword() {
+        return password;
+    }
     public void setPassword(String password) {
         this.password = password;
     }
@@ -71,50 +70,49 @@ public class User {
         this.credit = credit;
     }
 
-    // todo: better name for increase and decrease
     public void addCredit(float amount) {
         this.credit += amount;
     }
 
-    public void decreaseCredit(int amount) throws InsufficientCredit {
+    public void withdrawCredit(int amount) throws InsufficientCredit {
         if (amount > this.credit)
             throw new InsufficientCredit();
 
         this.credit -= amount;
     }
 
-    public void setBuy_list(ArrayList<Commodity> buy_list) {
-        this.buy_list = buy_list;
+    public void setBuyList(ArrayList<Commodity> buy_list) {
+        this.buyList = buy_list;
     }
 
-    public Map<Integer, Integer> getCommodities_rates() {
-        return this.commodities_rates;
+    public Map<Integer, Integer> getCommoditiesRates() {
+        return this.commoditiesRates;
     }
 
-    public ArrayList<Commodity> getPurchased_list() {
-        return purchased_list;
+    public ArrayList<Commodity> getPurchasedList() {
+        return purchasedList;
     }
 
-    public void setPurchased_list(ArrayList<Commodity> purchased_list) {
-        this.purchased_list = purchased_list;
+    public void setPurchasedList(ArrayList<Commodity> purchased_list) {
+        this.purchasedList = purchased_list;
     }
 
-    public void add_rated_commodities(int commodity_id, int score) {
-        this.commodities_rates.put(commodity_id, score);
+    public void addRatedCommodities(int commodity_id, int score) {
+        this.commoditiesRates.put(commodity_id, score);
     }
 
     // todo: check if buy item or purchased item is already in the corresponding lists
-    public void add_buy_item(Commodity commodity) {
-        this.buy_list.add(commodity);
+    public void addBuyItem(Commodity commodity) {
+        this.buyList.add(commodity);
     }
 
-    public void add_purchased_item(Commodity commodity) {
-        this.purchased_list.add(commodity);
+    public void addPurchasedItem(Commodity commodity) {
+        this.purchasedList.add(commodity);
     }
 
-    public void remove_item_from_buy_list(Commodity commodity) throws CommodityIsNotInBuyList {
-        if (this.buy_list.contains(commodity))
-            this.buy_list.remove(commodity);
+    public void removeItemFromBuyList(Commodity commodity) throws CommodityIsNotInBuyList {
+        if (this.buyList.contains(commodity))
+            this.buyList.remove(commodity);
         else
             throw new CommodityIsNotInBuyList();
     }

@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_MISSING_COMMENT_ID;
+import static defines.Errors.ERROR_MISSING_COMMENT_ID;
 
 public class MissingCommentId extends Exception {
     public MissingCommentId() {

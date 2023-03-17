@@ -3,7 +3,6 @@ package controllers;
 import Exceptions.*;
 import application.Baloot;
 import entities.Commodity;
-import entities.ExceptionHandler;
 import entities.User;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
@@ -12,13 +11,13 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.function.Function;
+
+import static defines.HtmlTemplates.USER_HTML_TEMPLATE_FILE;
 
 
 public class UserController {
     private final Baloot baloot;
-    private static final String USER_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/User.html";
 
     public UserController(Baloot baloot) {
         this.baloot = baloot;
@@ -79,14 +78,14 @@ public class UserController {
         Element addressElement = doc.getElementById("address");
         Element creditElement = doc.getElementById("credit");
 
-        usernameElement.text("Username: " + user.getUsername());
+        usernameElement.text("Username: " + user.getUserId());
         emailElement.text("Email: " + user.getEmail());
         birthDateElement.text("Birth Date: " + user.getBirthDate());
         addressElement.text(user.getAddress());
         creditElement.text("Credit: " + user.getCredit());
 
         // add to purchased list
-        doc.getElementById("form_payment").attr("value", String.valueOf(user.getUsername()));
+        doc.getElementById("form_payment").attr("value", String.valueOf(user.getUserId()));
 
         Element buyListTable = doc.select("table").first();
         Function<Commodity, Element> buyListRowToHtml = commodity -> {
@@ -101,13 +100,13 @@ public class UserController {
             row.append("<td>" + "<a href='/commodities/" + commodity.getId() + "'>Link</a>" + "</td>");
             row.append("<td><form action='/removeFromBuyList' method='POST' >" +
                     "<input id='form_commodity_id' type='hidden' name='commodityId' value='" + commodity.getId() + "'>" +
-                    "<input id='form_user_id' type='hidden' name='userId' value='" + user.getUsername() + "'>" +
+                    "<input id='form_user_id' type='hidden' name='userId' value='" + user.getUserId() + "'>" +
                     "<button type='submit'>Remove</button></form></td>");
 
             return row;
         };
 
-        for (Commodity commodity : user.getBuy_list()) {
+        for (Commodity commodity : user.getBuyList()) {
             Element row = buyListRowToHtml.apply(commodity);
             buyListTable.appendChild(row);
         }
@@ -127,7 +126,7 @@ public class UserController {
             return row;
         };
 
-        for (Commodity commodity : user.getPurchased_list()) {
+        for (Commodity commodity : user.getPurchasedList()) {
             Element row = purchasedListRowToHtml.apply(commodity);
             purchasedListTable.appendChild(row);
         }

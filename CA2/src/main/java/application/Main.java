@@ -5,7 +5,7 @@ import io.javalin.Javalin;
 
 import java.io.IOException;
 
-import static defines.endpoints.SERVER_PORT;
+import static defines.Endpoints.SERVER_PORT;
 
 
 public class Main {

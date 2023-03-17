@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_MISSING_VOTE_VALUE;
+import static defines.Errors.ERROR_MISSING_VOTE_VALUE;
 
 public class MissingVoteValue extends Exception {
     public MissingVoteValue() {

@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_INVALID_CREDIT_RANGE;
+import static defines.Errors.ERROR_INVALID_CREDIT_RANGE;
 
 public class InvalidCreditRange extends Exception {
     public InvalidCreditRange() {

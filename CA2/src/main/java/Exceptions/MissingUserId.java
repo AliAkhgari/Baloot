@@ -1,6 +1,6 @@
 package Exceptions;
 
-import static defines.defines.ERROR_MISSING_USER_ID;
+import static defines.Errors.ERROR_MISSING_USER_ID;
 
 public class MissingUserId extends Exception {
     public MissingUserId() {

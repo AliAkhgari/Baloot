@@ -15,10 +15,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+import static defines.HtmlTemplates.COMMODITIES_HTML_TEMPLATE_FILE;
+import static defines.HtmlTemplates.COMMODITY_HTML_TEMPLATE_FILE;
+
 // todo: add html file paths to define
 public class CommoditiesController {
-    private static final String COMMODITIES_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Commodities.html";
-    private static final String COMMODITY_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Commodity.html";
+
     private final Baloot baloot;
 
     public CommoditiesController(Baloot baloot) {

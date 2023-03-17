@@ -3,7 +3,6 @@ package controllers;
 import Exceptions.NotExistentProvider;
 import application.Baloot;
 import entities.Commodity;
-import entities.ExceptionHandler;
 import entities.Provider;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
@@ -14,9 +13,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Function;
 
+import static defines.HtmlTemplates.PROVIDER_HTML_TEMPLATE_FILE;
+
 public class ProviderController {
     private final Baloot baloot;
-    private static final String PROVIDER_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Provider.html";
 
     public ProviderController(Baloot baloot) {
         this.baloot = baloot;

@@ -5,10 +5,10 @@ import org.jsoup.Jsoup;
 
 import java.io.File;
 
+import static defines.HtmlTemplates.*;
+
 public class ResponseController {
-    private static final String OK_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/200.html";
-    private static final String FORBIDDEN_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/403.html";
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
+
 
     public void showSuccessfulPage(Javalin app) {
         app.get("/200", ctx -> {
