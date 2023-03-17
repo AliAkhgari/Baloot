@@ -29,6 +29,7 @@ public class Main {
                 new commoditiesController(baloot).getCommodity(app);
                 new providerController(baloot).getProvider(app);
                 new userController(baloot).getUser(app);
+                new userController(baloot).increaseUserCredit(app);
                 new voteCommentController(baloot).voteComment(app);
                 new rateCommodityController(baloot).rateCommodity(app);
                 new addToBuyListController(baloot).addToBuyList(app);

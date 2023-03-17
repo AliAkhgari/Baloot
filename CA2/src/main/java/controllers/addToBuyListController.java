@@ -24,9 +24,6 @@ public class addToBuyListController {
             String commodityId = ctx.formParam("commodity_id");
             String userId = ctx.formParam("user_id");
 
-            System.out.println("idddddd : "+ commodityId);
-            System.out.println("idddddd : "+ userId);
-
             if ((commodityId == null) || (userId == null))
                 ctx.redirect("/403");
 

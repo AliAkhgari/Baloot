@@ -68,6 +68,9 @@ public class User {
         this.credit = credit;
     }
 
+    public void increaseCredit(int amount) {
+        this.credit += amount;
+    }
     public void setBuy_list(ArrayList<Commodity> buy_list) {
         this.buy_list = buy_list;
     }

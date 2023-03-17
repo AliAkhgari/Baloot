@@ -36,29 +36,23 @@ public class userController {
         });
     }
 
-    public void addCreditToUser(Javalin app) {
-        app.get("/users/{user_id}/{credit}", ctx -> {
+    public void increaseUserCredit(Javalin app) {
+        app.get("/addCredit/{user_id}/{credit}", ctx -> {
+            String user_id = ctx.pathParam("user_id");
+            int credit = Integer.parseInt(ctx.pathParam("credit"));
+
+            if (credit < 0)
+                ctx.redirect("/403");
+
             try {
-                User user = baloot.getUserById(ctx.pathParam("user_id"));
-                String userHtml = generateUserHtml(user);
-                ctx.contentType("text/html").result(userHtml);
+                User user = baloot.getUserById(user_id);
+                user.increaseCredit(credit);
             } catch (ExceptionHandler e) {
                 File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
                 String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+                Document doc = Jsoup.parse(htmlTemplate);
+                ctx.contentType("text/html").result(doc.toString());
             }
-            int credit = Integer.parseInt(ctx.pathParam("credit"));
-
-
-//            if (user == null) {
-//                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-//                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-//
-//                Document doc = Jsoup.parse(htmlTemplate);
-//                ctx.contentType("text/html").result(doc.toString());
-//            } else {
-//                String userHtml = generateUserHtml(user);
-//                ctx.contentType("text/html").result(userHtml);
-//            }
         });
     }
 
