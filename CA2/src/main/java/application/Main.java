@@ -1,15 +1,9 @@
 package application;
 
 import controllers.*;
-import database.Database;
-import entities.Comment;
-import entities.Commodity;
-import entities.Provider;
-import entities.User;
 import io.javalin.Javalin;
 
 import java.io.IOException;
-import java.net.URL;
 
 import static defines.endpoints.SERVER_PORT;
 
@@ -23,24 +17,43 @@ public class Main {
         // todo: better name for setEntities
         baloot.setEntities();
 
+        CommoditiesController commoditiesController = new CommoditiesController(baloot);
+        ProviderController providerController = new ProviderController(baloot);
+        UserController userController = new UserController(baloot);
+        VoteCommentController voteCommentController = new VoteCommentController(baloot);
+        RateCommodityController rateCommodityController = new RateCommodityController(baloot);
+        AddToBuyListController addToBuyListController = new AddToBuyListController(baloot);
+        RemoveFromBuyListController removeFromBuyListController = new RemoveFromBuyListController(baloot);
+        ResponseController responseController = new ResponseController();
+
         app.routes(() -> {
             try {
-                new commoditiesController(baloot).getCommodities(app);
-                new commoditiesController(baloot).getCommodity(app);
-                new commoditiesController(baloot).searchCommoditiesBasedOnPrice(app);
-                new commoditiesController(baloot).searchCommoditiesBasedOnCategories(app);
-                new providerController(baloot).getProvider(app);
-                new userController(baloot).getUser(app);
-                new userController(baloot).increaseUserCredit(app);
-                new userController(baloot).addToPurchasedList(app);
-                new voteCommentController(baloot).voteComment(app);
-                new voteCommentController(baloot).showVoteCommentPage(app);
-                new rateCommodityController(baloot).rateCommodity(app);
-                new rateCommodityController(baloot).showRateCommodityPage(app);
-                new addToBuyListController(baloot).addToBuyList(app);
-                new addToBuyListController(baloot).showAddToBuyListPage(app);
-                new removeFromBuyListController(baloot).removeFromBuyList(app);
-                new removeFromBuyListController(baloot).showRemoveFromBuyListPage(app);
+                commoditiesController.getCommodities(app);
+                commoditiesController.getCommodity(app);
+                commoditiesController.searchCommoditiesBasedOnPrice(app);
+                commoditiesController.searchCommoditiesBasedOnCategories(app);
+
+                providerController.getProvider(app);
+
+                userController.getUser(app);
+                userController.increaseUserCredit(app);
+                userController.addToPurchasedList(app);
+
+                voteCommentController.voteComment(app);
+                voteCommentController.showVoteCommentPage(app);
+
+                rateCommodityController.rateCommodity(app);
+                rateCommodityController.showRateCommodityPage(app);
+
+                addToBuyListController.addToBuyList(app);
+                addToBuyListController.showAddToBuyListPage(app);
+
+                removeFromBuyListController.removeFromBuyList(app);
+                removeFromBuyListController.showRemoveFromBuyListPage(app);
+
+                responseController.showSuccessfulPage(app);
+                responseController.showForbiddenPage(app);
+                responseController.showNotFoundPage(app);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

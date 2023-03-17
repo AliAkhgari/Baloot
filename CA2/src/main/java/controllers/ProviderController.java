@@ -4,7 +4,6 @@ import application.Baloot;
 import entities.Commodity;
 import entities.ExceptionHandler;
 import entities.Provider;
-import entities.User;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,12 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Function;
 
-public class providerController {
+public class ProviderController {
     private final Baloot baloot;
     private static final String PROVIDER_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Provider.html";
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
 
-    public providerController(Baloot baloot) {
+    public ProviderController(Baloot baloot) {
         this.baloot = baloot;
     }
 
@@ -30,10 +28,7 @@ public class providerController {
                 String providerHtml = generateProviderHtml(provider);
                 ctx.contentType("text/html").result(providerHtml);
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
         });
     }

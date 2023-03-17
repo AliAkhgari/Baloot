@@ -7,21 +7,18 @@ import io.javalin.Javalin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.FormElement;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Function;
 
-public class commoditiesController {
+public class CommoditiesController {
     private static final String COMMODITIES_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Commodities.html";
     private static final String COMMODITY_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Commodity.html";
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
-
     private final Baloot baloot;
 
-    public commoditiesController(Baloot baloot) {
+    public CommoditiesController(Baloot baloot) {
         this.baloot = baloot;
     }
 
@@ -41,10 +38,7 @@ public class commoditiesController {
                 String commodityPageHtml = generateCommodityPage(commodity);
                 ctx.contentType("text/html").result(commodityPageHtml);
             } catch (Exception e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
         });
     }
@@ -153,10 +147,6 @@ public class commoditiesController {
                 ctx.contentType("text/html").result(commoditiesHtml);
             } catch (Exception e) {
                 ctx.redirect("/403");
-//                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-//                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-//                Document doc = Jsoup.parse(htmlTemplate);
-//                ctx.contentType("text/html").result(doc.toString());
             }
         });
     }

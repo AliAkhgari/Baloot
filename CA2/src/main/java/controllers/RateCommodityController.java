@@ -1,7 +1,6 @@
 package controllers;
 
 import application.Baloot;
-import entities.Comment;
 import entities.Commodity;
 import entities.ExceptionHandler;
 import entities.User;
@@ -10,14 +9,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
-import java.io.IOException;
 
-public class rateCommodityController {
+public class RateCommodityController {
 
     private final Baloot baloot;
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
 
-    public rateCommodityController(Baloot baloot) {
+    public RateCommodityController(Baloot baloot) {
         this.baloot = baloot;
     }
 
@@ -38,12 +35,10 @@ public class rateCommodityController {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 User user = baloot.getUserById(userId);
                 commodity.add_rate(userId, rate);
+                ctx.redirect("/200");
 
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
 
         });
@@ -63,12 +58,10 @@ public class rateCommodityController {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 User user = baloot.getUserById(userId);
                 commodity.add_rate(userId, rate);
+                ctx.redirect("/200");
 
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
 
         });

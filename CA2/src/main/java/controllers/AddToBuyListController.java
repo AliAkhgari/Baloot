@@ -9,13 +9,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
-import java.io.IOException;
 
-public class addToBuyListController {
+public class AddToBuyListController {
     private final Baloot baloot;
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
 
-    public addToBuyListController(Baloot baloot) {
+    public AddToBuyListController(Baloot baloot) {
         this.baloot = baloot;
     }
 
@@ -31,32 +29,29 @@ public class addToBuyListController {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 User user = baloot.getUserById(userId);
                 user.add_buy_item(commodity);
+                ctx.redirect("/200");
 
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
 
         });
     }
 
+    // fixme: Is it allowed to keep duplicate commodities in buy list?
     public void showAddToBuyListPage(Javalin app) {
         app.get("/addToBuyList/{user_id}/{commodity_id}", ctx -> {
             String commodityId = ctx.pathParam("commodity_id");
             String userId = ctx.pathParam("user_id");
-
+            
             try {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 User user = baloot.getUserById(userId);
                 user.add_buy_item(commodity);
+                ctx.redirect("/200");
 
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
 
         });

@@ -3,8 +3,6 @@ package entities;
 import java.util.HashMap;
 import java.util.Map;
 
-import static defines.defines.ERROR_INVALID_COMMENT_VOTE;
-
 public class Comment {
 
     int id;

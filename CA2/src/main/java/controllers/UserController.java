@@ -13,12 +13,11 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 
-public class userController {
+public class UserController {
     private final Baloot baloot;
     private static final String USER_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/User.html";
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
 
-    public userController(Baloot baloot) {
+    public UserController(Baloot baloot) {
         this.baloot = baloot;
     }
 
@@ -29,10 +28,7 @@ public class userController {
                 String userHtml = generateUserHtml(user);
                 ctx.contentType("text/html").result(userHtml);
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
         });
     }
@@ -48,11 +44,9 @@ public class userController {
             try {
                 User user = baloot.getUserById(user_id);
                 user.increaseCredit(credit);
+                ctx.redirect("/200");
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
         });
     }
@@ -68,12 +62,9 @@ public class userController {
                     user.decreaseCredit(commodity.getPrice());
                 }
                 user.setBuy_list(new ArrayList<>());
-
+                ctx.redirect("/200");
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
         });
     }

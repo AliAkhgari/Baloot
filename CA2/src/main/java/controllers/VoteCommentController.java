@@ -9,17 +9,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
 
 // todo: change all not found file to what default /404 does!!
 
-public class voteCommentController {
+public class VoteCommentController {
     private final Baloot baloot;
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
 
-    public voteCommentController(Baloot baloot) {
+    public VoteCommentController(Baloot baloot) {
         this.baloot = baloot;
     }
 
@@ -40,15 +36,15 @@ public class voteCommentController {
                 else if (vote.equals("like"))
                     comment.addUserVote(userId, "like");
 
+                ctx.redirect("/200");
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
 
         });
     }
+
+    // todo: refactor showVoteCommentPage
 
     public void showVoteCommentPage(Javalin app) {
         app.get("/voteComment/{user_id}/{comment_id}/{vote}", ctx -> {
@@ -59,20 +55,20 @@ public class voteCommentController {
             try {
                 Comment comment = baloot.getCommentById(Integer.parseInt(commentId));
                 User user = baloot.getUserById(userId);
-                if (vote.equals("-1"))
+                if (vote.equals("-1")) {
                     comment.addUserVote(userId, "dislike");
-                else if (vote.equals("1"))
+                    ctx.redirect("/200");
+                } else if (vote.equals("1")) {
                     comment.addUserVote(userId, "like");
-                else if (vote.equals("0"))
+                    ctx.redirect("/200");
+                } else if (vote.equals("0")) {
                     comment.addUserVote(userId, "neutral");
-                else
+                    ctx.redirect("/200");
+                } else
                     ctx.redirect("/403");
 
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
 
         });

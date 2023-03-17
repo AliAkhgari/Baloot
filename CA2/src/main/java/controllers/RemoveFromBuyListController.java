@@ -9,13 +9,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
-import java.io.IOException;
 
-public class removeFromBuyListController {
+public class RemoveFromBuyListController {
     private final Baloot baloot;
-    private static final String NOT_FOUND_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/404.html";
 
-    public removeFromBuyListController(Baloot baloot) {
+    public RemoveFromBuyListController(Baloot baloot) {
         this.baloot = baloot;
     }
 
@@ -31,14 +29,10 @@ public class removeFromBuyListController {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 User user = baloot.getUserById(userId);
                 user.remove_item_from_buy_list(commodity);
-
+                ctx.redirect("/200");
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
-
         });
     }
 
@@ -51,12 +45,10 @@ public class removeFromBuyListController {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 User user = baloot.getUserById(userId);
                 user.remove_item_from_buy_list(commodity);
+                ctx.redirect("/200");
 
             } catch (ExceptionHandler e) {
-                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
-                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
-                Document doc = Jsoup.parse(htmlTemplate);
-                ctx.contentType("text/html").result(doc.toString());
+                ctx.redirect("/404");
             }
 
         });
