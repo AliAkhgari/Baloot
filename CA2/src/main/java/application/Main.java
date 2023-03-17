@@ -30,6 +30,7 @@ public class Main {
                 new providerController(baloot).getProvider(app);
                 new userController(baloot).getUser(app);
                 new userController(baloot).increaseUserCredit(app);
+                new userController(baloot).addToPurchasedList(app);
                 new voteCommentController(baloot).voteComment(app);
                 new rateCommodityController(baloot).rateCommodity(app);
                 new addToBuyListController(baloot).addToBuyList(app);

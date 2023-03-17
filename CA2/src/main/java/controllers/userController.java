@@ -9,6 +9,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 
@@ -56,6 +57,27 @@ public class userController {
         });
     }
 
+    public void addToPurchasedList(Javalin app) {
+        app.post("/addToPurchasedList", ctx -> {
+            String user_id = ctx.formParam("userId");
+
+            try {
+                User user = baloot.getUserById(user_id);
+                for (Commodity commodity : user.getBuy_list()) {
+                    user.add_purchased_item(commodity);
+                    user.decreaseCredit(commodity.getPrice());
+                }
+                user.setBuy_list(new ArrayList<>());
+
+            } catch (ExceptionHandler e) {
+                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+                Document doc = Jsoup.parse(htmlTemplate);
+                ctx.contentType("text/html").result(doc.toString());
+            }
+        });
+    }
+
     private String generateUserHtml(User user) throws IOException {
         File htmlFile = new File(USER_HTML_TEMPLATE_FILE);
         String htmlTemplate = Jsoup.parse(htmlFile, "UTF-8").toString();
@@ -74,6 +96,9 @@ public class userController {
         addressElement.text(user.getAddress());
         creditElement.text("Credit: " + user.getCredit());
 
+        // add to purchased list
+        doc.getElementById("form_payment").attr("value", String.valueOf(user.getUsername()));
+
         Element buyListTable = doc.select("table").first();
         Function<Commodity, Element> buyListRowToHtml = commodity -> {
             Element row = new Element("tr");
@@ -86,7 +111,7 @@ public class userController {
             row.append("<td>" + commodity.getInStock() + "</td>");
             row.append("<td>" + "<a href='/commodities/" + commodity.getId() + "'>Link</a>" + "</td>");
             row.append("<td><form action='/removeFromBuyList' method='POST' >" +
-                    "<input id='form_commodity_id' type='hidden' name='commodityId' value='" + commodity.getId() +"'>" +
+                    "<input id='form_commodity_id' type='hidden' name='commodityId' value='" + commodity.getId() + "'>" +
                     "<input id='form_user_id' type='hidden' name='userId' value='" + user.getUsername() + "'>" +
                     "<button type='submit'>Remove</button></form></td>");
 
@@ -98,7 +123,7 @@ public class userController {
             buyListTable.appendChild(row);
         }
 
-        Element purchasedListTable = doc.select("table").first();
+        Element purchasedListTable = doc.select("table").get(1);
         Function<Commodity, Element> purchasedListRowToHtml = commodity -> {
             Element row = new Element("tr");
             row.append("<td>" + commodity.getId() + "</td>");

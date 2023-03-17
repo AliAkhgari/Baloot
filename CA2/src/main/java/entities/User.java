@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static defines.defines.ERROR_NOT_ENOUGH_CREDIT;
+import static defines.defines.ERROR_NOT_EXISTENT_COMMENT;
+
 public class User {
     private String username;
     private String password;
@@ -68,8 +71,16 @@ public class User {
         this.credit = credit;
     }
 
+    // todo: better name for increase and decrease
     public void increaseCredit(int amount) {
         this.credit += amount;
+    }
+
+    public void decreaseCredit(int amount) throws ExceptionHandler {
+        if (amount > this.credit)
+            throw new ExceptionHandler(ERROR_NOT_ENOUGH_CREDIT);
+
+        this.credit -= amount;
     }
     public void setBuy_list(ArrayList<Commodity> buy_list) {
         this.buy_list = buy_list;
