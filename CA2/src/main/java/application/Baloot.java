@@ -196,4 +196,29 @@ public class Baloot {
 
         return result;
     }
+
+    public ArrayList<Commodity> getUserBuyList(String userId) throws NotExistentUser {
+        User user = getUserById(userId);
+        return user.getBuyList();
+    }
+
+    public void addUser(User user) {
+        database.addUser(user);
+    }
+
+    public void addCommodity(Commodity commodity) {
+        database.addCommodity(commodity);
+    }
+
+    public void addProvider(Provider provider) {
+        database.addProvider(provider);
+    }
+
+    public void addComment(Comment comment) {
+        database.addComment(comment);
+    }
+
+    public ArrayList<User> getUsers() {
+        return database.getUsers();
+    }
 }

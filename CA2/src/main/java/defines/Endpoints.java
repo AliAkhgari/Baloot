@@ -7,6 +7,8 @@ public class Endpoints {
     public static final String COMMODITIES_ENDPOINT = "/api/commodities";
     public static final String COMMENTS_ENDPOINT = "/api/comments";
     public static final int SERVER_PORT = 8080;
+    public static final String LOCALHOST_URL = "http://localhost:8080";
 
+    public static final String RATE_COMMODITY_ENDPOINT = "/rateCommodity";
 
 }
