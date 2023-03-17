@@ -1,9 +1,0 @@
-{
-  "id": 1,
-  "name": "Headphone",
-  "providerId": 1,
-  "price": 35000,
-  "categories": ["Tech", "Phone"],
-  "rating": 5.5,
-  "inStock": 50
-}
