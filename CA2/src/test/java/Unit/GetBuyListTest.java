@@ -1,7 +1,7 @@
 package Unit;
 
-import Exceptions.AlreadyInBuyList;
-import Exceptions.CommodityIsNotInBuyList;
+import exceptions.AlreadyInBuyList;
+import exceptions.CommodityIsNotInBuyList;
 import application.Baloot;
 import entities.Commodity;
 import entities.User;
@@ -9,7 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 

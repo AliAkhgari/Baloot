@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>Commodity</title>
     <style>
       li {
@@ -11,52 +11,53 @@
         width: 50%;
         text-align: center;
       }
+
     </style>
-  </head>
-  <body>
+</head>
+<body>
 
-    <ul>
-      <li id="id">Id: 2341</li>
-      <li id="name">Name: Galaxy S21</li>
-      <li id="providerId">Provider Id: 1781</li>
-      <li id="price">Price: 21000000</li>
-      <li id="categories">Categories: Technology, Phone</li>
-      <li id="rating">Rating: 8.3</li>
-      <li id="inStock">In Stock: 17</li>
-    </ul>
+<ul>
+    <li id="id">Id: 2341</li>
+    <li id="name">Name: Galaxy S21</li>
+    <li id="providerId">Provider Id: 1781</li>
+    <li id="price">Price: 21000000</li>
+    <li id="categories">Categories: Technology, Phone</li>
+    <li id="rating">Rating: 8.3</li>
+    <li id="inStock">In Stock: 17</li>
+</ul>
 
-    <form action="/rateCommodity" method="POST">
-      <label>Your ID:</label>
-      <input type="text" name="user_id" value="" required/>
-      <input type="hidden" name="commodity_id" value="" id="rate_commodity_id">
-      <label>Rate(between 1 and 10):</label>
-      <input type="number" id="quantity" name="quantity" min="1" max="10">
-      <button type="submit">Rate</button>
-    </form>
-    <br>
-    <form action="/addToBuyList" method="POST">
-      <label>Your ID:</label>
-      <input type="text" name="user_id" value="" required/>
-      <input type="hidden" name="commodity_id" value="" id="add_to_buy_list_commodity_id">
-      <button type="submit">Add to BuyList</button>
-    </form>
-    <br />
+<form action="/rateCommodity" method="POST">
+    <label>Your ID:</label>
+    <input type="text" name="user_id" value="" required/>
+    <input type="hidden" name="commodity_id" value="" id="rate_commodity_id">
+    <label>Rate(between 1 and 10):</label>
+    <input type="number" id="quantity" name="quantity" min="1" max="10">
+    <button type="submit">Rate</button>
+</form>
+<br>
+<form action="/addToBuyList" method="POST">
+    <label>Your ID:</label>
+    <input type="text" name="user_id" value="" required/>
+    <input type="hidden" name="commodity_id" value="" id="add_to_buy_list_commodity_id">
+    <button type="submit">Add to BuyList</button>
+</form>
+<br/>
 
-    <form action="/voteComment" method="POST">
+<form action="/voteComment" method="POST">
     <table>
-      <tr>
-        <th>username</th>
-        <th>comment</th>
-        <th>date</th>
-        <th></th>
-        <th></th>
-      </tr>
+        <tr>
+            <th>username</th>
+            <th>comment</th>
+            <th>date</th>
+            <th></th>
+            <th></th>
+        </tr>
 
 
     </table>
-        <label>Your ID:</label>
-        <input type="text" name="user_id" value="" required/>
-    </form>
+    <label>Your ID:</label>
+    <input type="text" name="user_id" value="" required/>
+</form>
 
-  </body>
+</body>
 </html>

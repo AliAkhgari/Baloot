@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 import static defines.Errors.MISSING_START_OR_END_PRICE;
 

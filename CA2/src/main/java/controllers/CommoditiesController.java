@@ -1,8 +1,8 @@
 package controllers;
 
-import Exceptions.InvalidPriceRange;
-import Exceptions.MissingCategory;
-import Exceptions.NotExistentCommodity;
+import exceptions.InvalidPriceRange;
+import exceptions.MissingCategory;
+import exceptions.NotExistentCommodity;
 import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
@@ -146,10 +146,8 @@ public class CommoditiesController {
         app.get("/commodities/search/{start_price}/{end_price}", ctx -> {
             String start_price = ctx.pathParam("start_price");
             String end_price = ctx.pathParam("end_price");
-            System.out.println("startttttt : " + start_price);
             try {
                 ArrayList<Commodity> commodities = baloot.filterCommoditiesByPrice(start_price, end_price);
-                System.out.println("lennnnnnn : " + commodities.size());
                 String commoditiesHtml = generateCommoditiesTable(commodities);
                 ctx.contentType("text/html").result(commoditiesHtml);
             } catch (InvalidPriceRange e) {

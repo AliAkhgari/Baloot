@@ -1,6 +1,6 @@
 package controllers;
 
-import Exceptions.NotExistentProvider;
+import exceptions.NotExistentProvider;
 import application.Baloot;
 import entities.Commodity;
 import entities.Provider;

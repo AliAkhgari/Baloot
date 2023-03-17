@@ -73,9 +73,5 @@ public class DataParser {
 
         for (Comment comment : commentsList)
             comment.setId(commentsList.indexOf(comment));
-
-        for (Comment comment : database.getComments()) {
-            System.out.println("comm IDDDDD: " + comment.getCommodityId());
-        }
     }
 }

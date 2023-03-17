@@ -1,6 +1,6 @@
 package controllers;
 
-import Exceptions.*;
+import exceptions.*;
 import application.Baloot;
 import entities.Commodity;
 import entities.User;

@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 import static defines.Errors.MISSING_CATEGORY;
 

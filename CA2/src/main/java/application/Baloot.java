@@ -1,6 +1,6 @@
 package application;
 
-import Exceptions.*;
+import exceptions.*;
 import database.Database;
 import entities.Comment;
 import entities.Commodity;
@@ -10,7 +10,6 @@ import entities.User;
 import java.io.IOException;
 import java.util.ArrayList;
 
-// todo: html files refactoring
 public class Baloot {
     Database database = new Database();
 
@@ -46,7 +45,6 @@ public class Baloot {
         if (commodityId == null)
             throw new MissingCommodityId();
         int rateNumber;
-        // todo: check with float.
         try {
             rateNumber = Integer.parseInt(rate);
         } catch (NumberFormatException e) {

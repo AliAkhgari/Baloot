@@ -1,8 +1,8 @@
 package entities;
 
-import Exceptions.AlreadyInBuyList;
-import Exceptions.CommodityIsNotInBuyList;
-import Exceptions.InsufficientCredit;
+import exceptions.AlreadyInBuyList;
+import exceptions.CommodityIsNotInBuyList;
+import exceptions.InsufficientCredit;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 import static defines.Errors.COMMODITY_IS_ALREADY_IN_THE_BUY_LIST;
 
