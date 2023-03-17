@@ -2,6 +2,7 @@ package application;
 
 import controllers.*;
 import io.javalin.Javalin;
+import io.javalin.http.NotFoundResponse;
 
 import java.io.IOException;
 
@@ -57,6 +58,10 @@ public class Server {
                 throw new RuntimeException(e);
             }
 
+        });
+
+        app.exception(NotFoundResponse.class, (e, ctx) -> {
+            ctx.redirect("/404");
         });
     }
 }
