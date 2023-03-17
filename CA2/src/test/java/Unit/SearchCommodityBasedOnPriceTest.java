@@ -1,9 +1,9 @@
 package Unit;
 
-import exceptions.InvalidPriceRange;
-import exceptions.MissingStartOrEndPrice;
 import application.Baloot;
 import entities.Commodity;
+import exceptions.InvalidPriceRange;
+import exceptions.MissingStartOrEndPrice;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

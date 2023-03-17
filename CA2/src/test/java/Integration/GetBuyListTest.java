@@ -2,7 +2,6 @@ package Integration;
 
 import application.Baloot;
 import application.Server;
-import controllers.AddToBuyListController;
 import entities.Commodity;
 import entities.User;
 import io.javalin.Javalin;

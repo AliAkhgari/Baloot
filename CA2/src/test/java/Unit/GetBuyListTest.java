@@ -1,10 +1,10 @@
 package Unit;
 
-import exceptions.AlreadyInBuyList;
-import exceptions.CommodityIsNotInBuyList;
 import application.Baloot;
 import entities.Commodity;
 import entities.User;
+import exceptions.AlreadyInBuyList;
+import exceptions.CommodityIsNotInBuyList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

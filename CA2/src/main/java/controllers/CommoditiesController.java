@@ -1,11 +1,11 @@
 package controllers;
 
-import exceptions.InvalidPriceRange;
-import exceptions.MissingCategory;
-import exceptions.NotExistentCommodity;
 import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
+import exceptions.InvalidPriceRange;
+import exceptions.MissingCategory;
+import exceptions.NotExistentCommodity;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

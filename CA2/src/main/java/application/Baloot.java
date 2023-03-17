@@ -1,11 +1,11 @@
 package application;
 
-import exceptions.*;
 import database.Database;
 import entities.Comment;
 import entities.Commodity;
 import entities.Provider;
 import entities.User;
+import exceptions.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
