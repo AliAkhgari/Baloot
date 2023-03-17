@@ -1,5 +1,8 @@
 package entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Comment {
 
     int id;
@@ -10,6 +13,8 @@ public class Comment {
 
     private int like;
     private int dislike;
+
+    private Map<String, String> userVote = new HashMap<>();
 
     public int getId() {
         return id;
@@ -55,23 +60,27 @@ public class Comment {
         return like;
     }
 
-    public void setLike(int like) {
-        this.like = like;
-    }
-
     public int getDislike() {
         return dislike;
     }
 
-    public void setDislike(int dislike) {
-        this.dislike = dislike;
+    public Map<String, String> getUserVote() {
+        return userVote;
     }
 
-    public void addLike() {
-        this.like += 1;
+    // todo: make like and dislike counting efficient
+
+    public void addUserVote(String userName, String vote) {
+        userVote.put(userName, vote);
+
+        this.like = 0;
+        this.dislike = 0;
+        for (String key : userVote.keySet()) {
+            if (userVote.get(key).equals("like"))
+                this.like += 1;
+            else if (userVote.get(key).equals("dislike"))
+                this.dislike += 1;
+        }
     }
 
-    public void addDislike() {
-        this.dislike += 1;
-    }
 }

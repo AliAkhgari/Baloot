@@ -30,9 +30,7 @@ public class voteCommentController {
             String commentId = ctx.formParam("comment_id");
             String userId = ctx.formParam("user_id");
             String vote = ctx.formParam("vote");
-
-            System.out.println("voteeeeee  : " + vote);
-
+            
             if ((commentId == null) || (userId == null))
                 ctx.redirect("/403");
 
@@ -40,9 +38,9 @@ public class voteCommentController {
                 Comment comment = baloot.getCommentById(Integer.parseInt(commentId));
                 User user = baloot.getUserById(userId);
                 if (vote.equals("dislike"))
-                    comment.addDislike();
+                    comment.addUserVote(userId, "dislike");
                 else if (vote.equals("like"))
-                    comment.addLike();
+                    comment.addUserVote(userId, "like");
 
             } catch (ExceptionHandler e) {
                 File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
