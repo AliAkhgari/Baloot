@@ -155,7 +155,6 @@ public class CommoditiesController {
         });
     }
 
-    // fixme: categories or category???
     public void searchCommoditiesBasedOnCategories(Javalin app) {
         app.get("/commodities/search/{categories}", ctx -> {
             String category = ctx.pathParam("categories");

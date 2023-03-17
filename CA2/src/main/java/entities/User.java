@@ -103,7 +103,6 @@ public class User {
         this.commoditiesRates.put(commodity_id, score);
     }
 
-    // todo: check if buy item or purchased item is already in the corresponding lists
     public void addBuyItem(Commodity commodity) throws AlreadyInBuyList {
         if (this.buyList.contains(commodity))
             throw new AlreadyInBuyList();

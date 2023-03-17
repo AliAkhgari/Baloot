@@ -27,7 +27,6 @@ public class AddToBuyListController {
         });
     }
 
-    // fixme: Is it allowed to keep duplicate commodities in buy list?
     public void showAddToBuyListPage(Javalin app) {
         app.get("/addToBuyList/{user_id}/{commodity_id}", ctx -> {
             String userId = ctx.pathParam("user_id");
