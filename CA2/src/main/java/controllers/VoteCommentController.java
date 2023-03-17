@@ -2,8 +2,6 @@ package controllers;
 
 import Exceptions.*;
 import application.Baloot;
-import entities.Comment;
-import entities.User;
 import io.javalin.Javalin;
 
 public class VoteCommentController {
@@ -29,8 +27,6 @@ public class VoteCommentController {
             }
         });
     }
-
-    // todo: refactor showVoteCommentPage
 
     public void showVoteCommentPage(Javalin app) {
         app.get("/voteComment/{user_id}/{comment_id}/{vote}", ctx -> {

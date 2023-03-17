@@ -5,7 +5,6 @@ import Exceptions.MissingUserId;
 import Exceptions.NotExistentCommodity;
 import Exceptions.NotExistentUser;
 import application.Baloot;
-
 import io.javalin.Javalin;
 
 public class AddToBuyListController {

@@ -18,7 +18,6 @@ import java.util.function.Function;
 import static defines.HtmlTemplates.COMMODITIES_HTML_TEMPLATE_FILE;
 import static defines.HtmlTemplates.COMMODITY_HTML_TEMPLATE_FILE;
 
-// todo: add html file paths to define
 public class CommoditiesController {
 
     private final Baloot baloot;

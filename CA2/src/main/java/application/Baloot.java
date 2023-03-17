@@ -2,7 +2,10 @@ package application;
 
 import Exceptions.*;
 import database.Database;
-import entities.*;
+import entities.Comment;
+import entities.Commodity;
+import entities.Provider;
+import entities.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -156,7 +159,6 @@ public class Baloot {
         return commodities;
     }
 
-    // todo: set comments for commodity when reading from database
     public ArrayList<Comment> getCommentsForCommodity(int commodityId) {
         ArrayList<Comment> comments = new ArrayList<>();
         for (Comment comment : database.getComments())
