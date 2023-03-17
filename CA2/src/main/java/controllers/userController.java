@@ -91,6 +91,10 @@ public class userController {
             row.append("<td>" + commodity.getRating() + "</td>");
             row.append("<td>" + commodity.getInStock() + "</td>");
             row.append("<td>" + "<a href='/commodities/" + commodity.getId() + "'>Link</a>" + "</td>");
+            row.append("<td><form action='/removeFromBuyList' method='POST' >" +
+                    "<input id='form_commodity_id' type='hidden' name='commodityId' value='" + commodity.getId() +"'>" +
+                    "<input id='form_user_id' type='hidden' name='userId' value='" + user.getUsername() + "'>" +
+                    "<button type='submit'>Remove</button></form></td>");
 
             return row;
         };
