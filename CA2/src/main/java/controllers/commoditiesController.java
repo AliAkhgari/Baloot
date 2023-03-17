@@ -83,6 +83,7 @@ public class commoditiesController {
 
         Document doc = Jsoup.parse(htmlTemplate);
 
+        // commodity info
         Element idElement = doc.getElementById("id");
         Element nameElement = doc.getElementById("name");
         Element providerIdElement = doc.getElementById("providerId");
@@ -99,8 +100,13 @@ public class commoditiesController {
         rating.text("Rating: " + commodity.getRating());
         inStock.text("In Stock: " + commodity.getInStock());
 
+        // rate commodity
         doc.getElementById("rate_commodity_id").attr("value", String.valueOf(commodity.getId()));
 
+        // add to buy list
+        doc.getElementById("add_to_buy_list_commodity_id").attr("value", String.valueOf(commodity.getId()));
+
+        // vote comment
         Element table = doc.selectFirst("table");
         Function<Comment, Element> rowToHtml = comment -> {
             Element row = new Element("tr");

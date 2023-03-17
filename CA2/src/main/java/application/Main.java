@@ -31,6 +31,7 @@ public class Main {
                 new userController(baloot).getUser(app);
                 new voteCommentController(baloot).voteComment(app);
                 new rateCommodityController(baloot).rateCommodity(app);
+                new addToBuyListController(baloot).addToBuyList(app);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
