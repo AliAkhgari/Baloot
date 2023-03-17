@@ -2,6 +2,7 @@ package Integration;
 
 import application.Baloot;
 import application.Server;
+import controllers.AddToBuyListController;
 import entities.Commodity;
 import entities.User;
 import io.javalin.Javalin;
@@ -13,6 +14,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static Integration.Utils.*;
 import static defines.Endpoints.*;
@@ -46,8 +49,11 @@ public class GetBuyListTest {
 
     @Test
     public void testSuccess() throws Exception {
+        Commodity commodity1 = baloot.getCommodities().get(0);
+        User user1 = baloot.getUsers().get(0);
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" + getRandomUserId(baloot) + "/" + getRandomCommodityId(baloot) + "/1"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" + user1.getUsername() + "/" + commodity1.getId()))
                 .GET()
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -57,7 +63,7 @@ public class GetBuyListTest {
     @Test
     public void testInvalidUrl() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" + getRandomUserId(baloot) + "/1"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" + getRandomUserId(baloot)))
                 .GET()
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -67,7 +73,7 @@ public class GetBuyListTest {
     @Test
     public void testNotExistentUser() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" + getNotExistentUserId(baloot) + "/" + getRandomCommodityId(baloot) + "/1"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" + getNotExistentUserId(baloot) + "/" + getRandomCommodityId(baloot)))
                 .GET()
                 .build();
 
@@ -78,7 +84,7 @@ public class GetBuyListTest {
     @Test
     public void testNotExistentCommodity() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" + getRandomUserId(baloot) + "/" + getNotExistentCommodityId(baloot) + "/1"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" + getRandomUserId(baloot) + "/" + getNotExistentCommodityId(baloot)))
                 .GET()
                 .build();
 
@@ -87,51 +93,28 @@ public class GetBuyListTest {
     }
 
     @Test
-    public void testInvalidRateFormat() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" + getRandomUserId(baloot) + "/" + getRandomCommodityId(baloot) + "/1a"))
-                .GET()
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals("/403", response.headers().map().get("Location").get(0));
-    }
-
-    @Test
-    public void testInvalidRateRange() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" + getRandomUserId(baloot) + "/" + getRandomCommodityId(baloot) + "/-3"))
-                .GET()
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals("/403", response.headers().map().get("Location").get(0));
-    }
-
-    @Test
-    public void testRateCorrectness() throws Exception {
-        Commodity randomCommodity = baloot.getCommodityById(getRandomCommodityId(baloot));
-        float commodityRate = randomCommodity.getRating();
+    public void testBuyListCorrectness() throws Exception {
+        Commodity commodity1 = baloot.getCommodities().get(0);
+        Commodity commodity2 = baloot.getCommodities().get(1);
+        Commodity commodity3 = baloot.getCommodities().get(2);
 
         User user1 = baloot.getUsers().get(0);
-        User user2 = baloot.getUsers().get(1);
-        User user3 = baloot.getUsers().get(2);
 
         HttpRequest request1 = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" +
-                        user1.getUsername() + "/" + randomCommodity.getId() + "/6"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" +
+                        user1.getUsername() + "/" + commodity1.getId()))
                 .GET()
                 .build();
 
         HttpRequest request2 = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" +
-                        user2.getUsername() + "/" + randomCommodity.getId() + "/4"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" +
+                        user1.getUsername() + "/" + commodity2.getId()))
                 .GET()
                 .build();
 
         HttpRequest request3 = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" +
-                        user3.getUsername() + "/" + randomCommodity.getId() + "/9"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" +
+                        user1.getUsername() + "/" + commodity3.getId()))
                 .GET()
                 .build();
 
@@ -139,33 +122,34 @@ public class GetBuyListTest {
         client.send(request2, HttpResponse.BodyHandlers.ofString());
         client.send(request3, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals((commodityRate + 6 + 4 + 9) / 4, randomCommodity.getRating(), 0.001);
+        ArrayList<Commodity> expected = new ArrayList<>(Arrays.asList(commodity1, commodity2, commodity3));
+
+        assertEquals(expected, user1.getBuyList());
     }
 
     @Test
-    public void testRateCorrectnessWithChangingRate() throws Exception {
-        Commodity randomCommodity = baloot.getCommodityById(getRandomCommodityId(baloot));
-        float commodityRate = randomCommodity.getRating();
+    public void testRateCorrectnessWithRemovingItem() throws Exception {
+        Commodity commodity1 = baloot.getCommodities().get(0);
+        Commodity commodity2 = baloot.getCommodities().get(1);
+        Commodity commodity3 = baloot.getCommodities().get(2);
 
         User user1 = baloot.getUsers().get(0);
-        User user2 = baloot.getUsers().get(1);
-        User user3 = baloot.getUsers().get(2);
 
         HttpRequest request1 = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" +
-                        user1.getUsername() + "/" + randomCommodity.getId() + "/6"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" +
+                        user1.getUsername() + "/" + commodity1.getId()))
                 .GET()
                 .build();
 
         HttpRequest request2 = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" +
-                        user2.getUsername() + "/" + randomCommodity.getId() + "/4"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" +
+                        user1.getUsername() + "/" + commodity2.getId()))
                 .GET()
                 .build();
 
         HttpRequest request3 = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" +
-                        user3.getUsername() + "/" + randomCommodity.getId() + "/9"))
+                .uri(new URI(LOCALHOST_URL + ADD_TO_BUY_LIST_ENDPOINT + "/" +
+                        user1.getUsername() + "/" + commodity3.getId()))
                 .GET()
                 .build();
 
@@ -174,13 +158,14 @@ public class GetBuyListTest {
         client.send(request3, HttpResponse.BodyHandlers.ofString());
 
         HttpRequest request4 = HttpRequest.newBuilder()
-                .uri(new URI(LOCALHOST_URL + RATE_COMMODITY_ENDPOINT + "/" +
-                        user3.getUsername() + "/" + randomCommodity.getId() + "/1"))
+                .uri(new URI(LOCALHOST_URL + REMOVE_FROM_BUY_LIST_ENDPOINT + "/" +
+                        user1.getUsername() + "/" + commodity2.getId()))
                 .GET()
                 .build();
-
         client.send(request4, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals((commodityRate + 6 + 4 + 1) / 4, randomCommodity.getRating(), 0.001);
+        ArrayList<Commodity> expected = new ArrayList<>(Arrays.asList(commodity1, commodity3));
+
+        assertEquals(expected, user1.getBuyList());
     }
 }
