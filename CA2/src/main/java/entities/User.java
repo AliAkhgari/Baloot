@@ -1,5 +1,6 @@
 package entities;
 
+import Exceptions.AlreadyInBuyList;
 import Exceptions.CommodityIsNotInBuyList;
 import Exceptions.InsufficientCredit;
 
@@ -50,6 +51,7 @@ public class User {
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -102,8 +104,11 @@ public class User {
     }
 
     // todo: check if buy item or purchased item is already in the corresponding lists
-    public void addBuyItem(Commodity commodity) {
-        this.buyList.add(commodity);
+    public void addBuyItem(Commodity commodity) throws AlreadyInBuyList {
+        if (this.buyList.contains(commodity))
+            throw new AlreadyInBuyList();
+        else
+            this.buyList.add(commodity);
     }
 
     public void addPurchasedItem(Commodity commodity) {

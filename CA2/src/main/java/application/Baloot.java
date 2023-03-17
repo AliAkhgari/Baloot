@@ -28,7 +28,7 @@ public class Baloot {
         }
     }
 
-    public void addCommodityToUserBuyList(String userId, String commodityId) throws MissingUserId, MissingCommodityId, NotExistentUser, NotExistentCommodity {
+    public void addCommodityToUserBuyList(String userId, String commodityId) throws MissingUserId, MissingCommodityId, NotExistentUser, NotExistentCommodity, AlreadyInBuyList {
         if (userId == null)
             throw new MissingUserId();
         if (commodityId == null)
