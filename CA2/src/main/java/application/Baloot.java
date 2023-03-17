@@ -124,7 +124,7 @@ public class Baloot {
 
     public User getUserById(String userId) throws NotExistentUser {
         for (User user : database.getUsers())
-            if (user.getUserId().equals(userId))
+            if (user.getUsername().equals(userId))
                 return user;
 
         throw new NotExistentUser();

@@ -78,14 +78,14 @@ public class UserController {
         Element addressElement = doc.getElementById("address");
         Element creditElement = doc.getElementById("credit");
 
-        usernameElement.text("Username: " + user.getUserId());
+        usernameElement.text("Username: " + user.getUsername());
         emailElement.text("Email: " + user.getEmail());
         birthDateElement.text("Birth Date: " + user.getBirthDate());
         addressElement.text(user.getAddress());
         creditElement.text("Credit: " + user.getCredit());
 
         // add to purchased list
-        doc.getElementById("form_payment").attr("value", String.valueOf(user.getUserId()));
+        doc.getElementById("form_payment").attr("value", String.valueOf(user.getUsername()));
 
         Element buyListTable = doc.select("table").first();
         Function<Commodity, Element> buyListRowToHtml = commodity -> {
@@ -100,7 +100,7 @@ public class UserController {
             row.append("<td>" + "<a href='/commodities/" + commodity.getId() + "'>Link</a>" + "</td>");
             row.append("<td><form action='/removeFromBuyList' method='POST' >" +
                     "<input id='form_commodity_id' type='hidden' name='commodityId' value='" + commodity.getId() + "'>" +
-                    "<input id='form_user_id' type='hidden' name='userId' value='" + user.getUserId() + "'>" +
+                    "<input id='form_user_id' type='hidden' name='userId' value='" + user.getUsername() + "'>" +
                     "<button type='submit'>Remove</button></form></td>");
 
             return row;

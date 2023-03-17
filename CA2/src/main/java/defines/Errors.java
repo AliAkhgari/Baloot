@@ -15,5 +15,9 @@ public class Errors {
     public static final String INVALID_RATE_RANGE = "Rate value must be an integer between 1 and 10";
     public static final String INVALID_CREDIT_RANGE = "Credit value must be a positive float";
     public static final String INVALID_PRICE_RANGE = "Invalid Price Range.";
-
+    public static final String INSUFFICIENT_CREDIT = "Credit is insufficient.";
+    public static final String NOT_EXISTENT_COMMODITY = "Commodity does not exist.";
+    public static final String NOT_EXISTENT_COMMENT = "Comment does not exist.";
+    public static final String NOT_EXISTENT_PROVIDER = "Provider does not exist.";
+    public static final String NOT_EXISTENT_USER = "User does not exist.";
 }

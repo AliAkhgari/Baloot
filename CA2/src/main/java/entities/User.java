@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String userId;
+    private String username;
     private String password;
     private String email;
     private String birthDate;
@@ -20,8 +20,8 @@ public class User {
 
     private ArrayList<Commodity> purchasedList = new ArrayList<>();
 
-    public String getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
@@ -44,8 +44,8 @@ public class User {
         return credit;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
