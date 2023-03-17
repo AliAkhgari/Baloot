@@ -1,9 +1,6 @@
 package application;
 
-import controllers.commoditiesController;
-import controllers.providerController;
-import controllers.userController;
-import controllers.voteCommentController;
+import controllers.*;
 import database.Database;
 import entities.Comment;
 import entities.Commodity;
@@ -33,6 +30,7 @@ public class Main {
                 new providerController(baloot).getProvider(app);
                 new userController(baloot).getUser(app);
                 new voteCommentController(baloot).voteComment(app);
+                new rateCommodityController(baloot).rateCommodity(app);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

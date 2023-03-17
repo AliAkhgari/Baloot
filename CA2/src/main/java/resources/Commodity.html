@@ -25,16 +25,18 @@
       <li id="inStock">In Stock: 17</li>
     </ul>
 
-    <label>Your ID:</label>
-    <input type="text" name="user_id" value="" />
-    <br><br>
-    <form action="" method="POST">
+    <form action="/rateCommodity" method="POST">
+      <label>Your ID:</label>
+      <input type="text" name="user_id" value="" required/>
+      <input type="hidden" name="commodity_id" value="" id="rate_commodity_id">
       <label>Rate(between 1 and 10):</label>
       <input type="number" id="quantity" name="quantity" min="1" max="10">
       <button type="submit">Rate</button>
     </form>
     <br>
     <form action="" method="POST">
+      <label>Your ID:</label>
+      <input type="text" name="user_id" value="" required/>
       <button type="submit">Add to BuyList</button>
     </form>
     <br />
@@ -48,28 +50,7 @@
         <th></th>
         <th></th>
       </tr>
-      <tr>
-<!--        <td>user1</td>-->
-<!--        <td>Good</td>-->
-<!--        <td>2022-07-25</td>-->
-<!--        <td>-->
-<!--            <label for="">2</label>-->
-<!--            <input id="like_comment_id" type="hidden" name="comment_id" value=""/>-->
-<!--            <input id="like_vote" type="hidden" name="vote" value="1"/>-->
-<!--            <button type="submit">like</button>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--            <label for="">1</label>-->
-<!--            <input id="dislike_comment_id" type="hidden" name="comment_id" value=""/>-->
-<!--            <input id="dislike_vote" type="hidden" name="vote" value="-1"/>-->
-<!--            <button type="submit">dislike</button>-->
-<!--          <label>Your ID:</label>-->
 
-<!--        </td>-->
-
-
-
-      </tr>
 
     </table>
         <label>Your ID:</label>

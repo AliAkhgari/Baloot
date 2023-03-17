@@ -7,6 +7,7 @@ import io.javalin.Javalin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.FormElement;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,6 +99,7 @@ public class commoditiesController {
         rating.text("Rating: " + commodity.getRating());
         inStock.text("In Stock: " + commodity.getInStock());
 
+        doc.getElementById("rate_commodity_id").attr("value", String.valueOf(commodity.getId()));
 
         Element table = doc.selectFirst("table");
         Function<Comment, Element> rowToHtml = comment -> {
