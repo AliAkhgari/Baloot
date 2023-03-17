@@ -453,7 +453,7 @@ public class Baloot {
     // todo: set comments for commodity when reading from database
     public ArrayList<Comment> getCommentsForCommodity(int commodityId) {
         ArrayList<Comment> comments = new ArrayList<>();
-        for (Comment comment: database.getComments())
+        for (Comment comment : database.getComments())
             if (comment.getCommodityId() == commodityId)
                 comments.add(comment);
 
@@ -461,14 +461,28 @@ public class Baloot {
     }
 
     public Comment getCommentById(int commentId) throws ExceptionHandler {
-        for (Comment comment: database.getComments())
+        for (Comment comment : database.getComments())
             if (comment.getId() == commentId)
                 return comment;
 
         throw new ExceptionHandler(ERROR_NOT_EXISTENT_COMMENT);
     }
 
-    public void likeComment(int commentId) {
+//    public void likeComment(int commentId) {
+//
+//    }
 
+    public ArrayList<Commodity> filterCommoditiesByPrice(float start_price, float end_price) throws ExceptionHandler {
+        if (start_price > end_price || end_price < 0)
+            throw new ExceptionHandler(ERROR_INVALID_PRICE_RANGE);
+
+        System.out.println("startttt : " + start_price);
+        System.out.println("endddddd : " + end_price);
+        ArrayList<Commodity> result = new ArrayList<>();
+        for (Commodity commodity : database.getCommodities())
+            if (commodity.getPrice() >= start_price && commodity.getPrice() <= end_price)
+                result.add(commodity);
+
+        return result;
     }
 }

@@ -142,4 +142,23 @@ public class commoditiesController {
 
         return doc.toString();
     }
+
+    public void searchCommoditiesBasedOnPrice(Javalin app) {
+        app.get("/commodities/search/{start_price}/{end_price}", ctx -> {
+            float start_price = Float.parseFloat(ctx.pathParam("start_price"));
+            float end_price = Float.parseFloat(ctx.pathParam("end_price"));
+            try {
+                ArrayList<Commodity> commodities = baloot.filterCommoditiesByPrice(start_price, end_price);
+                System.out.println("lennnn : " + commodities.size());
+                String commoditiesHtml = generateCommoditiesTable(commodities);
+                ctx.contentType("text/html").result(commoditiesHtml);
+            } catch (Exception e) {
+                ctx.redirect("/403");
+//                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+//                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+//                Document doc = Jsoup.parse(htmlTemplate);
+//                ctx.contentType("text/html").result(doc.toString());
+            }
+        });
+    }
 }

@@ -27,6 +27,7 @@ public class Main {
             try {
                 new commoditiesController(baloot).getCommodities(app);
                 new commoditiesController(baloot).getCommodity(app);
+                new commoditiesController(baloot).searchCommoditiesBasedOnPrice(app);
                 new providerController(baloot).getProvider(app);
                 new userController(baloot).getUser(app);
                 new userController(baloot).increaseUserCredit(app);

@@ -23,6 +23,8 @@ public class defines {
     public static final String ERROR_COMMODITY_IS_ALREADY_IN_BUY_LIST = "Commodity Is Already In The Buy List.";
     public static final String ERROR_COMMODITY_IS_NOT_IN_BUY_LIST = "Commodity is not in the buy list.";
     public static final String ERROR_COMMODITY_IS_NOT_IN_STOCK = "Commodity is not in stock.";
+
+    public static final String ERROR_INVALID_PRICE_RANGE = "Invalid Price Range.";
     public static final String ADDED_SUCCESSFULLY_RESPONSE = "%s Added Successfully!";
     public static final String USER_DATA_UPDATED = "User %s data Updated Successfully!";
     public static final String RATE_TO_COMMODITY_RESPONSE = "The rate was successfully added to the system.";
