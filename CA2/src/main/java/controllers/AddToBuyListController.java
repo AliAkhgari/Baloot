@@ -5,10 +5,6 @@ import entities.Commodity;
 import entities.ExceptionHandler;
 import entities.User;
 import io.javalin.Javalin;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.File;
 
 public class AddToBuyListController {
     private final Baloot baloot;
@@ -43,7 +39,7 @@ public class AddToBuyListController {
         app.get("/addToBuyList/{user_id}/{commodity_id}", ctx -> {
             String commodityId = ctx.pathParam("commodity_id");
             String userId = ctx.pathParam("user_id");
-            
+
             try {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 User user = baloot.getUserById(userId);

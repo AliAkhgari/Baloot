@@ -5,10 +5,6 @@ import entities.Comment;
 import entities.ExceptionHandler;
 import entities.User;
 import io.javalin.Javalin;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.File;
 
 // todo: change all not found file to what default /404 does!!
 

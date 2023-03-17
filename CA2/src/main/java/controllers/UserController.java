@@ -1,7 +1,9 @@
 package controllers;
 
 import application.Baloot;
-import entities.*;
+import entities.Commodity;
+import entities.ExceptionHandler;
+import entities.User;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

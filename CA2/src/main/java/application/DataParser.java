@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import database.Database;
 import entities.Comment;
-import entities.User;
-import entities.Provider;
 import entities.Commodity;
+import entities.Provider;
+import entities.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static defines.defines.*;
+import static defines.defines.ERROR_COMMODITY_IS_NOT_IN_BUY_LIST;
+import static defines.defines.ERROR_NOT_ENOUGH_CREDIT;
 
 public class User {
     private String username;
