@@ -1,5 +1,7 @@
 package controllers;
 
+import Exceptions.InvalidPriceRange;
+import Exceptions.NotExistentCommodity;
 import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+// todo: add html file paths to define
 public class CommoditiesController {
     private static final String COMMODITIES_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Commodities.html";
     private static final String COMMODITY_HTML_TEMPLATE_FILE = "CA2/src/main/java/resources/Commodity.html";
@@ -32,12 +35,12 @@ public class CommoditiesController {
 
     public void getCommodity(Javalin app) {
         app.get("/commodities/{commodity_id}", ctx -> {
-            Commodity commodity;
+            String commodityId = ctx.pathParam("commodity_id");
             try {
-                commodity = baloot.getCommodityById(Integer.parseInt(ctx.pathParam("commodity_id")));
+                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
                 String commodityPageHtml = generateCommodityPage(commodity);
                 ctx.contentType("text/html").result(commodityPageHtml);
-            } catch (Exception e) {
+            } catch (NotExistentCommodity e) {
                 ctx.redirect("/404");
             }
         });
@@ -111,7 +114,7 @@ public class CommoditiesController {
             Element likeTd = new Element("td");
             Element likeLabel = new Element("label").attr("for", "like_comment_id").text(String.valueOf(comment.getLike()));
             Element likeCommentIdInput = new Element("input").attr("id", "like_comment_id").attr("type", "hidden").attr("name", "comment_id").attr("value", String.valueOf(comment.getId()));
-            Element likeButton = new Element("button").attr("type", "submit").attr("name", "vote").attr("value", "like").text("like");
+            Element likeButton = new Element("button").attr("type", "submit").attr("name", "vote").attr("value", "1").text("like");
             likeTd.appendChild(likeLabel);
             likeTd.appendChild(likeCommentIdInput);
             likeTd.appendChild(likeButton);
@@ -120,7 +123,7 @@ public class CommoditiesController {
             Element dislikeTd = new Element("td");
             Element dislikeLabel = new Element("label").attr("for", "dislike_comment_id").text(String.valueOf(comment.getDislike()));
             Element dislikeCommentIdInput = new Element("input").attr("id", "dislike_comment_id").attr("type", "hidden").attr("name", "comment_id").attr("value", String.valueOf(comment.getId()));
-            Element dislikeButton = new Element("button").attr("type", "submit").attr("name", "vote").attr("value", "dislike").text("dislike");
+            Element dislikeButton = new Element("button").attr("type", "submit").attr("name", "vote").attr("value", "-1").text("dislike");
             dislikeTd.appendChild(dislikeLabel);
             dislikeTd.appendChild(dislikeCommentIdInput);
             dislikeTd.appendChild(dislikeButton);
@@ -145,7 +148,7 @@ public class CommoditiesController {
                 ArrayList<Commodity> commodities = baloot.filterCommoditiesByPrice(start_price, end_price);
                 String commoditiesHtml = generateCommoditiesTable(commodities);
                 ctx.contentType("text/html").result(commoditiesHtml);
-            } catch (Exception e) {
+            } catch (InvalidPriceRange e) {
                 ctx.redirect("/403");
             }
         });

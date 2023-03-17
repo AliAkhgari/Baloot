@@ -1,5 +1,6 @@
 package controllers;
 
+import Exceptions.NotExistentProvider;
 import application.Baloot;
 import entities.Commodity;
 import entities.ExceptionHandler;
@@ -23,11 +24,12 @@ public class ProviderController {
 
     public void getProvider(Javalin app) {
         app.get("/providers/{provider_id}", ctx -> {
+            String providerId = ctx.pathParam("provider_id");
             try {
-                Provider provider = baloot.getProviderById(Integer.parseInt(ctx.pathParam("provider_id")));
+                Provider provider = baloot.getProviderById(Integer.parseInt(providerId));
                 String providerHtml = generateProviderHtml(provider);
                 ctx.contentType("text/html").result(providerHtml);
-            } catch (ExceptionHandler e) {
+            } catch (NotExistentProvider e) {
                 ctx.redirect("/404");
             }
         });

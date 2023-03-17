@@ -1,11 +1,11 @@
 package entities;
 
+import Exceptions.CommodityIsNotInBuyList;
+import Exceptions.InsufficientCredit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static defines.defines.ERROR_COMMODITY_IS_NOT_IN_BUY_LIST;
-import static defines.defines.ERROR_NOT_ENOUGH_CREDIT;
 
 public class User {
     private String username;
@@ -14,7 +14,7 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
-    private Map<Integer,Integer> commodities_rates = new HashMap<Integer,Integer>();
+    private Map<Integer, Integer> commodities_rates = new HashMap<Integer, Integer>();
     private ArrayList<Commodity> buy_list = new ArrayList<Commodity>();
 
     private ArrayList<Commodity> purchased_list = new ArrayList<>();
@@ -72,21 +72,22 @@ public class User {
     }
 
     // todo: better name for increase and decrease
-    public void increaseCredit(int amount) {
+    public void addCredit(float amount) {
         this.credit += amount;
     }
 
-    public void decreaseCredit(int amount) throws ExceptionHandler {
+    public void decreaseCredit(int amount) throws InsufficientCredit {
         if (amount > this.credit)
-            throw new ExceptionHandler(ERROR_NOT_ENOUGH_CREDIT);
+            throw new InsufficientCredit();
 
         this.credit -= amount;
     }
+
     public void setBuy_list(ArrayList<Commodity> buy_list) {
         this.buy_list = buy_list;
     }
 
-    public Map<Integer,Integer> getCommodities_rates() {
+    public Map<Integer, Integer> getCommodities_rates() {
         return this.commodities_rates;
     }
 
@@ -111,10 +112,10 @@ public class User {
         this.purchased_list.add(commodity);
     }
 
-    public void remove_item_from_buy_list(Commodity commodity) throws ExceptionHandler {
+    public void remove_item_from_buy_list(Commodity commodity) throws CommodityIsNotInBuyList {
         if (this.buy_list.contains(commodity))
             this.buy_list.remove(commodity);
         else
-            throw new ExceptionHandler(ERROR_COMMODITY_IS_NOT_IN_BUY_LIST);
+            throw new CommodityIsNotInBuyList();
     }
 }

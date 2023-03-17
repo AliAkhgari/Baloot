@@ -14,8 +14,7 @@ public class Main {
 
         Javalin app = Javalin.create().start(SERVER_PORT);
 
-        // todo: better name for setEntities
-        baloot.setEntities();
+        baloot.fetchAndStoreDataFromAPI();
 
         CommoditiesController commoditiesController = new CommoditiesController(baloot);
         ProviderController providerController = new ProviderController(baloot);

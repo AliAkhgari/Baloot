@@ -1,5 +1,6 @@
 package controllers;
 
+import Exceptions.*;
 import application.Baloot;
 import entities.Commodity;
 import entities.ExceptionHandler;
@@ -15,18 +16,15 @@ public class RemoveFromBuyListController {
 
     public void removeFromBuyList(Javalin app) {
         app.post("/removeFromBuyList", ctx -> {
-            String commodityId = ctx.formParam("commodityId");
             String userId = ctx.formParam("userId");
-
-            if (commodityId == null)
-                ctx.redirect("/403");
+            String commodityId = ctx.formParam("commodityId");
 
             try {
-                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
-                User user = baloot.getUserById(userId);
-                user.remove_item_from_buy_list(commodity);
+                baloot.removeCommodityFromUserBuyList(userId, commodityId);
                 ctx.redirect("/200");
-            } catch (ExceptionHandler e) {
+            } catch (MissingUserId | MissingCommodityId e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser | NotExistentCommodity | CommodityIsNotInBuyList e2) {
                 ctx.redirect("/404");
             }
         });
@@ -34,19 +32,17 @@ public class RemoveFromBuyListController {
 
     public void showRemoveFromBuyListPage(Javalin app) {
         app.get("/removeFromBuyList/{user_id}/{commodity_id}", ctx -> {
-            String commodityId = ctx.pathParam("commodity_id");
             String userId = ctx.pathParam("user_id");
+            String commodityId = ctx.pathParam("commodity_id");
 
             try {
-                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
-                User user = baloot.getUserById(userId);
-                user.remove_item_from_buy_list(commodity);
+                baloot.removeCommodityFromUserBuyList(userId, commodityId);
                 ctx.redirect("/200");
-
-            } catch (ExceptionHandler e) {
+            } catch (MissingUserId | MissingCommodityId e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser | NotExistentCommodity | CommodityIsNotInBuyList e2) {
                 ctx.redirect("/404");
             }
-
         });
     }
 }

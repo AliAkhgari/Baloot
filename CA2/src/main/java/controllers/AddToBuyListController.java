@@ -1,33 +1,30 @@
 package controllers;
 
+import Exceptions.MissingCommodityId;
+import Exceptions.MissingUserId;
+import Exceptions.NotExistentCommodity;
+import Exceptions.NotExistentUser;
 import application.Baloot;
-import entities.Commodity;
-import entities.ExceptionHandler;
-import entities.User;
+
 import io.javalin.Javalin;
 
 public class AddToBuyListController {
     private final Baloot baloot;
-
     public AddToBuyListController(Baloot baloot) {
         this.baloot = baloot;
     }
 
     public void addToBuyList(Javalin app) {
         app.post("/addToBuyList", ctx -> {
-            String commodityId = ctx.formParam("commodity_id");
             String userId = ctx.formParam("user_id");
-
-            if ((commodityId == null) || (userId == null))
-                ctx.redirect("/403");
+            String commodityId = ctx.formParam("commodity_id");
 
             try {
-                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
-                User user = baloot.getUserById(userId);
-                user.add_buy_item(commodity);
+                baloot.addCommodityToUserBuyList(userId, commodityId);
                 ctx.redirect("/200");
-
-            } catch (ExceptionHandler e) {
+            } catch (MissingCommodityId | MissingUserId e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser | NotExistentCommodity e2) {
                 ctx.redirect("/404");
             }
 
@@ -37,16 +34,15 @@ public class AddToBuyListController {
     // fixme: Is it allowed to keep duplicate commodities in buy list?
     public void showAddToBuyListPage(Javalin app) {
         app.get("/addToBuyList/{user_id}/{commodity_id}", ctx -> {
-            String commodityId = ctx.pathParam("commodity_id");
             String userId = ctx.pathParam("user_id");
+            String commodityId = ctx.pathParam("commodity_id");
 
             try {
-                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
-                User user = baloot.getUserById(userId);
-                user.add_buy_item(commodity);
+                baloot.addCommodityToUserBuyList(userId, commodityId);
                 ctx.redirect("/200");
-
-            } catch (ExceptionHandler e) {
+            } catch (MissingCommodityId | MissingUserId e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser | NotExistentCommodity e2) {
                 ctx.redirect("/404");
             }
 

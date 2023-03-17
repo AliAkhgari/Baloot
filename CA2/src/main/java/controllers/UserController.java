@@ -1,5 +1,6 @@
 package controllers;
 
+import Exceptions.*;
 import application.Baloot;
 import entities.Commodity;
 import entities.ExceptionHandler;
@@ -29,7 +30,7 @@ public class UserController {
                 User user = baloot.getUserById(ctx.pathParam("user_id"));
                 String userHtml = generateUserHtml(user);
                 ctx.contentType("text/html").result(userHtml);
-            } catch (ExceptionHandler e) {
+            } catch (NotExistentUser e) {
                 ctx.redirect("/404");
             }
         });
@@ -38,16 +39,14 @@ public class UserController {
     public void increaseUserCredit(Javalin app) {
         app.get("/addCredit/{user_id}/{credit}", ctx -> {
             String user_id = ctx.pathParam("user_id");
-            int credit = Integer.parseInt(ctx.pathParam("credit"));
-
-            if (credit < 0)
-                ctx.redirect("/403");
+            String credit = ctx.pathParam("credit");
 
             try {
-                User user = baloot.getUserById(user_id);
-                user.increaseCredit(credit);
+                baloot.addCreditToUser(user_id, credit);
                 ctx.redirect("/200");
-            } catch (ExceptionHandler e) {
+            } catch (MissingUserId | MissingCreditValue | InvalidCreditFormat | InvalidCreditRange e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser e2) {
                 ctx.redirect("/404");
             }
         });
@@ -55,17 +54,14 @@ public class UserController {
 
     public void addToPurchasedList(Javalin app) {
         app.post("/addToPurchasedList", ctx -> {
-            String user_id = ctx.formParam("userId");
+            String userId = ctx.formParam("userId");
 
             try {
-                User user = baloot.getUserById(user_id);
-                for (Commodity commodity : user.getBuy_list()) {
-                    user.add_purchased_item(commodity);
-                    user.decreaseCredit(commodity.getPrice());
-                }
-                user.setBuy_list(new ArrayList<>());
+                baloot.moveCommoditiesFromBuyListToPurchasedList(userId);
                 ctx.redirect("/200");
-            } catch (ExceptionHandler e) {
+            } catch (MissingUserId | InsufficientCredit e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser e2) {
                 ctx.redirect("/404");
             }
         });

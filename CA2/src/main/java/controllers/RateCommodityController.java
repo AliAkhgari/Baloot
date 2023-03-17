@@ -1,5 +1,6 @@
 package controllers;
 
+import Exceptions.*;
 import application.Baloot;
 import entities.Commodity;
 import entities.ExceptionHandler;
@@ -16,50 +17,35 @@ public class RateCommodityController {
 
     public void rateCommodity(Javalin app) {
         app.post("/rateCommodity", ctx -> {
-            String commodityId = ctx.formParam("commodity_id");
             String userId = ctx.formParam("user_id");
-            String rate_str = ctx.formParam("quantity");
-
-            if ((commodityId == null) || (userId == null) || (rate_str == null))
-                ctx.redirect("/403");
-
-            int rate = Integer.parseInt(rate_str);
-            if (rate > 10 || rate < 0)
-                ctx.redirect("/403");
+            String commodityId = ctx.formParam("commodity_id");
+            String rate = ctx.formParam("quantity");
 
             try {
-                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
-                User user = baloot.getUserById(userId);
-                commodity.add_rate(userId, rate);
+                baloot.rateCommodity(userId, commodityId, rate);
                 ctx.redirect("/200");
-
-            } catch (ExceptionHandler e) {
+            } catch (MissingUserId | MissingCommodityId | InvalidRateFormat | InvalidRateRange e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser | NotExistentCommodity e2) {
                 ctx.redirect("/404");
             }
-
         });
     }
 
     public void showRateCommodityPage(Javalin app) {
         app.get("/rateCommodity/{user_id}/{commodity_id}/{rate}", ctx -> {
-            String commodityId = ctx.pathParam("commodity_id");
             String userId = ctx.pathParam("user_id");
-            String rate_str = ctx.pathParam("rate");
-
-            int rate = Integer.parseInt(rate_str);
-            if (rate > 10 || rate < 0)
-                ctx.redirect("/403");
+            String commodityId = ctx.pathParam("commodity_id");
+            String rate = ctx.pathParam("rate");
 
             try {
-                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
-                User user = baloot.getUserById(userId);
-                commodity.add_rate(userId, rate);
+                baloot.rateCommodity(userId, commodityId, rate);
                 ctx.redirect("/200");
-
-            } catch (ExceptionHandler e) {
+            } catch (MissingUserId | MissingCommodityId | InvalidRateFormat | InvalidRateRange e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser | NotExistentCommodity e2) {
                 ctx.redirect("/404");
             }
-
         });
     }
 
