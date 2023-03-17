@@ -27,6 +27,14 @@
                 <button type="submit">Payment</button>
             </form>
         </li>
+        <li>
+            <form action="/addCredit" method="POST" >
+                <label>Add Credit</label>
+                <input id="form_add_credit" type="hidden" name="userId" value="">
+                <input type="number" id="add_credit" name="credit_value" min="0">
+                <button type="submit">Add</button>
+            </form>
+        </li>
     </ul>
     <table>
         <caption>

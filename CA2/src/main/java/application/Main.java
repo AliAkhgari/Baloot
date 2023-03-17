@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import static defines.Endpoints.SERVER_PORT;
 
+// todo: remove prints
 
 public class Main {
     public static void main(String[] args) {
@@ -37,6 +38,7 @@ public class Main {
                 userController.getUser(app);
                 userController.increaseUserCredit(app);
                 userController.addToPurchasedList(app);
+                userController.increaseUserCreditPost(app);
 
                 voteCommentController.voteComment(app);
                 voteCommentController.showVoteCommentPage(app);

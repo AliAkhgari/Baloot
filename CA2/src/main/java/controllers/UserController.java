@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 import static defines.HtmlTemplates.USER_HTML_TEMPLATE_FILE;
 
-
+// todo: better naming for get and post
 public class UserController {
     private final Baloot baloot;
 
@@ -39,6 +39,22 @@ public class UserController {
         app.get("/addCredit/{user_id}/{credit}", ctx -> {
             String user_id = ctx.pathParam("user_id");
             String credit = ctx.pathParam("credit");
+
+            try {
+                baloot.addCreditToUser(user_id, credit);
+                ctx.redirect("/200");
+            } catch (MissingUserId | MissingCreditValue | InvalidCreditFormat | InvalidCreditRange e) {
+                ctx.redirect("/403");
+            } catch (NotExistentUser e2) {
+                ctx.redirect("/404");
+            }
+        });
+    }
+
+    public void increaseUserCreditPost(Javalin app) {
+        app.post("/addCredit", ctx -> {
+            String user_id = ctx.formParam("userId");
+            String credit = ctx.formParam("credit_value");
 
             try {
                 baloot.addCreditToUser(user_id, credit);
@@ -86,6 +102,9 @@ public class UserController {
 
         // add to purchased list
         doc.getElementById("form_payment").attr("value", String.valueOf(user.getUsername()));
+
+        // add credit
+        doc.getElementById("form_add_credit").attr("value", String.valueOf(user.getUsername()));
 
         Element buyListTable = doc.select("table").first();
         Function<Commodity, Element> buyListRowToHtml = commodity -> {
