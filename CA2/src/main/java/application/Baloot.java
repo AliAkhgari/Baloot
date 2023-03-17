@@ -176,19 +176,26 @@ public class Baloot {
         throw new NotExistentComment();
     }
 
-    public ArrayList<Commodity> filterCommoditiesByPrice(float startPrice, float endPrice) throws InvalidPriceRange {
-        if (startPrice > endPrice || endPrice < 0)
+    public ArrayList<Commodity> filterCommoditiesByPrice(String startPrice, String endPrice) throws InvalidPriceRange, MissingStartOrEndPrice {
+        if (startPrice == null || endPrice == null)
+            throw new MissingStartOrEndPrice();
+        float startPriceInt = Float.parseFloat(startPrice);
+        float endPriceInt = Float.parseFloat(endPrice);
+        if (startPriceInt > endPriceInt || endPriceInt < 0)
             throw new InvalidPriceRange();
 
         ArrayList<Commodity> result = new ArrayList<>();
         for (Commodity commodity : database.getCommodities())
-            if (commodity.getPrice() >= startPrice && commodity.getPrice() <= endPrice)
+            if (commodity.getPrice() >= startPriceInt && commodity.getPrice() <= endPriceInt)
                 result.add(commodity);
 
         return result;
     }
 
-    public ArrayList<Commodity> filterCommoditiesByCategory(String category) {
+    public ArrayList<Commodity> filterCommoditiesByCategory(String category) throws MissingCategory {
+        if (category == null)
+            throw new MissingCategory();
+
         ArrayList<Commodity> result = new ArrayList<>();
         for (Commodity commodity : database.getCommodities())
             if (commodity.getCategories().contains(category))

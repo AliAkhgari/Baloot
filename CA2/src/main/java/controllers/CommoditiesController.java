@@ -1,6 +1,7 @@
 package controllers;
 
 import Exceptions.InvalidPriceRange;
+import Exceptions.MissingCategory;
 import Exceptions.NotExistentCommodity;
 import application.Baloot;
 import entities.Comment;
@@ -143,10 +144,12 @@ public class CommoditiesController {
 
     public void searchCommoditiesBasedOnPrice(Javalin app) {
         app.get("/commodities/search/{start_price}/{end_price}", ctx -> {
-            float start_price = Float.parseFloat(ctx.pathParam("start_price"));
-            float end_price = Float.parseFloat(ctx.pathParam("end_price"));
+            String start_price = ctx.pathParam("start_price");
+            String end_price = ctx.pathParam("end_price");
+            System.out.println("startttttt : " + start_price);
             try {
                 ArrayList<Commodity> commodities = baloot.filterCommoditiesByPrice(start_price, end_price);
+                System.out.println("lennnnnnn : " + commodities.size());
                 String commoditiesHtml = generateCommoditiesTable(commodities);
                 ctx.contentType("text/html").result(commoditiesHtml);
             } catch (InvalidPriceRange e) {
@@ -159,9 +162,14 @@ public class CommoditiesController {
         app.get("/commodities/search/{categories}", ctx -> {
             String category = ctx.pathParam("categories");
 
-            ArrayList<Commodity> commodities = baloot.filterCommoditiesByCategory(category);
-            String commoditiesHtml = generateCommoditiesTable(commodities);
-            ctx.contentType("text/html").result(commoditiesHtml);
+            try {
+                ArrayList<Commodity> commodities = baloot.filterCommoditiesByCategory(category);
+                String commoditiesHtml = generateCommoditiesTable(commodities);
+                ctx.contentType("text/html").result(commoditiesHtml);
+            } catch (MissingCategory e) {
+                ctx.redirect("/403");
+            }
+
         });
     }
 }
