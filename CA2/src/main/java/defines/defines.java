@@ -18,8 +18,8 @@ public class defines {
     public static final String ERROR_NOT_EXISTENT_COMMODITY = "Commodity Does Not Exist.";
     public static final String ERROR_NOT_EXISTENT_COMMENT = "Comment Does Not Exist.";
     public static final String ERROR_NOT_ENOUGH_CREDIT = "Insufficient Credit.";
-
     public static final String ERROR_INVALID_SCORE_RANGE = "Score Should be Between 1 to 10.";
+    public static final String ERROR_INVALID_COMMENT_VOTE = "Vote Is Not Valid.";
     public static final String ERROR_COMMODITY_IS_ALREADY_IN_BUY_LIST = "Commodity Is Already In The Buy List.";
     public static final String ERROR_COMMODITY_IS_NOT_IN_BUY_LIST = "Commodity is not in the buy list.";
     public static final String ERROR_COMMODITY_IS_NOT_IN_STOCK = "Commodity is not in stock.";

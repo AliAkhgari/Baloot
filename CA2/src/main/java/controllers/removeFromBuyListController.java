@@ -19,13 +19,33 @@ public class removeFromBuyListController {
         this.baloot = baloot;
     }
 
-    public void removeFromBuyList(Javalin app) throws IOException {
+    public void removeFromBuyList(Javalin app) {
         app.post("/removeFromBuyList", ctx -> {
             String commodityId = ctx.formParam("commodityId");
             String userId = ctx.formParam("userId");
 
             if (commodityId == null)
                 ctx.redirect("/403");
+
+            try {
+                Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));
+                User user = baloot.getUserById(userId);
+                user.remove_item_from_buy_list(commodity);
+
+            } catch (ExceptionHandler e) {
+                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+                Document doc = Jsoup.parse(htmlTemplate);
+                ctx.contentType("text/html").result(doc.toString());
+            }
+
+        });
+    }
+
+    public void showRemoveFromBuyListPage(Javalin app) {
+        app.get("/removeFromBuyList/{user_id}/{commodity_id}", ctx -> {
+            String commodityId = ctx.pathParam("commodity_id");
+            String userId = ctx.pathParam("user_id");
 
             try {
                 Commodity commodity = baloot.getCommodityById(Integer.parseInt(commodityId));

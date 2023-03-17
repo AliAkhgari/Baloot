@@ -15,6 +15,9 @@ import java.util.Map;
 import static defines.defines.*;
 
 // todo: refactor test class names
+// todo: naming consistency!!!
+// todo: html files refactoring
+// todo: ok 200 pageeeee
 public class Baloot {
     private final ObjectMapper objectMapper = new ObjectMapper();
     Database database = new Database();

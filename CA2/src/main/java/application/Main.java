@@ -32,9 +32,13 @@ public class Main {
                 new userController(baloot).increaseUserCredit(app);
                 new userController(baloot).addToPurchasedList(app);
                 new voteCommentController(baloot).voteComment(app);
+                new voteCommentController(baloot).showVoteCommentPage(app);
                 new rateCommodityController(baloot).rateCommodity(app);
+                new rateCommodityController(baloot).showRateCommodityPage(app);
                 new addToBuyListController(baloot).addToBuyList(app);
+                new addToBuyListController(baloot).showAddToBuyListPage(app);
                 new removeFromBuyListController(baloot).removeFromBuyList(app);
+                new removeFromBuyListController(baloot).showRemoveFromBuyListPage(app);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

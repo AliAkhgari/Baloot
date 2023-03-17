@@ -23,7 +23,7 @@ public class voteCommentController {
         this.baloot = baloot;
     }
 
-    public void voteComment(Javalin app) throws IOException {
+    public void voteComment(Javalin app) {
         app.post("/voteComment", ctx -> {
             String commentId = ctx.formParam("comment_id");
             String userId = ctx.formParam("user_id");
@@ -39,6 +39,34 @@ public class voteCommentController {
                     comment.addUserVote(userId, "dislike");
                 else if (vote.equals("like"))
                     comment.addUserVote(userId, "like");
+
+            } catch (ExceptionHandler e) {
+                File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);
+                String htmlTemplate = Jsoup.parse(notFoundHtmlFile, "UTF-8").toString();
+                Document doc = Jsoup.parse(htmlTemplate);
+                ctx.contentType("text/html").result(doc.toString());
+            }
+
+        });
+    }
+
+    public void showVoteCommentPage(Javalin app) {
+        app.get("/voteComment/{user_id}/{comment_id}/{vote}", ctx -> {
+            String commentId = ctx.pathParam("comment_id");
+            String userId = ctx.pathParam("user_id");
+            String vote = ctx.pathParam("vote");
+
+            try {
+                Comment comment = baloot.getCommentById(Integer.parseInt(commentId));
+                User user = baloot.getUserById(userId);
+                if (vote.equals("-1"))
+                    comment.addUserVote(userId, "dislike");
+                else if (vote.equals("1"))
+                    comment.addUserVote(userId, "like");
+                else if (vote.equals("0"))
+                    comment.addUserVote(userId, "neutral");
+                else
+                    ctx.redirect("/403");
 
             } catch (ExceptionHandler e) {
                 File notFoundHtmlFile = new File(NOT_FOUND_HTML_TEMPLATE_FILE);

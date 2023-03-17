@@ -3,6 +3,8 @@ package entities;
 import java.util.HashMap;
 import java.util.Map;
 
+import static defines.defines.ERROR_INVALID_COMMENT_VOTE;
+
 public class Comment {
 
     int id;
@@ -13,6 +15,7 @@ public class Comment {
 
     private int like;
     private int dislike;
+    private int neutral;
 
     private Map<String, String> userVote = new HashMap<>();
 
@@ -75,11 +78,15 @@ public class Comment {
 
         this.like = 0;
         this.dislike = 0;
+        this.neutral = 0;
+
         for (String key : userVote.keySet()) {
             if (userVote.get(key).equals("like"))
                 this.like += 1;
             else if (userVote.get(key).equals("dislike"))
                 this.dislike += 1;
+            else if (userVote.get(key).equals("neutral"))
+                this.neutral += 1;
         }
     }
 

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static defines.defines.ERROR_NOT_ENOUGH_CREDIT;
-import static defines.defines.ERROR_NOT_EXISTENT_COMMENT;
+import static defines.defines.*;
 
 public class User {
     private String username;
@@ -111,7 +110,10 @@ public class User {
         this.purchased_list.add(commodity);
     }
 
-    public void remove_item_from_buy_list(Commodity commodity) {
-        this.buy_list.remove(commodity);
+    public void remove_item_from_buy_list(Commodity commodity) throws ExceptionHandler {
+        if (this.buy_list.contains(commodity))
+            this.buy_list.remove(commodity);
+        else
+            throw new ExceptionHandler(ERROR_COMMODITY_IS_NOT_IN_BUY_LIST);
     }
 }
