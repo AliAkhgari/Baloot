@@ -1,10 +1,7 @@
 package controllers;
 
 import application.Baloot;
-import entities.Commodity;
-import entities.ExceptionHandler;
-import entities.Provider;
-import entities.User;
+import entities.*;
 import io.javalin.Javalin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -82,6 +79,46 @@ public class userController {
         birthDateElement.text("Birth Date: " + user.getBirthDate());
         addressElement.text(user.getAddress());
         creditElement.text("Credit: " + user.getCredit());
+
+        Element buyListTable = doc.select("table").first();
+        Function<Commodity, Element> buyListRowToHtml = commodity -> {
+            Element row = new Element("tr");
+            row.append("<td>" + commodity.getId() + "</td>");
+            row.append("<td>" + commodity.getName() + "</td>");
+            row.append("<td>" + commodity.getProviderId() + "</td>");
+            row.append("<td>" + commodity.getPrice() + "</td>");
+            row.append("<td>" + String.join(",", commodity.getCategories()) + "</td>");
+            row.append("<td>" + commodity.getRating() + "</td>");
+            row.append("<td>" + commodity.getInStock() + "</td>");
+            row.append("<td>" + "<a href='/commodities/" + commodity.getId() + "'>Link</a>" + "</td>");
+
+            return row;
+        };
+
+        for (Commodity commodity : user.getBuy_list()) {
+            Element row = buyListRowToHtml.apply(commodity);
+            buyListTable.appendChild(row);
+        }
+
+        Element purchasedListTable = doc.select("table").first();
+        Function<Commodity, Element> purchasedListRowToHtml = commodity -> {
+            Element row = new Element("tr");
+            row.append("<td>" + commodity.getId() + "</td>");
+            row.append("<td>" + commodity.getName() + "</td>");
+            row.append("<td>" + commodity.getProviderId() + "</td>");
+            row.append("<td>" + commodity.getPrice() + "</td>");
+            row.append("<td>" + String.join(",", commodity.getCategories()) + "</td>");
+            row.append("<td>" + commodity.getRating() + "</td>");
+            row.append("<td>" + commodity.getInStock() + "</td>");
+            row.append("<td>" + "<a href='/commodities/" + commodity.getId() + "'>Link</a>" + "</td>");
+
+            return row;
+        };
+
+        for (Commodity commodity : user.getPurchased_list()) {
+            Element row = purchasedListRowToHtml.apply(commodity);
+            purchasedListTable.appendChild(row);
+        }
 
         return doc.toString();
     }

@@ -14,6 +14,8 @@ public class User {
     private Map<Integer,Integer> commodities_rates = new HashMap<Integer,Integer>();
     private ArrayList<Commodity> buy_list = new ArrayList<Commodity>();
 
+    private ArrayList<Commodity> purchased_list = new ArrayList<>();
+
     public String getUsername() {
         return username;
     }
@@ -74,12 +76,25 @@ public class User {
         return this.commodities_rates;
     }
 
+    public ArrayList<Commodity> getPurchased_list() {
+        return purchased_list;
+    }
+
+    public void setPurchased_list(ArrayList<Commodity> purchased_list) {
+        this.purchased_list = purchased_list;
+    }
+
     public void add_rated_commodities(int commodity_id, int score) {
         this.commodities_rates.put(commodity_id, score);
     }
 
+    // todo: check if buy item or purchased item is already in the corresponding lists
     public void add_buy_item(Commodity commodity) {
         this.buy_list.add(commodity);
+    }
+
+    public void add_purchased_item(Commodity commodity) {
+        this.purchased_list.add(commodity);
     }
 
     public void remove_item_from_buy_list(Commodity commodity) {
