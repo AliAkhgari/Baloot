@@ -476,11 +476,18 @@ public class Baloot {
         if (start_price > end_price || end_price < 0)
             throw new ExceptionHandler(ERROR_INVALID_PRICE_RANGE);
 
-        System.out.println("startttt : " + start_price);
-        System.out.println("endddddd : " + end_price);
         ArrayList<Commodity> result = new ArrayList<>();
         for (Commodity commodity : database.getCommodities())
             if (commodity.getPrice() >= start_price && commodity.getPrice() <= end_price)
+                result.add(commodity);
+
+        return result;
+    }
+
+    public ArrayList<Commodity> filterCommoditiesByCategory(String category) {
+        ArrayList<Commodity> result = new ArrayList<>();
+        for (Commodity commodity : database.getCommodities())
+            if (commodity.getCategories().contains(category))
                 result.add(commodity);
 
         return result;

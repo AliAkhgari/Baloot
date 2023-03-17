@@ -149,7 +149,6 @@ public class commoditiesController {
             float end_price = Float.parseFloat(ctx.pathParam("end_price"));
             try {
                 ArrayList<Commodity> commodities = baloot.filterCommoditiesByPrice(start_price, end_price);
-                System.out.println("lennnn : " + commodities.size());
                 String commoditiesHtml = generateCommoditiesTable(commodities);
                 ctx.contentType("text/html").result(commoditiesHtml);
             } catch (Exception e) {
@@ -159,6 +158,17 @@ public class commoditiesController {
 //                Document doc = Jsoup.parse(htmlTemplate);
 //                ctx.contentType("text/html").result(doc.toString());
             }
+        });
+    }
+
+    // fixme: categories or category???
+    public void searchCommoditiesBasedOnCategories(Javalin app) {
+        app.get("/commodities/search/{categories}", ctx -> {
+            String category = ctx.pathParam("categories");
+
+            ArrayList<Commodity> commodities = baloot.filterCommoditiesByCategory(category);
+            String commoditiesHtml = generateCommoditiesTable(commodities);
+            ctx.contentType("text/html").result(commoditiesHtml);
         });
     }
 }

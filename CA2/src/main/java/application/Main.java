@@ -28,6 +28,7 @@ public class Main {
                 new commoditiesController(baloot).getCommodities(app);
                 new commoditiesController(baloot).getCommodity(app);
                 new commoditiesController(baloot).searchCommoditiesBasedOnPrice(app);
+                new commoditiesController(baloot).searchCommoditiesBasedOnCategories(app);
                 new providerController(baloot).getProvider(app);
                 new userController(baloot).getUser(app);
                 new userController(baloot).increaseUserCredit(app);
