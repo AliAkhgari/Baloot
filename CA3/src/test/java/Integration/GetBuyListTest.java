@@ -5,10 +5,12 @@ import application.Server;
 import entities.Commodity;
 import entities.User;
 import io.javalin.Javalin;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,7 +30,9 @@ public class GetBuyListTest {
 
     @BeforeEach
     public void setup() {
-        baloot = new Baloot();
+        Baloot.resetInstance();
+        baloot = Baloot.getInstance();
+        baloot.fetchAndStoreDataFromAPI();
         baloot.fetchAndStoreDataFromAPI();
 
         app = Javalin.create().start(SERVER_PORT);
@@ -40,10 +44,20 @@ public class GetBuyListTest {
     }
 
     @AfterEach
-    public void teardown() {
-        baloot = null;
+    public void tearDownAfterEach() {
         client = null;
         app.stop();
+    }
+
+    @AfterAll
+    public static void tearDownAfterAll() {
+        try {
+            Field instance = Baloot.class.getDeclaredField("instance");
+            instance.setAccessible(true);
+            instance.set(null, null);
+        } catch (Exception e) {
+            throw new RuntimeException("Error resetting singleton instance", e);
+        }
     }
 
     @Test

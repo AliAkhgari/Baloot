@@ -5,10 +5,12 @@ import entities.Commodity;
 import entities.User;
 import exceptions.AlreadyInBuyList;
 import exceptions.CommodityIsNotInBuyList;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,12 +23,19 @@ public class GetBuyListTest {
 
     @BeforeEach
     public void setup() {
-        baloot = new Baloot();
+        Baloot.resetInstance();
+        baloot = Baloot.getInstance();
     }
 
-    @AfterEach
-    public void teardown() {
-        baloot = null;
+    @AfterAll
+    public static void tearDown() {
+        try {
+            Field instance = Baloot.class.getDeclaredField("instance");
+            instance.setAccessible(true);
+            instance.set(null, null);
+        } catch (Exception e) {
+            throw new RuntimeException("Error resetting singleton instance", e);
+        }
     }
 
     @Test

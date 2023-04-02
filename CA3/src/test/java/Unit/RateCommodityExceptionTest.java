@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 
+import java.lang.reflect.Field;
 import java.util.stream.Stream;
 
 import static defines.Errors.*;
@@ -23,7 +24,8 @@ public class RateCommodityExceptionTest {
 
     @BeforeEach
     public void setup() {
-        baloot = new Baloot();
+        Baloot.resetInstance();
+        baloot = Baloot.getInstance();
         User user1 = new User();
         user1.setUsername("ali");
         baloot.addUser(user1);
@@ -33,17 +35,25 @@ public class RateCommodityExceptionTest {
         baloot.addCommodity(commodity1);
     }
 
+
+    @AfterAll
+    public static void tearDown() {
+        try {
+            Field instance = Baloot.class.getDeclaredField("instance");
+            instance.setAccessible(true);
+            instance.set(null, null);
+        } catch (Exception e) {
+            throw new RuntimeException("Error resetting singleton instance", e);
+        }
+    }
+
+
     @Test
     @DisplayName("Rate Commodity Exceptions Test")
     public void testRateCommodityExceptions() {
-        assertThrows(Exception.class, () -> baloot.rateCommodity(userId, commodityId, rate),
-                expectedExceptionMessage);
+        assertThrows(Exception.class, () -> baloot.rateCommodity(userId, commodityId, rate), expectedExceptionMessage);
     }
 
-    @AfterEach
-    public void teardown() {
-        baloot = null;
-    }
 
     @ParameterizedTest(name = "#{index} - Test with userId={0}, commodityId={1}, rate={2}, expectedExceptionMessage={3}")
     @MethodSource("testData")
@@ -53,21 +63,10 @@ public class RateCommodityExceptionTest {
         this.rate = rate;
         this.expectedExceptionMessage = expectedExceptionMessage;
 
-        assertThrows(Exception.class, () -> baloot.rateCommodity(userId, commodityId, rate),
-                expectedExceptionMessage);
+        assertThrows(Exception.class, () -> baloot.rateCommodity(userId, commodityId, rate), expectedExceptionMessage);
     }
 
     static Stream<Arguments> testData() {
-        return Stream.of(
-                Arguments.of(null, "1", "5", MISSING_USER_ID),
-                Arguments.of("ali", null, "5", MISSING_COMMODITY_ID),
-                Arguments.of("ali", "1", "5.5", INVALID_RATE_FORMAT),
-                Arguments.of("ali", "1", "5a", INVALID_RATE_FORMAT),
-                Arguments.of("ali", "1", "11", INVALID_RATE_RANGE),
-                Arguments.of("ali", "1", "0", INVALID_RATE_RANGE),
-                Arguments.of("ali", "1", "-1", INVALID_RATE_RANGE),
-                Arguments.of("amin", "1", "1", NOT_EXISTENT_USER),
-                Arguments.of("ali", "2", "1", NOT_EXISTENT_COMMODITY)
-        );
+        return Stream.of(Arguments.of(null, "1", "5", MISSING_USER_ID), Arguments.of("ali", null, "5", MISSING_COMMODITY_ID), Arguments.of("ali", "1", "5.5", INVALID_RATE_FORMAT), Arguments.of("ali", "1", "5a", INVALID_RATE_FORMAT), Arguments.of("ali", "1", "11", INVALID_RATE_RANGE), Arguments.of("ali", "1", "0", INVALID_RATE_RANGE), Arguments.of("ali", "1", "-1", INVALID_RATE_RANGE), Arguments.of("amin", "1", "1", NOT_EXISTENT_USER), Arguments.of("ali", "100", "1", NOT_EXISTENT_COMMODITY));
     }
 }

@@ -11,6 +11,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Baloot {
+    private static Baloot instance;
+
+    private Baloot() {
+    }
+
+    public static Baloot getInstance() {
+        if (instance == null) {
+            instance = new Baloot();
+        }
+        return instance;
+    }
+
+    public static void resetInstance() {
+        instance = null;
+    }
+
     public void fetchAndStoreDataFromAPI() {
         DataParser dataParser = new DataParser(Database.getInstance());
 
