@@ -34,7 +34,7 @@ public class DataParser {
 
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer content = new StringBuffer();
+        StringBuilder content = new StringBuilder();
         while ((inputLine = in.readLine()) != null) {
             content.append(inputLine);
         }
@@ -46,7 +46,7 @@ public class DataParser {
 
     public void getUsersList() throws IOException {
         String usersString = makeGetRequest(HOST + USERS_ENDPOINT);
-        List<User> userList = objectMapper.readValue(usersString, new TypeReference<List<User>>() {
+        List<User> userList = objectMapper.readValue(usersString, new TypeReference<>() {
         });
         database.setUsers((ArrayList<User>) userList);
     }

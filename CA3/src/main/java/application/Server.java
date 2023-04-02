@@ -7,8 +7,8 @@ import io.javalin.http.NotFoundResponse;
 import java.io.IOException;
 
 public class Server {
-    private Baloot baloot;
-    private Javalin app;
+    private final Baloot baloot;
+    private final Javalin app;
 
     public Server(Baloot baloot, Javalin app) {
         this.app = app;
@@ -60,9 +60,7 @@ public class Server {
 
         });
 
-        app.exception(NotFoundResponse.class, (e, ctx) -> {
-            ctx.redirect("/404");
-        });
+        app.exception(NotFoundResponse.class, (e, ctx) -> ctx.redirect("/404"));
     }
 }
 

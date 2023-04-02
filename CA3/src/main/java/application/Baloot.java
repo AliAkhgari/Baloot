@@ -53,7 +53,7 @@ public class Baloot {
         if (rateNumber < 1 || rateNumber > 10)
             throw new InvalidRateRange();
 
-        User user = getUserById(userId);
+        getUserById(userId);
         Commodity commodity = getCommodityById(Integer.parseInt(commodityId));
 
         commodity.addRate(userId, rateNumber);
@@ -109,7 +109,7 @@ public class Baloot {
         if (vote == null)
             throw new MissingVoteValue();
 
-        User user = getUserById(userId);
+        getUserById(userId);
         Comment comment = getCommentById(Integer.parseInt(commentId));
 
         switch (vote) {
