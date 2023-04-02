@@ -8,12 +8,17 @@ import entities.User;
 import java.util.ArrayList;
 
 public class Database {
+    private static final Database instance = new Database();
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Provider> providers = new ArrayList<>();
     private ArrayList<Commodity> commodities = new ArrayList<>();
     private ArrayList<Comment> comments = new ArrayList<>();
 
-    public Database() {
+    private Database() {
+    }
+
+    public static Database getInstance() {
+        return instance;
     }
 
     public void addUser(User user) {

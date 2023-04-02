@@ -11,10 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Baloot {
-    Database database = new Database();
-
     public void fetchAndStoreDataFromAPI() {
-        DataParser dataParser = new DataParser(database);
+        DataParser dataParser = new DataParser(Database.getInstance());
 
         try {
             dataParser.getUsersList();
@@ -121,7 +119,7 @@ public class Baloot {
     }
 
     public User getUserById(String userId) throws NotExistentUser {
-        for (User user : database.getUsers())
+        for (User user : Database.getInstance().getUsers())
             if (user.getUsername().equals(userId))
                 return user;
 
@@ -129,7 +127,7 @@ public class Baloot {
     }
 
     public Provider getProviderById(int providerId) throws NotExistentProvider {
-        for (Provider provider : database.getProviders())
+        for (Provider provider : Database.getInstance().getProviders())
             if (provider.getId() == providerId)
                 return provider;
 
@@ -137,7 +135,7 @@ public class Baloot {
     }
 
     public Commodity getCommodityById(int commodityId) throws NotExistentCommodity {
-        for (Commodity commodity : database.getCommodities())
+        for (Commodity commodity : Database.getInstance().getCommodities())
             if (commodity.getId() == commodityId)
                 return commodity;
 
@@ -145,12 +143,12 @@ public class Baloot {
     }
 
     public ArrayList<Commodity> getCommodities() {
-        return database.getCommodities();
+        return Database.getInstance().getCommodities();
     }
 
     public ArrayList<Commodity> getCommoditiesProvidedByProvider(int providerId) {
         ArrayList<Commodity> commodities = new ArrayList<>();
-        for (Commodity commodity : database.getCommodities())
+        for (Commodity commodity : Database.getInstance().getCommodities())
             if (commodity.getProviderId() == providerId)
                 commodities.add(commodity);
 
@@ -159,7 +157,7 @@ public class Baloot {
 
     public ArrayList<Comment> getCommentsForCommodity(int commodityId) {
         ArrayList<Comment> comments = new ArrayList<>();
-        for (Comment comment : database.getComments())
+        for (Comment comment : Database.getInstance().getComments())
             if (comment.getCommodityId() == commodityId)
                 comments.add(comment);
 
@@ -167,7 +165,7 @@ public class Baloot {
     }
 
     public Comment getCommentById(int commentId) throws NotExistentComment {
-        for (Comment comment : database.getComments())
+        for (Comment comment : Database.getInstance().getComments())
             if (comment.getId() == commentId)
                 return comment;
 
@@ -183,7 +181,7 @@ public class Baloot {
             throw new InvalidPriceRange();
 
         ArrayList<Commodity> result = new ArrayList<>();
-        for (Commodity commodity : database.getCommodities())
+        for (Commodity commodity : Database.getInstance().getCommodities())
             if (commodity.getPrice() >= startPriceInt && commodity.getPrice() <= endPriceInt)
                 result.add(commodity);
 
@@ -195,7 +193,7 @@ public class Baloot {
             throw new MissingCategory();
 
         ArrayList<Commodity> result = new ArrayList<>();
-        for (Commodity commodity : database.getCommodities())
+        for (Commodity commodity : Database.getInstance().getCommodities())
             if (commodity.getCategories().contains(category))
                 result.add(commodity);
 
@@ -208,22 +206,22 @@ public class Baloot {
     }
 
     public void addUser(User user) {
-        database.addUser(user);
+        Database.getInstance().addUser(user);
     }
 
     public void addCommodity(Commodity commodity) {
-        database.addCommodity(commodity);
+        Database.getInstance().addCommodity(commodity);
     }
 
     public void addProvider(Provider provider) {
-        database.addProvider(provider);
+        Database.getInstance().addProvider(provider);
     }
 
     public void addComment(Comment comment) {
-        database.addComment(comment);
+        Database.getInstance().addComment(comment);
     }
 
     public ArrayList<User> getUsers() {
-        return database.getUsers();
+        return Database.getInstance().getUsers();
     }
 }
