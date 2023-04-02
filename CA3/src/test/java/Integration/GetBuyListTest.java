@@ -5,9 +5,9 @@ import application.Server;
 import entities.Commodity;
 import entities.User;
 import io.javalin.Javalin;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 import static Integration.Utils.*;
 import static defines.Endpoints.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class GetBuyListTest {
@@ -26,7 +26,7 @@ public class GetBuyListTest {
     private Baloot baloot;
     private Javalin app;
 
-    @Before
+    @BeforeEach
     public void setup() {
         baloot = new Baloot();
         baloot.fetchAndStoreDataFromAPI();
@@ -39,7 +39,7 @@ public class GetBuyListTest {
         client = HttpClient.newHttpClient();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         baloot = null;
         client = null;

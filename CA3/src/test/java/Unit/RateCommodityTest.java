@@ -3,21 +3,21 @@ package Unit;
 import application.Baloot;
 import entities.Commodity;
 import entities.User;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RateCommodityTest {
     private Baloot baloot;
 
-    @Before
+    @BeforeEach
     public void setup() {
         baloot = new Baloot();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         baloot = null;
     }

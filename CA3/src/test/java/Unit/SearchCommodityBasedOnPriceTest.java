@@ -4,26 +4,26 @@ import application.Baloot;
 import entities.Commodity;
 import exceptions.InvalidPriceRange;
 import exceptions.MissingStartOrEndPrice;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static defines.Errors.INVALID_PRICE_RANGE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class SearchCommodityBasedOnPriceTest {
     private Baloot baloot;
 
-    @Before
+    @BeforeEach
     public void setup() {
         baloot = new Baloot();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         baloot = null;
     }

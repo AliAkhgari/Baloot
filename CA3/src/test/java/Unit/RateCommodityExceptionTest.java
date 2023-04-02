@@ -3,41 +3,27 @@ package Unit;
 import application.Baloot;
 import entities.Commodity;
 import entities.User;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.Collection;
+
+import java.util.stream.Stream;
 
 import static defines.Errors.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(Parameterized.class)
 public class RateCommodityExceptionTest {
     private Baloot baloot;
-    private final String userId;
-    private final String commodityId;
-    private final String rate;
-    private final String expectedExceptionMessage;
+    private String userId;
+    private String commodityId;
+    private String rate;
+    private String expectedExceptionMessage;
 
-    public RateCommodityExceptionTest(String userId, String commodityId, String rate, String expectedExceptionMessage) {
-        this.userId = userId;
-        this.commodityId = commodityId;
-        this.rate = rate;
-        this.expectedExceptionMessage = expectedExceptionMessage;
-    }
-
-    @Before
+    @BeforeEach
     public void setup() {
         baloot = new Baloot();
-    }
-
-    @Test
-    public void testRateCommodityExceptions() {
         User user1 = new User();
         user1.setUsername("ali");
         baloot.addUser(user1);
@@ -45,32 +31,43 @@ public class RateCommodityExceptionTest {
         Commodity commodity1 = new Commodity();
         commodity1.setId(1);
         baloot.addCommodity(commodity1);
-
-        try {
-            baloot.rateCommodity(userId, commodityId, rate);
-            fail("Expected exception was not thrown.");
-        } catch (Exception e) {
-            assertEquals(expectedExceptionMessage, e.getMessage());
-        }
     }
 
-    @After
+    @Test
+    @DisplayName("Rate Commodity Exceptions Test")
+    public void testRateCommodityExceptions() {
+        assertThrows(Exception.class, () -> baloot.rateCommodity(userId, commodityId, rate),
+                expectedExceptionMessage);
+    }
+
+    @AfterEach
     public void teardown() {
         baloot = null;
     }
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> testData() {
-        return Arrays.asList(new Object[][]{
-                {null, "1", "5", MISSING_USER_ID},
-                {"ali", null, "5", MISSING_COMMODITY_ID},
-                {"ali", "1", "5.5", INVALID_RATE_FORMAT},
-                {"ali", "1", "5a", INVALID_RATE_FORMAT},
-                {"ali", "1", "11", INVALID_RATE_RANGE},
-                {"ali", "1", "0", INVALID_RATE_RANGE},
-                {"ali", "1", "-1", INVALID_RATE_RANGE},
-                {"amin", "1", "1", NOT_EXISTENT_USER},
-                {"ali", "2", "1", NOT_EXISTENT_COMMODITY}
-        });
+    @ParameterizedTest(name = "#{index} - Test with userId={0}, commodityId={1}, rate={2}, expectedExceptionMessage={3}")
+    @MethodSource("testData")
+    public void testCommodityRateExceptions(String userId, String commodityId, String rate, String expectedExceptionMessage) {
+        this.userId = userId;
+        this.commodityId = commodityId;
+        this.rate = rate;
+        this.expectedExceptionMessage = expectedExceptionMessage;
+
+        assertThrows(Exception.class, () -> baloot.rateCommodity(userId, commodityId, rate),
+                expectedExceptionMessage);
+    }
+
+    static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of(null, "1", "5", MISSING_USER_ID),
+                Arguments.of("ali", null, "5", MISSING_COMMODITY_ID),
+                Arguments.of("ali", "1", "5.5", INVALID_RATE_FORMAT),
+                Arguments.of("ali", "1", "5a", INVALID_RATE_FORMAT),
+                Arguments.of("ali", "1", "11", INVALID_RATE_RANGE),
+                Arguments.of("ali", "1", "0", INVALID_RATE_RANGE),
+                Arguments.of("ali", "1", "-1", INVALID_RATE_RANGE),
+                Arguments.of("amin", "1", "1", NOT_EXISTENT_USER),
+                Arguments.of("ali", "2", "1", NOT_EXISTENT_COMMODITY)
+        );
     }
 }
