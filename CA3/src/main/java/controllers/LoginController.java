@@ -13,12 +13,7 @@ import java.io.IOException;
 public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("username") == null) {
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-            response.sendRedirect("/");
-        }
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
     @Override
