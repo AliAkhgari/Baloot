@@ -14,6 +14,7 @@ public class Baloot {
     private static Baloot instance;
 
     private Baloot() {
+        fetchAndStoreDataFromAPI();
     }
 
     public static Baloot getInstance() {
