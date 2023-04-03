@@ -1,4 +1,6 @@
-<%--
+<%@ page import="entities.Commodity" %>
+<%@ page import="application.Baloot" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: ali_akhgary
   Date: 4/4/23
@@ -22,7 +24,7 @@
 <p id="username">username: <%= session.getAttribute("username") %>
 </p>
 <br><br>
-<form action="" method="POST">
+<form action="commodities" method="POST">
     <label>Search:</label>
     <input type="text" name="search" value="">
     <button type="submit" name="action" value="search_by_category">Search By Cagtegory</button>
@@ -30,9 +32,10 @@
     <button type="submit" name="action" value="clear">Clear Search</button>
 </form>
 <br><br>
-<form action="" method="POST">
+<form action="commodities" method="POST">
     <label>Sort By:</label>
     <button type="submit" name="action" value="sort_by_rate">Rate</button>
+    <button type="submit" name="action" value="sort_by_price">Price</button>
 </form>
 <br><br>
 <table>
@@ -46,26 +49,40 @@
         <th>In Stock</th>
         <th>Links</th>
     </tr>
+    <%
+        ArrayList<Commodity> commodities = (ArrayList<Commodity>) request.getAttribute("commodities");
+        for (Commodity commodity : commodities) {
+    %>
     <tr>
-        <td>2341</td>
-        <td>Galaxy S21</td>
-        <td>Phone Provider</td>
-        <td>21000000</td>
-        <td>Technology, Phone</td>
-        <td>8.3</td>
-        <td>17</td>
-        <td><a href="/commodities/2341">Link</a></td>
+        <td>
+            <%= commodity.getId()%>
+        </td>
+        <td>
+            <%= commodity.getName()%>
+        </td>
+        <td>
+            <%= commodity.getProviderId()%>
+        </td>
+        <td>
+            <%= commodity.getPrice()%>
+        </td>
+        <td>
+            <%= commodity.getCategories()%>
+        </td>
+        <td>
+            <%= commodity.getRating()%>
+        </td>
+        <td>
+            <%= commodity.getInStock()%>
+        </td>
+        <td><a href=<%= "/commodities/" + commodity.getId()%>>Link</a></td>
     </tr>
-    <tr>
-        <td>4231</td>
-        <td>Onion</td>
-        <td>Vegetables Provider</td>
-        <td>3000</td>
-        <td>Vegetables</td>
-        <td>7.6</td>
-        <td>29</td>
-        <td><a href="/commodities/4231">Link</a></td>
-    </tr>
+
+
+    <%
+        }
+    %>
+
 </table>
 </body>
 </html>

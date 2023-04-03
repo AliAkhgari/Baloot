@@ -6,6 +6,7 @@ import entities.Commodity;
 import entities.Provider;
 import entities.User;
 import exceptions.*;
+import utils.SortCommodities;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -211,16 +212,34 @@ public class Baloot {
         return result;
     }
 
-    public ArrayList<Commodity> filterCommoditiesByCategory(String category) throws MissingCategory {
-        if (category == null)
-            throw new MissingCategory();
-
+    public ArrayList<Commodity> filterCommoditiesByCategory(String category) {
         ArrayList<Commodity> result = new ArrayList<>();
         for (Commodity commodity : Database.getInstance().getCommodities())
             if (commodity.getCategories().contains(category))
                 result.add(commodity);
 
         return result;
+    }
+
+    public ArrayList<Commodity> filterCommoditiesByName(String name) {
+        ArrayList<Commodity> result = new ArrayList<>();
+        for (Commodity commodity : Database.getInstance().getCommodities())
+            if (commodity.getName().contains(name))
+                result.add(commodity);
+
+        return result;
+    }
+
+    public ArrayList<Commodity> getSortedCommoditiesByRate(ArrayList<Commodity> commodities) {
+        ArrayList<Commodity> sortedList = new ArrayList<>(commodities);
+        sortedList.sort(new SortCommodities("rating"));
+        return sortedList;
+    }
+
+    public ArrayList<Commodity> getSortedCommoditiesByPrice(ArrayList<Commodity> commodities) {
+        ArrayList<Commodity> sortedList = new ArrayList<>(commodities);
+        sortedList.sort(new SortCommodities("price"));
+        return sortedList;
     }
 
     public ArrayList<Commodity> getUserBuyList(String userId) throws NotExistentUser {
