@@ -41,6 +41,12 @@ public class Baloot {
         }
     }
 
+    public void login(String userId, String password) throws NotExistentUser, IncorrectPassword {
+        User user = this.getUserById(userId);
+        if (!user.getPassword().equals(password))
+            throw new IncorrectPassword();
+    }
+
     public void addCommodityToUserBuyList(String userId, String commodityId) throws MissingUserId, MissingCommodityId, NotExistentUser, NotExistentCommodity, AlreadyInBuyList {
         if (userId == null)
             throw new MissingUserId();
