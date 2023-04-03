@@ -24,7 +24,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userId = request.getParameter("username");
-        String password = request.getParameter("password");
+        String password = request.getParameter("Password");
         try {
             HttpSession session = request.getSession();
             Baloot.getInstance().login(userId, password);
@@ -32,7 +32,7 @@ public class LoginController extends HttpServlet {
             session.setAttribute("username", userId);
             request.setAttribute("username", userId);
 
-            response.sendRedirect("/");
+            response.sendRedirect(request.getContextPath() + "/");
         } catch (NotExistentUser | IncorrectPassword e) {
             HttpSession session = request.getSession(false);
             session.setAttribute("errorMessage", e.getMessage());
