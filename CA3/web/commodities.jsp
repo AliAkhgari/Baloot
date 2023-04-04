@@ -67,7 +67,7 @@
             <%= commodity.getPrice()%>
         </td>
         <td>
-            <%= commodity.getCategories()%>
+            <%= String.join(", ", commodity.getCategories())%>
         </td>
         <td>
             <%= commodity.getRating()%>
