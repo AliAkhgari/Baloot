@@ -14,7 +14,6 @@ public class ErrorController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         String error_msg = (String) session.getAttribute("errorMessage");
-        session.removeAttribute("errorMessage");
         request.setAttribute("errorMessage", error_msg);
         request.getRequestDispatcher("error.jsp").forward(request, response);
     }
