@@ -1,4 +1,6 @@
-<%@ page import="entities.Commodity" %><%--
+<%@ page import="entities.Commodity" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="entities.Comment" %><%--
   Created by IntelliJ IDEA.
   User: ali_akhgary
   Date: 4/4/23
@@ -68,13 +70,18 @@
         <th>likes</th>
         <th>dislikes</th>
     </tr>
+    <% ArrayList<Comment> comments = (ArrayList<Comment>) request.getAttribute("comments"); %>
+    <% for (Comment comment : comments) { %>
     <tr>
-        <td>user1</td>
-        <td>Good</td>
-        <td>2022-07-25</td>
+        <td><%=comment.getUserEmail()%>
+        </td>
+        <td><%=comment.getText()%>
+        </td>
+        <td><%=comment.getDate()%>
+        </td>
         <td>
             <form action="" method="POST">
-                <label for="">2</label>
+                <label for=""><%=comment.getLike()%></label>
                 <input
                         id="form_comment_id"
                         type="hidden"
@@ -86,7 +93,7 @@
         </td>
         <td>
             <form action="" method="POST">
-                <label for="">1</label>
+                <label for=""><%=comment.getDislike()%></label>
                 <input
                         id="form_comment_id"
                         type="hidden"
@@ -97,6 +104,7 @@
             </form>
         </td>
     </tr>
+    <% } %>
 </table>
 <br><br>
 <table>

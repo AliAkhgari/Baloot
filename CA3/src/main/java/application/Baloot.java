@@ -266,4 +266,8 @@ public class Baloot {
     public ArrayList<User> getUsers() {
         return Database.getInstance().getUsers();
     }
+
+    public int generateCommentId() {
+        return Database.getInstance().getComments().size();
+    }
 }

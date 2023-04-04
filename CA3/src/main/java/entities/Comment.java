@@ -17,6 +17,16 @@ public class Comment {
 
     private Map<String, String> userVote = new HashMap<>();
 
+    public Comment() {
+    }
+
+    public Comment(int id, String userEmail, int commodityId, String text) {
+        this.id = id;
+        this.userEmail = userEmail;
+        this.commodityId = commodityId;
+        this.text = text;
+    }
+
     public int getId() {
         return id;
     }

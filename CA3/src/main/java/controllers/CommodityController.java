@@ -1,6 +1,7 @@
 package controllers;
 
 import application.Baloot;
+import entities.Comment;
 import entities.Commodity;
 import exceptions.NotExistentCommodity;
 import exceptions.NotExistentProvider;
@@ -26,12 +27,38 @@ public class CommodityController extends HttpServlet {
             try {
                 Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
                 String providerName = Baloot.getInstance().getProviderById(commodity.getProviderId()).getName();
+
                 request.setAttribute("commodity", commodity);
                 request.setAttribute("provider_name", providerName);
+                request.setAttribute("comments", Baloot.getInstance().getCommentsForCommodity(commodityId));
+
                 request.getRequestDispatcher("/commodity.jsp").forward(request, response);
             } catch (NotExistentCommodity | NotExistentProvider e) {
                 session.setAttribute("errorMessage", e.getMessage());
                 response.sendRedirect(request.getContextPath() + "/error");
+            }
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        if (session.getAttribute("username") == null)
+            response.sendRedirect(request.getContextPath() + "/login");
+        else {
+            String[] split_url = request.getRequestURI().split("/");
+            int commodityId = Integer.parseInt(split_url[split_url.length - 1]);
+
+            request.setAttribute("comments", Baloot.getInstance().getCommentsForCommodity(commodityId));
+
+            if (request.getParameter("comment") != null) {
+                int commentId = Baloot.getInstance().generateCommentId();
+                String username = (String) session.getAttribute("username");
+                String commentText = request.getParameter("comment");
+
+                Comment comment = new Comment(commentId, username, commodityId, commentText);
+                Baloot.getInstance().addComment(comment);
             }
         }
     }
