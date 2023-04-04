@@ -27,7 +27,7 @@ public class LoginController extends HttpServlet {
             session.setAttribute("username", userId);
             request.setAttribute("username", userId);
 
-            response.sendRedirect(request.getContextPath() + "/");
+            response.sendRedirect(request.getContextPath() + "/200");
         } catch (NotExistentUser | IncorrectPassword e) {
             HttpSession session = request.getSession(false);
             session.setAttribute("errorMessage", e.getMessage());
