@@ -3,6 +3,7 @@ package entities;
 import exceptions.AlreadyInBuyList;
 import exceptions.CommodityIsNotInBuyList;
 import exceptions.InsufficientCredit;
+import exceptions.InvalidCreditRange;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,7 +73,10 @@ public class User {
         this.credit = credit;
     }
 
-    public void addCredit(float amount) {
+    public void addCredit(float amount) throws InvalidCreditRange {
+        if (amount < 0)
+            throw new InvalidCreditRange();
+        
         this.credit += amount;
     }
 
