@@ -17,6 +17,22 @@ import java.io.IOException;
 
 @WebServlet(name = "Commodity Page", value = "/commodities/*")
 public class CommodityController extends HttpServlet {
+    private void loadPage(HttpServletRequest request, HttpServletResponse response, HttpSession session, int commodityId) throws ServletException, IOException {
+        try {
+            Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
+            String providerName = Baloot.getInstance().getProviderById(commodity.getProviderId()).getName();
+
+            request.setAttribute("commodity", commodity);
+            request.setAttribute("provider_name", providerName);
+            request.setAttribute("comments", Baloot.getInstance().getCommentsForCommodity(commodityId));
+
+            request.getRequestDispatcher("/commodity.jsp").forward(request, response);
+        } catch (NotExistentCommodity | NotExistentProvider e) {
+            session.setAttribute("errorMessage", e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/error");
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -25,19 +41,7 @@ public class CommodityController extends HttpServlet {
         else {
             String[] split_url = request.getRequestURI().split("/");
             int commodityId = Integer.parseInt(split_url[split_url.length - 1]);
-            try {
-                Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
-                String providerName = Baloot.getInstance().getProviderById(commodity.getProviderId()).getName();
-
-                request.setAttribute("commodity", commodity);
-                request.setAttribute("provider_name", providerName);
-                request.setAttribute("comments", Baloot.getInstance().getCommentsForCommodity(commodityId));
-
-                request.getRequestDispatcher("/commodity.jsp").forward(request, response);
-            } catch (NotExistentCommodity | NotExistentProvider e) {
-                session.setAttribute("errorMessage", e.getMessage());
-                response.sendRedirect(request.getContextPath() + "/error");
-            }
+            loadPage(request, response, session, commodityId);
         }
     }
 
@@ -50,8 +54,6 @@ public class CommodityController extends HttpServlet {
         else {
             String[] split_url = request.getRequestURI().split("/");
             int commodityId = Integer.parseInt(split_url[split_url.length - 1]);
-
-            request.setAttribute("comments", Baloot.getInstance().getCommentsForCommodity(commodityId));
 
             if (request.getParameter("comment") != null) {
                 int commentId = Baloot.getInstance().generateCommentId();
@@ -96,6 +98,7 @@ public class CommodityController extends HttpServlet {
                 }
             }
 
+            loadPage(request, response, session, commodityId);
         }
     }
 }
