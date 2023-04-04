@@ -3,6 +3,7 @@ package controllers;
 import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
+import exceptions.NotExistentComment;
 import exceptions.NotExistentCommodity;
 import exceptions.NotExistentProvider;
 
@@ -72,6 +73,29 @@ public class CommodityController extends HttpServlet {
                     throw new RuntimeException(e);
                 }
             }
+
+            if (request.getParameter("like") != null) {
+                int commentId = Integer.parseInt(request.getParameter("comment_id"));
+                try {
+                    Comment comment = Baloot.getInstance().getCommentById(commentId);
+                    String username = (String) session.getAttribute("username");
+                    comment.addUserVote(username, "like");
+                } catch (NotExistentComment e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            if (request.getParameter("dislike") != null) {
+                int commentId = Integer.parseInt(request.getParameter("comment_id"));
+                try {
+                    Comment comment = Baloot.getInstance().getCommentById(commentId);
+                    String username = (String) session.getAttribute("username");
+                    comment.addUserVote(username, "dislike");
+                } catch (NotExistentComment e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         }
     }
 }

@@ -81,11 +81,12 @@
         </td>
         <td>
             <form action="" method="POST">
-                <label for=""><%=comment.getLike()%></label>
+                <label for=""><%=comment.getLike()%>
+                </label>
+                <input type="hidden" name="comment_id" value="<%=comment.getId()%>">
                 <input
-                        id="form_comment_id"
                         type="hidden"
-                        name="comment_id"
+                        name="like"
                         value="1"
                 />
                 <button type="submit">like</button>
@@ -93,11 +94,12 @@
         </td>
         <td>
             <form action="" method="POST">
-                <label for=""><%=comment.getDislike()%></label>
+                <label for=""><%=comment.getDislike()%>
+                </label>
+                <input type="hidden" name="comment_id" value="<%=comment.getId()%>">
                 <input
-                        id="form_comment_id"
                         type="hidden"
-                        name="comment_id"
+                        name="dislike"
                         value="-1"
                 />
                 <button type="submit">dislike</button>
