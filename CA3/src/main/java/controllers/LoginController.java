@@ -25,7 +25,6 @@ public class LoginController extends HttpServlet {
             Baloot.getInstance().login(userId, password);
 
             session.setAttribute("username", userId);
-            request.setAttribute("username", userId);
 
             response.sendRedirect(request.getContextPath() + "/200");
         } catch (NotExistentUser | IncorrectPassword e) {
