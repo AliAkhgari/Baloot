@@ -30,12 +30,17 @@
     </li>
     <li id="name">Name: <%=commodity.getName()%>
     </li>
-    <li id="providerName">Provider Name: <%=commodity.getProviderId()%>
+
+    <li id="providerName">Provider Name: <%=request.getAttribute("provider_name")%>
     </li>
-    <li id="price">Price: 21000000</li>
-    <li id="categories">Categories: Technology, Phone</li>
-    <li id="rating">Rating: 8.3</li>
-    <li id="inStock">In Stock: 17</li>
+    <li id="price">Price: <%=commodity.getPrice()%>
+    </li>
+    <li id="categories">Categories: <%=String.join(", ", commodity.getCategories())%>
+    </li>
+    <li id="rating">Rating: <%=commodity.getRating()%>
+    </li>
+    <li id="inStock">In Stock: <%=commodity.getInStock()%>
+    </li>
 </ul>
 
 <label>Add Your Comment:</label>
