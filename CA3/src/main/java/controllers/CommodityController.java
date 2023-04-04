@@ -60,6 +60,18 @@ public class CommodityController extends HttpServlet {
                 Comment comment = new Comment(commentId, username, commodityId, commentText);
                 Baloot.getInstance().addComment(comment);
             }
+
+            if (request.getParameter("quantity") != null) {
+                int rate = Integer.parseInt(request.getParameter("quantity"));
+                String username = (String) session.getAttribute("username");
+
+                try {
+                    Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
+                    commodity.addRate(username, rate);
+                } catch (NotExistentCommodity e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }
