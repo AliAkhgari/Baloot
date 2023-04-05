@@ -37,6 +37,7 @@ public class Baloot {
             dataParser.getProvidersList();
             dataParser.getCommoditiesList();
             dataParser.getCommentsList();
+            dataParser.getDiscountsList();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

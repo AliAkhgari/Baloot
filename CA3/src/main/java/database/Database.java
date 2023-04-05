@@ -1,9 +1,6 @@
 package database;
 
-import entities.Comment;
-import entities.Commodity;
-import entities.Provider;
-import entities.User;
+import entities.*;
 
 import java.util.ArrayList;
 
@@ -13,6 +10,7 @@ public class Database {
     private ArrayList<Provider> providers = new ArrayList<>();
     private ArrayList<Commodity> commodities = new ArrayList<>();
     private ArrayList<Comment> comments = new ArrayList<>();
+    private ArrayList<Discount> discounts = new ArrayList<>();
 
     private Database() {
     }
@@ -68,5 +66,13 @@ public class Database {
 
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
+    }
+
+    public ArrayList<Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(ArrayList<Discount> discounts) {
+        this.discounts = discounts;
     }
 }
