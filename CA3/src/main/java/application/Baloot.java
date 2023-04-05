@@ -265,4 +265,10 @@ public class Baloot {
     public int generateCommentId() {
         return Database.getInstance().getComments().size();
     }
+
+    public String getProviderNameOfCommodityId(int commodityId) throws NotExistentCommodity, NotExistentProvider {
+        Commodity commodity = this.getCommodityById(commodityId);
+        Provider provider = getProviderById(commodity.getProviderId());
+        return provider.getName();
+    }
 }

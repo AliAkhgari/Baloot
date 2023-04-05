@@ -80,7 +80,7 @@ public class User {
         this.credit += amount;
     }
 
-    public void withdrawCredit(int amount) throws InsufficientCredit {
+    public void withdrawCredit(float amount) throws InsufficientCredit {
         if (amount > this.credit)
             throw new InsufficientCredit();
 
@@ -123,5 +123,20 @@ public class User {
             this.buyList.remove(commodity);
         else
             throw new CommodityIsNotInBuyList();
+    }
+
+    // TODO: add discount!
+    public float getCurrentBuyListPrice() {
+        float total = 0;
+        for (Commodity commodity : this.getBuyList()) {
+            total += commodity.getPrice();
+        }
+
+        return total;
+    }
+
+    public void withdrawPayableAmount() throws InsufficientCredit {
+        float amount = getCurrentBuyListPrice();
+        this.withdrawCredit(amount);
     }
 }
