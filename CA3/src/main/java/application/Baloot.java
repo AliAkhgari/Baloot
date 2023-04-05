@@ -109,8 +109,10 @@ public class Baloot {
             throw new MissingUserId();
 
         User user = getUserById(userId);
-        for (Commodity commodity : user.getBuyList())
+        for (Commodity commodity : user.getBuyList()) {
             user.addPurchasedItem(commodity);
+            commodity.updateInStock(-1);
+        }
 
         user.setBuyList(new ArrayList<>());
     }

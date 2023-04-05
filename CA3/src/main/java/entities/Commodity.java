@@ -74,6 +74,10 @@ public class Commodity {
         this.inStock = inStock;
     }
 
+    public void updateInStock(int amount) {
+        this.inStock += amount;
+    }
+
     public ArrayList<Comment> getComments() {
         return comments;
     }
