@@ -58,6 +58,7 @@
 </form>
 <br>
 <form action="" method="POST">
+    <input type="hidden" name="add_to_buy_list"/>
     <button type="submit">Add to BuyList</button>
 </form>
 <br/>

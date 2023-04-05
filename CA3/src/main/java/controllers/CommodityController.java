@@ -3,9 +3,7 @@ package controllers;
 import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
-import exceptions.NotExistentComment;
-import exceptions.NotExistentCommodity;
-import exceptions.NotExistentProvider;
+import exceptions.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -95,6 +93,17 @@ public class CommodityController extends HttpServlet {
                     comment.addUserVote(username, "dislike");
                 } catch (NotExistentComment e) {
                     throw new RuntimeException(e);
+                }
+            }
+
+            if (request.getParameter("add_to_buy_list") != null) {
+                try {
+                    String username = (String) session.getAttribute("username");
+                    Baloot.getInstance().addCommodityToUserBuyList(username, String.valueOf(commodityId));
+                } catch (NotExistentCommodity | NotExistentUser | AlreadyInBuyList e) {
+                    session.setAttribute("errorMessage", e.getMessage());
+                    response.sendRedirect(request.getContextPath() + "/error");
+                    return;
                 }
             }
 

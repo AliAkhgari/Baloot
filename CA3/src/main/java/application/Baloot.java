@@ -49,12 +49,7 @@ public class Baloot {
             throw new IncorrectPassword();
     }
 
-    public void addCommodityToUserBuyList(String userId, String commodityId) throws MissingUserId, MissingCommodityId, NotExistentUser, NotExistentCommodity, AlreadyInBuyList {
-        if (userId == null)
-            throw new MissingUserId();
-        if (commodityId == null)
-            throw new MissingCommodityId();
-
+    public void addCommodityToUserBuyList(String userId, String commodityId) throws NotExistentUser, NotExistentCommodity, AlreadyInBuyList {
         User user = getUserById(userId);
         Commodity commodity = getCommodityById(Integer.parseInt(commodityId));
 
