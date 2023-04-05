@@ -2,6 +2,7 @@ package controllers;
 
 import application.Baloot;
 import entities.Commodity;
+import entities.Discount;
 import entities.User;
 import exceptions.*;
 
@@ -69,6 +70,19 @@ public class BuyListController extends HttpServlet {
                     commodity = Baloot.getInstance().getCommodityById(commodityId);
                     user.removeItemFromBuyList(commodity);
                 } catch (CommodityIsNotInBuyList | NotExistentCommodity e) {
+                    session.setAttribute("errorMessage", e.getMessage());
+                    response.sendRedirect(request.getContextPath() + "/error");
+                    return;
+                }
+            }
+
+            if (request.getParameter("discountId") != null) {
+                String discountCode = request.getParameter("discountId");
+                try {
+                    Discount discount = Baloot.getInstance().getDiscountByCode(discountCode);
+                    Baloot.getInstance().checkDiscountExpiration(user, discount);
+                    user.setCurrentDiscount(discount);
+                } catch (NotExistentDiscount | ExpiredDiscount e) {
                     session.setAttribute("errorMessage", e.getMessage());
                     response.sendRedirect(request.getContextPath() + "/error");
                     return;

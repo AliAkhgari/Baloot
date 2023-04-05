@@ -1,10 +1,7 @@
 package application;
 
 import database.Database;
-import entities.Comment;
-import entities.Commodity;
-import entities.Provider;
-import entities.User;
+import entities.*;
 import exceptions.*;
 import utils.SortCommodities;
 
@@ -112,10 +109,9 @@ public class Baloot {
             throw new MissingUserId();
 
         User user = getUserById(userId);
-        for (Commodity commodity : user.getBuyList()) {
+        for (Commodity commodity : user.getBuyList())
             user.addPurchasedItem(commodity);
-            user.withdrawCredit(commodity.getPrice());
-        }
+
         user.setBuyList(new ArrayList<>());
     }
 
@@ -272,4 +268,19 @@ public class Baloot {
         Provider provider = getProviderById(commodity.getProviderId());
         return provider.getName();
     }
+
+    public Discount getDiscountByCode(String discountCode) throws NotExistentDiscount {
+        for (Discount discount : Database.getInstance().getDiscounts()) {
+            if (discount.getDiscountCode().equals(discountCode))
+                return discount;
+        }
+        throw new NotExistentDiscount();
+    }
+
+    public void checkDiscountExpiration(User user, Discount discount) throws ExpiredDiscount {
+        if (user.getUsedDiscounts().contains(discount)) {
+            throw new ExpiredDiscount();
+        }
+    }
+
 }

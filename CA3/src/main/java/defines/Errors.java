@@ -22,5 +22,7 @@ public class Errors {
     public static final String NOT_EXISTENT_COMMENT = "Comment does not exist.";
     public static final String NOT_EXISTENT_PROVIDER = "Provider does not exist.";
     public static final String NOT_EXISTENT_USER = "User does not exist.";
+    public static final String NOT_EXISTENT_DISCOUNT = "Discount does not exist.";
     public static final String INCORRECT_PASSWORD = "Incorrect password.";
+    public static final String EXPIRED_DISCOUNT = "The discount you have provided is expired.";
 }

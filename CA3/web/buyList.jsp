@@ -38,6 +38,10 @@
     </li>
     <li>Current Buy List Price:<%=user.getCurrentBuyListPrice()%>
     </li>
+    <li>Discount:<%=user.getCurrentDiscountAmount()%>
+    </li>
+    <li>Pay:<%=user.getCurrentBuyListPrice() - user.getCurrentDiscountAmount()%>
+    </li>
     <li>
         <a href="/credit">Add Credit</a>
     </li>
@@ -92,5 +96,15 @@
     <% } %>
     </tbody>
 </table>
+<br><br>
+
+<form action="" method="POST">
+    <label>Discount:</label>
+    <label>
+        <input type="text" name="discountId" value="">
+    </label>
+    <button type="submit">apply</button>
+</form>
+
 </body>
 </html>

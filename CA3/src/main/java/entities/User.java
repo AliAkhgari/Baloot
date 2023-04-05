@@ -18,8 +18,9 @@ public class User {
     private int credit;
     private Map<Integer, Integer> commoditiesRates = new HashMap<>();
     private ArrayList<Commodity> buyList = new ArrayList<>();
-
     private ArrayList<Commodity> purchasedList = new ArrayList<>();
+    private ArrayList<Discount> usedDiscounts = new ArrayList<>();
+    private Discount currentDiscount = null;
 
     public String getUsername() {
         return username;
@@ -103,6 +104,27 @@ public class User {
         this.purchasedList = purchased_list;
     }
 
+    public ArrayList<Discount> getUsedDiscounts() {
+        return usedDiscounts;
+    }
+
+    public void setUsedDiscounts(ArrayList<Discount> usedDiscounts) {
+        this.usedDiscounts = usedDiscounts;
+    }
+
+    public void addCurrentDiscountToUsed() {
+        this.usedDiscounts.add(this.currentDiscount);
+        this.currentDiscount = null;
+    }
+
+    public Discount getCurrentDiscount() {
+        return currentDiscount;
+    }
+
+    public void setCurrentDiscount(Discount currentDiscount) {
+        this.currentDiscount = currentDiscount;
+    }
+
     public void addRatedCommodities(int commodity_id, int score) {
         this.commoditiesRates.put(commodity_id, score);
     }
@@ -125,18 +147,28 @@ public class User {
             throw new CommodityIsNotInBuyList();
     }
 
-    // TODO: add discount!
     public float getCurrentBuyListPrice() {
         float total = 0;
-        for (Commodity commodity : this.getBuyList()) {
+        for (Commodity commodity : this.getBuyList())
             total += commodity.getPrice();
-        }
 
         return total;
     }
 
+    public float getCurrentDiscountAmount() {
+        if (this.currentDiscount == null)
+            return 0;
+
+        return this.getCurrentBuyListPrice() * this.currentDiscount.getDiscount() / 100;
+    }
+
     public void withdrawPayableAmount() throws InsufficientCredit {
         float amount = getCurrentBuyListPrice();
-        this.withdrawCredit(amount);
+        float discount_amount = this.getCurrentDiscountAmount();
+        this.withdrawCredit(amount - discount_amount);
+        this.addCurrentDiscountToUsed();
+
     }
+
+
 }
