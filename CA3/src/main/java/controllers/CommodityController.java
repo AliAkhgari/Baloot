@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @WebServlet(name = "Commodity Page", value = "/commodities/*")
 public class CommodityController extends HttpServlet {
@@ -19,10 +20,13 @@ public class CommodityController extends HttpServlet {
         try {
             Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
             String providerName = Baloot.getInstance().getProviderById(commodity.getProviderId()).getName();
+            ArrayList<Commodity> suggestedCommodities = Baloot.getInstance().suggestSimilarCommodities(commodity);
 
             request.setAttribute("commodity", commodity);
             request.setAttribute("provider_name", providerName);
             request.setAttribute("comments", Baloot.getInstance().getCommentsForCommodity(commodityId));
+            request.setAttribute("suggestedCommodities", suggestedCommodities);
+
 
             request.getRequestDispatcher("/commodity.jsp").forward(request, response);
         } catch (NotExistentCommodity | NotExistentProvider e) {
