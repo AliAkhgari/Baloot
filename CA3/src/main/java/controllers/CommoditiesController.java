@@ -34,47 +34,43 @@ public class CommoditiesController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("username") == null)
-            response.sendRedirect(request.getContextPath() + "/login");
-        else {
-            String action = request.getParameter("action");
-            if (action == null) {
-                doGet(request, response);
-                return;
-            }
-
-            ArrayList<Commodity> commodities = null;
-
-            switch (action) {
-                case "search_by_category" -> {
-                    String category = request.getParameter("search");
-                    commodities = Baloot.getInstance().filterCommoditiesByCategory(category);
-                    session.setAttribute("filteredCommodities", commodities);
-                }
-                case "search_by_name" -> {
-                    String name = request.getParameter("search");
-                    commodities = Baloot.getInstance().filterCommoditiesByName(name);
-                    session.setAttribute("filteredCommodities", commodities);
-                }
-                case "clear" -> {
-                    commodities = Baloot.getInstance().getCommodities();
-                    session.removeAttribute("filteredCommodities");
-                }
-                case "sort_by_rate" -> {
-                    if (session.getAttribute("filteredCommodities") != null)
-                        commodities = (ArrayList<Commodity>) session.getAttribute("filteredCommodities");
-                    else commodities = Baloot.getInstance().getCommodities();
-                    commodities = Baloot.getInstance().getSortedCommoditiesByRate(commodities);
-                }
-                case "sort_by_price" -> {
-                    if (session.getAttribute("filteredCommodities") != null)
-                        commodities = (ArrayList<Commodity>) session.getAttribute("filteredCommodities");
-                    else commodities = Baloot.getInstance().getCommodities();
-                    commodities = Baloot.getInstance().getSortedCommoditiesByPrice(commodities);
-                }
-            }
-
-            loadPage(request, response, commodities);
+        String action = request.getParameter("action");
+        if (action == null) {
+            doGet(request, response);
+            return;
         }
+
+        ArrayList<Commodity> commodities = null;
+
+        switch (action) {
+            case "search_by_category" -> {
+                String category = request.getParameter("search");
+                commodities = Baloot.getInstance().filterCommoditiesByCategory(category);
+                session.setAttribute("filteredCommodities", commodities);
+            }
+            case "search_by_name" -> {
+                String name = request.getParameter("search");
+                commodities = Baloot.getInstance().filterCommoditiesByName(name);
+                session.setAttribute("filteredCommodities", commodities);
+            }
+            case "clear" -> {
+                commodities = Baloot.getInstance().getCommodities();
+                session.removeAttribute("filteredCommodities");
+            }
+            case "sort_by_rate" -> {
+                if (session.getAttribute("filteredCommodities") != null)
+                    commodities = (ArrayList<Commodity>) session.getAttribute("filteredCommodities");
+                else commodities = Baloot.getInstance().getCommodities();
+                commodities = Baloot.getInstance().getSortedCommoditiesByRate(commodities);
+            }
+            case "sort_by_price" -> {
+                if (session.getAttribute("filteredCommodities") != null)
+                    commodities = (ArrayList<Commodity>) session.getAttribute("filteredCommodities");
+                else commodities = Baloot.getInstance().getCommodities();
+                commodities = Baloot.getInstance().getSortedCommoditiesByPrice(commodities);
+            }
+        }
+
+        loadPage(request, response, commodities);
     }
 }

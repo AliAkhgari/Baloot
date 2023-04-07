@@ -42,55 +42,51 @@ public class BuyListController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("username") == null)
-            response.sendRedirect(request.getContextPath() + "/login");
-        else {
-            User user;
-            Commodity commodity;
-            try {
-                user = Baloot.getInstance().getUserById(String.valueOf(session.getAttribute("username")));
-            } catch (NotExistentUser e) {
-                throw new RuntimeException(e);
-            }
-
-            if (request.getParameter("userId") != null) {
-                try {
-                    user.withdrawPayableAmount();
-                    Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList((String) session.getAttribute("username"));
-                } catch (InsufficientCredit | MissingUserId | NotExistentUser e) {
-                    session.setAttribute("errorMessage", e.getMessage());
-                    response.sendRedirect(request.getContextPath() + "/error");
-                    return;
-                }
-            }
-
-            if (request.getParameter("commodityId") != null) {
-                try {
-                    int commodityId = Integer.parseInt(request.getParameter("commodityId"));
-                    commodity = Baloot.getInstance().getCommodityById(commodityId);
-                    user.removeItemFromBuyList(commodity);
-                } catch (CommodityIsNotInBuyList | NotExistentCommodity e) {
-                    session.setAttribute("errorMessage", e.getMessage());
-                    response.sendRedirect(request.getContextPath() + "/error");
-                    return;
-                }
-            }
-
-            if (request.getParameter("discountId") != null) {
-                String discountCode = request.getParameter("discountId");
-                try {
-                    Discount discount = Baloot.getInstance().getDiscountByCode(discountCode);
-                    Baloot.getInstance().checkDiscountExpiration(user, discount);
-                    user.setCurrentDiscount(discount);
-                } catch (NotExistentDiscount | ExpiredDiscount e) {
-                    session.setAttribute("errorMessage", e.getMessage());
-                    response.sendRedirect(request.getContextPath() + "/error");
-                    return;
-                }
-            }
-
-            request.setAttribute("user", user);
-            request.getRequestDispatcher("buyList.jsp").forward(request, response);
+        User user;
+        Commodity commodity;
+        try {
+            user = Baloot.getInstance().getUserById(String.valueOf(session.getAttribute("username")));
+        } catch (NotExistentUser e) {
+            throw new RuntimeException(e);
         }
+
+        if (request.getParameter("userId") != null) {
+            try {
+                user.withdrawPayableAmount();
+                Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList((String) session.getAttribute("username"));
+            } catch (InsufficientCredit | MissingUserId | NotExistentUser e) {
+                session.setAttribute("errorMessage", e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/error");
+                return;
+            }
+        }
+
+        if (request.getParameter("commodityId") != null) {
+            try {
+                int commodityId = Integer.parseInt(request.getParameter("commodityId"));
+                commodity = Baloot.getInstance().getCommodityById(commodityId);
+                user.removeItemFromBuyList(commodity);
+            } catch (CommodityIsNotInBuyList | NotExistentCommodity e) {
+                session.setAttribute("errorMessage", e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/error");
+                return;
+            }
+        }
+
+        if (request.getParameter("discountId") != null) {
+            String discountCode = request.getParameter("discountId");
+            try {
+                Discount discount = Baloot.getInstance().getDiscountByCode(discountCode);
+                Baloot.getInstance().checkDiscountExpiration(user, discount);
+                user.setCurrentDiscount(discount);
+            } catch (NotExistentDiscount | ExpiredDiscount e) {
+                session.setAttribute("errorMessage", e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/error");
+                return;
+            }
+        }
+
+        request.setAttribute("user", user);
+        request.getRequestDispatcher("buyList.jsp").forward(request, response);
     }
 }

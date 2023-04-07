@@ -27,19 +27,16 @@ public class CreditController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
-        if (session.getAttribute("username") == null)
-            response.sendRedirect(request.getContextPath() + "/login");
-        else {
-            String userId = (String) session.getAttribute("username");
-            float credit = Float.parseFloat(request.getParameter("credit"));
 
-            try {
-                Baloot.getInstance().getUserById(userId).addCredit(credit);
-                response.sendRedirect(request.getContextPath() + "/200");
-            } catch (InvalidCreditRange | NotExistentUser e) {
-                session.setAttribute("errorMessage", e.getMessage());
-                response.sendRedirect(request.getContextPath() + "/error");
-            }
+        String userId = (String) session.getAttribute("username");
+
+        try {
+            float credit = Float.parseFloat(request.getParameter("credit"));
+            Baloot.getInstance().getUserById(userId).addCredit(credit);
+            response.sendRedirect(request.getContextPath() + "/200");
+        } catch (InvalidCreditRange | NotExistentUser e) {
+            session.setAttribute("errorMessage", e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/error");
         }
     }
 }

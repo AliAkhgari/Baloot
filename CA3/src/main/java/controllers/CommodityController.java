@@ -53,71 +53,68 @@ public class CommodityController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("username") == null)
-            response.sendRedirect(request.getContextPath() + "/login");
-        else {
-            String[] split_url = request.getRequestURI().split("/");
-            int commodityId = Integer.parseInt(split_url[split_url.length - 1]);
+        String[] split_url = request.getRequestURI().split("/");
+        int commodityId = Integer.parseInt(split_url[split_url.length - 1]);
 
-            if (request.getParameter("comment") != null) {
-                int commentId = Baloot.getInstance().generateCommentId();
-                String username = (String) session.getAttribute("username");
-                String commentText = request.getParameter("comment");
+        if (request.getParameter("comment") != null) {
+            int commentId = Baloot.getInstance().generateCommentId();
+            String username = (String) session.getAttribute("username");
+            String commentText = request.getParameter("comment");
 
-                Date currentDate = new Date();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String dateString = dateFormat.format(currentDate);
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateString = dateFormat.format(currentDate);
 
-                Comment comment = new Comment(commentId, username, commodityId, commentText, dateString);
-                Baloot.getInstance().addComment(comment);
-            }
+            Comment comment = new Comment(commentId, username, commodityId, commentText, dateString);
+            Baloot.getInstance().addComment(comment);
+        }
 
-            if (request.getParameter("quantity") != null) {
+        if (request.getParameter("quantity") != null) {
+            try {
                 int rate = Integer.parseInt(request.getParameter("quantity"));
                 String username = (String) session.getAttribute("username");
-
-                try {
-                    Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
-                    commodity.addRate(username, rate);
-                } catch (NotExistentCommodity e) {
-                    throw new RuntimeException(e);
-                }
+                Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
+                commodity.addRate(username, rate);
+            } catch (NotExistentCommodity e) {
+                session.setAttribute("errorMessage", e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/error");
+                return;
             }
-
-            if (request.getParameter("like") != null) {
-                int commentId = Integer.parseInt(request.getParameter("comment_id"));
-                try {
-                    Comment comment = Baloot.getInstance().getCommentById(commentId);
-                    String username = (String) session.getAttribute("username");
-                    comment.addUserVote(username, "like");
-                } catch (NotExistentComment e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            if (request.getParameter("dislike") != null) {
-                int commentId = Integer.parseInt(request.getParameter("comment_id"));
-                try {
-                    Comment comment = Baloot.getInstance().getCommentById(commentId);
-                    String username = (String) session.getAttribute("username");
-                    comment.addUserVote(username, "dislike");
-                } catch (NotExistentComment e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            if (request.getParameter("add_to_buy_list") != null) {
-                try {
-                    String username = (String) session.getAttribute("username");
-                    Baloot.getInstance().addCommodityToUserBuyList(username, String.valueOf(commodityId));
-                } catch (NotExistentCommodity | NotExistentUser | AlreadyInBuyList e) {
-                    session.setAttribute("errorMessage", e.getMessage());
-                    response.sendRedirect(request.getContextPath() + "/error");
-                    return;
-                }
-            }
-
-            loadPage(request, response, session, commodityId);
         }
+
+        if (request.getParameter("like") != null) {
+            int commentId = Integer.parseInt(request.getParameter("comment_id"));
+            try {
+                Comment comment = Baloot.getInstance().getCommentById(commentId);
+                String username = (String) session.getAttribute("username");
+                comment.addUserVote(username, "like");
+            } catch (NotExistentComment e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (request.getParameter("dislike") != null) {
+            int commentId = Integer.parseInt(request.getParameter("comment_id"));
+            try {
+                Comment comment = Baloot.getInstance().getCommentById(commentId);
+                String username = (String) session.getAttribute("username");
+                comment.addUserVote(username, "dislike");
+            } catch (NotExistentComment e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (request.getParameter("add_to_buy_list") != null) {
+            try {
+                String username = (String) session.getAttribute("username");
+                Baloot.getInstance().addCommodityToUserBuyList(username, String.valueOf(commodityId));
+            } catch (NotExistentCommodity | NotExistentUser | AlreadyInBuyList e) {
+                session.setAttribute("errorMessage", e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/error");
+                return;
+            }
+        }
+
+        loadPage(request, response, session, commodityId);
     }
 }
