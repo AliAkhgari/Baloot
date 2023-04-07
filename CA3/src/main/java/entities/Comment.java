@@ -20,11 +20,12 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(int id, String userEmail, int commodityId, String text) {
+    public Comment(int id, String userEmail, int commodityId, String text, String date) {
         this.id = id;
         this.userEmail = userEmail;
         this.commodityId = commodityId;
         this.text = text;
+        this.date = date;
     }
 
     public int getId() {

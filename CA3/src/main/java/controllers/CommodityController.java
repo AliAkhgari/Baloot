@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 @WebServlet(name = "Commodity Page", value = "/commodities/*")
 public class CommodityController extends HttpServlet {
@@ -62,7 +64,11 @@ public class CommodityController extends HttpServlet {
                 String username = (String) session.getAttribute("username");
                 String commentText = request.getParameter("comment");
 
-                Comment comment = new Comment(commentId, username, commodityId, commentText);
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String dateString = dateFormat.format(currentDate);
+
+                Comment comment = new Comment(commentId, username, commodityId, commentText, dateString);
                 Baloot.getInstance().addComment(comment);
             }
 
