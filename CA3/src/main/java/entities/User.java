@@ -15,7 +15,7 @@ public class User {
     private String email;
     private String birthDate;
     private String address;
-    private int credit;
+    private float credit;
     private Map<Integer, Integer> commoditiesRates = new HashMap<>();
     private ArrayList<Commodity> buyList = new ArrayList<>();
     private ArrayList<Commodity> purchasedList = new ArrayList<>();
@@ -42,8 +42,8 @@ public class User {
         return address;
     }
 
-    public int getCredit() {
-        return credit;
+    public float getCredit() {
+        return this.credit;
     }
 
     public void setUsername(String username) {
@@ -70,7 +70,7 @@ public class User {
         this.address = address;
     }
 
-    public void setCredit(int credit) {
+    public void setCredit(float credit) {
         this.credit = credit;
     }
 

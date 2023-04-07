@@ -75,7 +75,7 @@ public class CommodityController extends HttpServlet {
                 String username = (String) session.getAttribute("username");
                 Commodity commodity = Baloot.getInstance().getCommodityById(commodityId);
                 commodity.addRate(username, rate);
-            } catch (NotExistentCommodity e) {
+            } catch (NotExistentCommodity | NumberFormatException e) {
                 session.setAttribute("errorMessage", e.getMessage());
                 response.sendRedirect(request.getContextPath() + "/error");
                 return;

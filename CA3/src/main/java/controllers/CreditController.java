@@ -34,7 +34,7 @@ public class CreditController extends HttpServlet {
             float credit = Float.parseFloat(request.getParameter("credit"));
             Baloot.getInstance().getUserById(userId).addCredit(credit);
             response.sendRedirect(request.getContextPath() + "/200");
-        } catch (InvalidCreditRange | NotExistentUser e) {
+        } catch (InvalidCreditRange | NotExistentUser | NumberFormatException e) {
             session.setAttribute("errorMessage", e.getMessage());
             response.sendRedirect(request.getContextPath() + "/error");
         }
