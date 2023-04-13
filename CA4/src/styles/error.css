@@ -1,0 +1,50 @@
+@charset "utf-8";
+@import "../assets/fonts/Inter/inter_font.css";
+@import "normalize.css";
+
+:root {
+    --darkbrown: #593C1C;
+    --lightbrown: #A97B47;
+    --red: #C82525;
+    --gray: #909090;
+    --blue: #315FD8;
+    --cream: #F7F0E9;
+    --white: #F5F5F5;
+    --beige: #FFC700;
+}
+
+body {
+    background-color: var(--cream);
+    font-family: Inter, serif;
+}
+
+.error-container {
+    max-width: 400px;
+    text-align: center;
+    margin: 5rem auto 0;
+}
+
+h1 {
+    font-size: 4rem;
+    color: var(--darkbrown);
+}
+
+p {
+    font-size: 1.6rem;
+    color: var(--gray);
+    margin-bottom: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--lightbrown);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn:hover {
+    background-color: var(--darkbrown);
+}
