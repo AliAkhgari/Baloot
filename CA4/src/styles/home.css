@@ -16,6 +16,10 @@ body {
     background-color: var(--white);
 }
 
+a {
+    text-decoration: none;
+}
+
 .wrapper {
     display: flex;
     flex-direction: column;
