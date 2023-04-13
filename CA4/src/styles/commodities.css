@@ -1,5 +1,6 @@
 @charset "utf-8";
 @import "../assets/fonts/Inter/inter_font.css";
+@import "normalize.css";
 
 :root {
     --darkbrown: #593C1C;
