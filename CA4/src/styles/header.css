@@ -80,6 +80,42 @@
     border-radius: 15px;
 }
 
+.account .cart-product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #F7F0E9;
+
+    width: 8vw;
+    height: 3vw;
+    border-radius: 15px;
+}
+
+.account .cart-product .cart-text {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.94vw;
+    line-height: 34px;
+
+    margin-left: 10px;
+
+    color: #593C1C;
+}
+
+.account .cart-product .cart-number {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.94vw;
+    line-height: 34px;
+
+    margin-right: 20px;
+
+    color: #593C1C;
+}
+
 .account .cart .cart-text {
     font-family: 'Inter', serif;
     font-style: normal;
