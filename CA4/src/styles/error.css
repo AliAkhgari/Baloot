@@ -25,12 +25,12 @@ body {
 }
 
 h1 {
-    font-size: 4rem;
+    font-size: 4vw;
     color: var(--darkbrown);
 }
 
 p {
-    font-size: 1.6rem;
+    font-size: 1.6vw;
     color: var(--gray);
     margin-bottom: 2rem;
 }
