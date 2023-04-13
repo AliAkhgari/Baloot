@@ -20,7 +20,7 @@
     justify-content: space-between;
 
     width: 100%;
-    height: 116px;
+    height: 5.5vw;
 
     background: var(--white);
     margin: auto;
@@ -63,7 +63,7 @@
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 600;
-    font-size: 1.94vw;
+    font-size: 1.5vw;
     line-height: 34px;
     text-align: center;
 }
@@ -75,8 +75,8 @@
 
     background-color: var(--darkbrown);
 
-    width: 8vw;
-    height: 3vw;
+    width: 8.5vw;
+    height: 3.5vw;
     border-radius: 15px;
 }
 
@@ -87,8 +87,8 @@
 
     background: #F7F0E9;
 
-    width: 8vw;
-    height: 3vw;
+    width: 8.5vw;
+    height: 3.5vw;
     border-radius: 15px;
 }
 
@@ -96,7 +96,7 @@
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 600;
-    font-size: 1.94vw;
+    font-size: 1.5vw;
     line-height: 34px;
 
     margin-left: 10px;
@@ -108,7 +108,7 @@
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 600;
-    font-size: 1.94vw;
+    font-size: 1.5vw;
     line-height: 34px;
 
     margin-right: 20px;
@@ -120,7 +120,7 @@
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 600;
-    font-size: 1.94vw;
+    font-size: 1.5vw;
     line-height: 34px;
 
     margin-left: 10px;
@@ -132,7 +132,7 @@
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 600;
-    font-size: 1.94vw;
+    font-size: 1.5vw;
     line-height: 34px;
 
     margin-right: 20px;
@@ -209,7 +209,7 @@
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 2vw;
+    font-size: 1.7vw;
 
     margin-right: 3vw;
 
@@ -227,7 +227,7 @@
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 2vw;
+    font-size: 1.7vw;
 
     margin-right: 2vw;
 
