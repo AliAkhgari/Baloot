@@ -24,8 +24,10 @@ public class LoginController {
             Baloot.getInstance().login(username, password);
             session.setAttribute("username", username);
             return new ResponseEntity<>("login successfully!", HttpStatus.OK);
-        } catch (NotExistentUser | IncorrectPassword e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        } catch (NotExistentUser e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IncorrectPassword e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
