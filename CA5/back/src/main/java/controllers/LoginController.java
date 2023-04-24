@@ -1,44 +1,38 @@
 package controllers;
 
+import application.Baloot;
+import exceptions.IncorrectPassword;
+import exceptions.NotExistentUser;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 
 @RestController
 public class LoginController {
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String login() {
-        return "Hello, world!";
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity<String> login(@RequestBody Map<String, String> input, HttpSession session) {
+        try {
+            String username = input.get("username");
+            String password = input.get("password");
+            Baloot.getInstance().login(username, password);
+            session.setAttribute("username", username);
+            return new ResponseEntity<>("login successfully!", HttpStatus.OK);
+        } catch (NotExistentUser | IncorrectPassword e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public ResponseEntity<String> logout(HttpSession session) {
+        session.invalidate();
+        return new ResponseEntity<>("logout successfully!", HttpStatus.OK);
     }
 }
 
-
-//@WebServlet(name = "Login Page", value = "/login")
-//public class LoginController extends HttpServlet {
-//    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        request.getRequestDispatcher("login.jsp").forward(request, response);
-//    }
-//
-//    @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        String userId = request.getParameter("username");
-//        String password = request.getParameter("Password");
-//        try {
-//            HttpSession session = request.getSession();
-//            Baloot.getInstance().login(userId, password);
-//
-//            session.setAttribute("username", userId);
-//
-//            response.sendRedirect(request.getContextPath() + "/200");
-//        } catch (NotExistentUser | IncorrectPassword e) {
-//            HttpSession session = request.getSession(false);
-//            session.setAttribute("errorMessage", e.getMessage());
-//            response.sendRedirect(request.getContextPath() + "/error");
-//        }
-//    }
-//}
-//
-//
-//
