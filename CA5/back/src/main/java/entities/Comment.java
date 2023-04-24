@@ -1,5 +1,7 @@
 package entities;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,12 +22,18 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(int id, String userEmail, int commodityId, String text, String date) {
+    public Comment(int id, String userEmail, int commodityId, String text) {
         this.id = id;
         this.userEmail = userEmail;
         this.commodityId = commodityId;
         this.text = text;
-        this.date = date;
+        this.date = getCurrentDate();
+    }
+
+    public String getCurrentDate() {
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(currentDate);
     }
 
     public int getId() {
