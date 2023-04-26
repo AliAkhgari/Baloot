@@ -4,4 +4,7 @@
 *.ipr
 *.class
 *.DS_Store
+target
 out
+node_modules
+CA5/prev_front

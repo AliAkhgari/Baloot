@@ -11,8 +11,8 @@
     <groupId>Baloot</groupId>
     <artifactId>CA5</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>CA5</name>
-    <description>CA5</description>
+<!--    <name>CA5</name>-->
+<!--    <description>CA5</description>-->
     <properties>
         <java.version>19</java.version>
     </properties>
