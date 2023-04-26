@@ -1,0 +1,111 @@
+@charset "utf-8";
+@import "../assets/fonts/Inter/inter_font.css";
+@import "normalize.css";
+
+:root {
+    --darkbrown: #593C1C;
+    --lightbrown: #A97B47;
+    --red: #C82525;
+    --gray: #909090;
+    --blue: #315FD8;
+    --cream: #F7F0E9;
+    --white: #F5F5F5;
+    --beige: #FFC700;
+}
+
+body {
+    background-color: var(--white);
+}
+
+a {
+    text-decoration: none;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    background: var(--white);
+
+    padding-top: 200px;
+    padding-bottom: 200px;
+}
+
+.wrapper .filters {
+    display: flex;
+    width: 80%;
+    height: 7vw;
+    align-items: center;
+
+    background: #F7F0E9;
+    box-shadow: 0 4px 4px rgba(208, 208, 208, 0.25);
+    border-radius: 15px;
+}
+
+.wrapper .filters h3 {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.4vw;
+    line-height: 39px;
+
+    text-align: left;
+
+    margin-left: 40px;
+
+    color: #593C1C;
+}
+
+.wrapper .filters .sort {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin-left: 35%;
+}
+
+.wrapper .filters .sort h4 {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.4vw;
+    line-height: 39px;
+
+    color: #593C1C;
+}
+
+.wrapper .filters .sort #name-filter-button {
+    background-color: #F7F0E9;
+    color: #A97B47;
+
+    border: none;
+    border-radius: 15px;
+
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.4vw;
+
+    height: 4vw;
+    width: 9vw;
+}
+
+
+.wrapper .filters .sort #price-filter-button {
+    background: #A97B47;
+    color: #FFFFFF;
+
+    border: none;
+    border-radius: 15px;
+
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.4vw;
+
+    height: 4vw;
+    width: 9vw;
+}
