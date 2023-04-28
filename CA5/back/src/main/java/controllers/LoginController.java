@@ -19,7 +19,6 @@ public class LoginController {
             String username = input.get("username");
             String password = input.get("password");
             Baloot.getInstance().login(username, password);
-            session.setAttribute("username", username);
             return new ResponseEntity<>("login successfully!", HttpStatus.OK);
         } catch (NotExistentUser e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -28,10 +27,10 @@ public class LoginController {
         }
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate();
-        return new ResponseEntity<>("logout successfully!", HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+//    public ResponseEntity<String> logout(HttpSession session) {
+//        session.invalidate();
+//        return new ResponseEntity<>("logout successfully!", HttpStatus.OK);
+//    }
 }
 

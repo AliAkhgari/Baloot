@@ -12,6 +12,7 @@ const Login = () => {
         e.preventDefault();
         loginForm(username, password)
             .then((data) => {
+                sessionStorage.setItem('username', username);
                 toast.success(data.data);
                 setTimeout(() => {
                     window.location.replace("/");
