@@ -26,11 +26,5 @@ public class LoginController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
-//    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-//    public ResponseEntity<String> logout(HttpSession session) {
-//        session.invalidate();
-//        return new ResponseEntity<>("logout successfully!", HttpStatus.OK);
-//    }
 }
 
