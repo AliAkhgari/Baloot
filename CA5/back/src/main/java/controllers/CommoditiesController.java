@@ -35,7 +35,7 @@ public class CommoditiesController {
                                                 @RequestBody Map<String, String> input,
                                                 HttpSession session) {
         try {
-            int rate = Integer.parseInt(input.get("quantity"));
+            int rate = Integer.parseInt(input.get("rate"));
             String username = (String) session.getAttribute("username");
             Commodity commodity = Baloot.getInstance().getCommodityById(Integer.parseInt(id));
             commodity.addRate(username, rate);
