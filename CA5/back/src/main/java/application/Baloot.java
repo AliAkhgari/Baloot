@@ -226,6 +226,27 @@ public class Baloot {
         return result;
     }
 
+    public ArrayList<Commodity> filterCommoditiesByProviderName(String name) {
+        int providerId = -1;
+        for (Provider provider : Database.getInstance().getProviders()) {
+            if (provider.getName().equals(name)) {
+                providerId = provider.getId();
+                break;
+            }
+        }
+
+        ArrayList<Commodity> result = new ArrayList<>();
+
+        if (providerId == -1)
+            return result;
+
+        for (Commodity commodity : Database.getInstance().getCommodities())
+            if (commodity.getProviderId() == providerId)
+                result.add(commodity);
+
+        return result;
+    }
+
     public ArrayList<Commodity> getSortedCommoditiesByRate(ArrayList<Commodity> commodities) {
         ArrayList<Commodity> sortedList = new ArrayList<>(commodities);
         sortedList.sort(new SortCommodities("rating"));

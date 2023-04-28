@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class CommoditiesController {
     @GetMapping(value = "/commodities")
@@ -66,6 +67,21 @@ public class CommoditiesController {
         ArrayList<Comment> comments = Baloot.getInstance().getCommentsForCommodity(Integer.parseInt(id));
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/commodities/search")
+    public ResponseEntity<ArrayList<Commodity>> searchCommodities(@RequestBody Map<String, String> input) {
+        String searchOption = input.get("searchOption");
+        String searchValue = input.get("searchValue");
+
+        ArrayList<Commodity> commodities = switch (searchOption) {
+            case "name" -> Baloot.getInstance().filterCommoditiesByName(searchValue);
+            case "category" -> Baloot.getInstance().filterCommoditiesByCategory(searchValue);
+            case "provider" -> Baloot.getInstance().filterCommoditiesByProviderName(searchValue);
+            default -> new ArrayList<>();
+        };
+
+        return new ResponseEntity<>(commodities, HttpStatus.OK);
     }
 
 }

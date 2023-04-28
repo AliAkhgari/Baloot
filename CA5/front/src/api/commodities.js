@@ -11,3 +11,7 @@ export function getCommodityById(id) {
 export function rateCommodity(id, rate) {
     return axios.post(`commodities/${id}/rate`, {rate: rate})
 }
+
+export function searchCommodities(searchOption, searchValue) {
+    return axios.post(`commodities/search`, {searchOption: searchOption, searchValue: searchValue})
+}
