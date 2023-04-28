@@ -1,24 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login Form</title>
-    <link rel="stylesheet" href="../styles/login_signup.css">
-</head>
-<body>
-<div class="login-container">
-    <div class="logo-container">
-        <img src="../assets/images/logo.png" alt="Logo">
-        <h1>Baloot Store</h1>
-    </div>
-    <form class="login-form">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Login</button>
-    </form>
-</div>
+import React, {useState} from "react";
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../styles/login_signup.css";
+import {loginForm} from "../api/login.js";
+import logo from "../assets/images/logo.png";
 
-</body>
-</html>
+const Login = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const handleLogin = (e) => {
+        e.preventDefault();
+        loginForm(username, password)
+            .then((data) => {
+                toast.success(data.data);
+                setTimeout(() => {
+                    window.location.replace("/");
+                }, 2000);
+            })
+            .catch((error) => {
+                toast.error(error.response.data);
+            });
+    };
+
+    return (
+        <div className={"login-container"}>
+            <ToastContainer/>
+            <div className={"logo-container"}>
+                <img src={logo} alt={"logo"}/>
+                <h1>Baloot Store</h1>
+            </div>
+            <form className={"login-form"} onSubmit={handleLogin}>
+                <label htmlFor={"username"}>Username</label>
+                <input
+                    type={"text"}
+                    id={"username"}
+                    name={"username"}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                <label htmlFor={"password"}>Password</label>
+                <input
+                    type={"password"}
+                    id={"password"}
+                    name={"password"}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button type={"submit"}>Login</button>
+            </form>
+        </div>
+    );
+};
+
+export default Login;
