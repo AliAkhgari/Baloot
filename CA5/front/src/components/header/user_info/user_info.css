@@ -1,0 +1,65 @@
+.account {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.account .username {
+    color: var(--darkbrown);
+    margin-right: 45px;
+
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+    text-align: center;
+}
+
+.account .cart {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: var(--darkbrown);
+
+    width: 8.5vw;
+    height: 3.5vw;
+    border-radius: 15px;
+}
+
+.account .cart-product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #F7F0E9;
+
+    width: 8.5vw;
+    height: 3.5vw;
+    border-radius: 15px;
+}
+
+.account .cart-product .cart-text {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+
+    margin-left: 10px;
+
+    color: #593C1C;
+}
+
+.account .cart-product .cart-number {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+
+    margin-right: 20px;
+
+    color: #593C1C;
+}
