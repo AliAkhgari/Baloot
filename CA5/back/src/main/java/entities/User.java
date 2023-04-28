@@ -22,6 +22,18 @@ public class User {
     private ArrayList<Discount> usedDiscounts = new ArrayList<>();
     private Discount currentDiscount = null;
 
+    public User() {
+
+    }
+
+    public User(String username, String password, String email, String birthDate, String address) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.birthDate = birthDate;
+        this.address = address;
+    }
+
     public String getUsername() {
         return username;
     }

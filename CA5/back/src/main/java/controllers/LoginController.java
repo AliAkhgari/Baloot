@@ -1,9 +1,9 @@
 package controllers;
 
 import application.Baloot;
+import entities.User;
 import exceptions.IncorrectPassword;
 import exceptions.NotExistentUser;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<String> login(@RequestBody Map<String, String> input, HttpSession session) {
+    public ResponseEntity<String> login(@RequestBody Map<String, String> input) {
         try {
             String username = input.get("username");
             String password = input.get("password");
@@ -25,6 +25,21 @@ public class LoginController {
         } catch (IncorrectPassword e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ResponseEntity<String> signup(@RequestBody Map<String, String> input) {
+
+        String address = input.get("address");
+        String birthDate = input.get("birthDate");
+        String email = input.get("email");
+        String username = input.get("username");
+        String password = input.get("password");
+
+        User newUser = new User(username, password, email, birthDate, address);
+        Baloot.getInstance().addUser(newUser);
+
+        return new ResponseEntity<>("signup successfully!", HttpStatus.OK);
     }
 }
 

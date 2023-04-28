@@ -6,14 +6,16 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Header from "./views/header.js";
 import Home from "./views/home.js";
 import Logout from "./views/logout.js";
+import Signup from "./views/signup.js";
 
 function App() {
     return (
         <Router>
             <Routes>
-                <Route path={"/"} element={<div><Header/><Home/></div>}/>
+                <Route path={"/"} element={<Home/>}/>
                 <Route path={"/login"} element={<Login/>}/>
                 <Route path={"/logout"} element={<Logout/>}/>
+                <Route path={"/signup"} element={<Signup/>}/>
             </Routes>
         </Router>
     );
