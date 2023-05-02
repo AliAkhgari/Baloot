@@ -17,7 +17,7 @@ body {
     background-color: var(--white);
 }
 
-.wrapper {
+.userWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -105,10 +105,11 @@ body {
     font-weight: 600;
     font-size: 1.1vw;
 
+    text-align: center;
+
     color: #919191;
 
     margin-bottom: 2%;
-
 
     height: 15%;
     width: 95%;
@@ -133,22 +134,22 @@ body {
 }
 
 
-.credits .buy input:hover {
-    border: 2px solid var(--darkbrown);
-    color: var(--darkbrown);
-}
+/*.credits .buy input:hover {*/
+/*    border: 2px solid var(--darkbrown);*/
+/*    color: var(--darkbrown);*/
+/*}*/
 
-.credits .buy input:last-child {
-    border: 2px solid var(--darkbrown);
-    background-color: var(--darkbrown);
-    color: var(--cream);
-}
+/*.credits .buy input:last-child {*/
+/*    border: 2px solid var(--darkbrown);*/
+/*    background-color: var(--darkbrown);*/
+/*    color: var(--cream);*/
+/*}*/
 
-.credits .buy input:last-child:hover {
-    border: 2px solid var(--lightbrown);
-    background-color: var(--lightbrown);
-    color: var(--beige);
-}
+/*.credits .buy input:last-child:hover {*/
+/*    border: 2px solid var(--lightbrown);*/
+/*    background-color: var(--lightbrown);*/
+/*    color: var(--beige);*/
+/*}*/
 
 .buy-list {
     display: flex;
