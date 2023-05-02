@@ -12,6 +12,7 @@ public class Commodity {
     private ArrayList<String> categories = new ArrayList<>();
     private float rating;
     private int inStock;
+    private String image;
     private Map<String, Integer> userRate = new HashMap<>();
     private float initRate;
 
@@ -84,6 +85,14 @@ public class Commodity {
 
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String imgURL) {
+        this.image = imgURL;
     }
 
     public void decreaseInStock() {
