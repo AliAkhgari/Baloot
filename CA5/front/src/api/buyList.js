@@ -19,7 +19,3 @@ export function getPurchasedList(username) {
 export function purchaseBuyList(username) {
     return axios.post(`/buy-list/purchase`, {username: username});
 }
-
-// export function addUserCredit(id, credit) {
-//     return axios.post(`/users/${id}/credit`, {credit: credit})
-// }
