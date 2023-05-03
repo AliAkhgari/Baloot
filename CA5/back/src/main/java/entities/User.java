@@ -1,6 +1,5 @@
 package entities;
 
-import exceptions.AlreadyInBuyList;
 import exceptions.CommodityIsNotInBuyList;
 import exceptions.InsufficientCredit;
 import exceptions.InvalidCreditRange;
@@ -17,8 +16,8 @@ public class User {
     private String address;
     private float credit;
     private Map<Integer, Integer> commoditiesRates = new HashMap<>();
-    private ArrayList<Commodity> buyList = new ArrayList<>();
-    private ArrayList<Commodity> purchasedList = new ArrayList<>();
+    private Map<String, Integer> buyList = new HashMap<>();
+    private Map<String, Integer> purchasedList = new HashMap<>();
     private ArrayList<Discount> usedDiscounts = new ArrayList<>();
     private Discount currentDiscount = null;
 
@@ -42,8 +41,12 @@ public class User {
         return email;
     }
 
-    public ArrayList<Commodity> getBuyList() {
+    public Map<String, Integer> getBuyList() {
         return buyList;
+    }
+
+    public void setBuyList(Map<String, Integer> buyList) {
+        this.buyList = buyList;
     }
 
     public String getBirthDate() {
@@ -99,20 +102,15 @@ public class User {
 
         this.credit -= amount;
     }
-
-    public void setBuyList(ArrayList<Commodity> buy_list) {
-        this.buyList = buy_list;
-    }
-
     public Map<Integer, Integer> getCommoditiesRates() {
         return this.commoditiesRates;
     }
 
-    public ArrayList<Commodity> getPurchasedList() {
+    public Map<String, Integer> getPurchasedList() {
         return purchasedList;
     }
 
-    public void setPurchasedList(ArrayList<Commodity> purchased_list) {
+    public void setPurchasedList(Map<String, Integer> purchased_list) {
         this.purchasedList = purchased_list;
     }
 
@@ -141,46 +139,39 @@ public class User {
         this.commoditiesRates.put(commodity_id, score);
     }
 
-    public void addBuyItem(Commodity commodity) throws AlreadyInBuyList {
-        if (this.buyList.contains(commodity))
-            throw new AlreadyInBuyList();
-        else
-            this.buyList.add(commodity);
+    public void addBuyItem(Commodity commodity) {
+        String id = commodity.getId();
+        if (this.buyList.containsKey(id)) {
+            int existingQuantity = this.buyList.get(id);
+            this.buyList.put(id, existingQuantity + 1);
+        } else
+            this.buyList.put(id, 1);
     }
 
-    public void addPurchasedItem(Commodity commodity) {
-        this.purchasedList.add(commodity);
+    public void addPurchasedItem(String id, int quantity) {
+        if (this.purchasedList.containsKey(id)) {
+            int existingQuantity = this.purchasedList.get(id);
+            this.purchasedList.put(id, existingQuantity + quantity);
+        } else
+            this.purchasedList.put(id, quantity);
     }
 
     public void removeItemFromBuyList(Commodity commodity) throws CommodityIsNotInBuyList {
-        if (this.buyList.contains(commodity))
-            this.buyList.remove(commodity);
-        else
+        String id = commodity.getId();
+        if (this.buyList.containsKey(id)) {
+            int existingQuantity = this.buyList.get(id);
+            if (existingQuantity == 1)
+                this.buyList.remove(commodity.getId());
+            else
+                this.buyList.put(id, existingQuantity - 1);
+        } else
             throw new CommodityIsNotInBuyList();
-    }
-
-    public float getCurrentBuyListPrice() {
-        float total = 0;
-        for (Commodity commodity : this.getBuyList())
-            total += commodity.getPrice();
-
-        return total;
     }
 
     public float getCurrentDiscountAmount() {
         if (this.currentDiscount == null)
             return 0;
 
-        return this.getCurrentBuyListPrice() * this.currentDiscount.getDiscount() / 100;
+        return this.currentDiscount.getDiscount() / 100;
     }
-
-    public void withdrawPayableAmount() throws InsufficientCredit {
-        float amount = getCurrentBuyListPrice();
-        float discount_amount = this.getCurrentDiscountAmount();
-        this.withdrawCredit(amount - discount_amount);
-        this.addCurrentDiscountToUsed();
-
-    }
-
-
 }

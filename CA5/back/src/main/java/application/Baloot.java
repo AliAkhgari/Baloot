@@ -51,7 +51,7 @@ public class Baloot {
 
     public void addCommodityToUserBuyList(String userId, String commodityId) throws NotExistentUser, NotExistentCommodity, AlreadyInBuyList {
         User user = getUserById(userId);
-        Commodity commodity = getCommodityById(Integer.parseInt(commodityId));
+        Commodity commodity = getCommodityById(commodityId);
 
         user.addBuyItem(commodity);
     }
@@ -71,7 +71,7 @@ public class Baloot {
             throw new InvalidRateRange();
 
         getUserById(userId);
-        Commodity commodity = getCommodityById(Integer.parseInt(commodityId));
+        Commodity commodity = getCommodityById(commodityId);
 
         commodity.addRate(userId, rateNumber);
     }
@@ -83,7 +83,7 @@ public class Baloot {
             throw new MissingCommodityId();
 
         User user = getUserById(userId);
-        Commodity commodity = getCommodityById(Integer.parseInt(commodityId));
+        Commodity commodity = getCommodityById(commodityId);
 
         user.removeItemFromBuyList(commodity);
     }
@@ -99,24 +99,46 @@ public class Baloot {
         } catch (NumberFormatException e) {
             throw new InvalidCreditFormat();
         }
-        if (creditNumber < 0)
-            throw new InvalidCreditRange();
+        if (creditNumber < 0) throw new InvalidCreditRange();
 
         User user = getUserById(userId);
         user.addCredit(creditNumber);
     }
 
-    public void moveCommoditiesFromBuyListToPurchasedList(String userId) throws MissingUserId, NotExistentUser, InsufficientCredit {
-        if (userId == null)
-            throw new MissingUserId();
-
-        User user = getUserById(userId);
-        for (Commodity commodity : user.getBuyList()) {
-            user.addPurchasedItem(commodity);
-            commodity.updateInStock(-1);
+    public float getCurrentBuyListPrice(User user) {
+        float total = 0;
+        for (String commodityId : new ArrayList<>(user.getBuyList().keySet())) {
+            try {
+                Commodity commodity = getCommodityById(commodityId);
+                total += commodity.getPrice();
+            } catch (NotExistentCommodity ignored) {
+            }
         }
 
-        user.setBuyList(new ArrayList<>());
+        return total;
+    }
+
+    public void withdrawPayableAmount(User user) throws InsufficientCredit {
+        float amount = getCurrentBuyListPrice(user);
+        float discount_amount = user.getCurrentDiscountAmount() * amount;
+        user.withdrawCredit(amount - discount_amount);
+        user.addCurrentDiscountToUsed();
+    }
+
+    public void moveCommoditiesFromBuyListToPurchasedList(String userId) throws MissingUserId, NotExistentUser, InsufficientCredit {
+        if (userId == null) throw new MissingUserId();
+
+        User user = getUserById(userId);
+        for (var entry : new ArrayList<>(user.getBuyList().entrySet())) {
+            user.addPurchasedItem(entry.getKey(), entry.getValue());
+            try {
+                Commodity commodity = getCommodityById(entry.getKey());
+                commodity.updateInStock(-1);
+            } catch (NotExistentCommodity ignored) {
+            }
+        }
+
+        user.setBuyList(new HashMap<>());
     }
 
     public void userVoteComment(String userId, String commentId, String vote) throws MissingUserId, MissingCommentId, MissingVoteValue, NotExistentUser, NotExistentComment, InvalidVoteFormat {
@@ -154,10 +176,9 @@ public class Baloot {
         throw new NotExistentProvider();
     }
 
-    public Commodity getCommodityById(int commodityId) throws NotExistentCommodity {
+    public Commodity getCommodityById(String commodityId) throws NotExistentCommodity {
         for (Commodity commodity : Database.getInstance().getCommodities())
-            if (commodity.getId() == commodityId)
-                return commodity;
+            if (Objects.equals(commodity.getId(), commodityId)) return commodity;
 
         throw new NotExistentCommodity();
     }
@@ -259,9 +280,14 @@ public class Baloot {
         return sortedList;
     }
 
-    public ArrayList<Commodity> getUserBuyList(String userId) throws NotExistentUser {
+    public Map<String, Integer> getUserBuyList(String userId) throws NotExistentUser {
         User user = getUserById(userId);
         return user.getBuyList();
+    }
+
+    public Map<String, Integer> getUserPurchasedList(String userId) throws NotExistentUser {
+        User user = getUserById(userId);
+        return user.getPurchasedList();
     }
 
     public void addUser(User user) {
@@ -288,7 +314,7 @@ public class Baloot {
         return Database.getInstance().getComments().size();
     }
 
-    public String getProviderNameOfCommodityId(int commodityId) throws NotExistentCommodity, NotExistentProvider {
+    public String getProviderNameOfCommodityId(String commodityId) throws NotExistentCommodity, NotExistentProvider {
         Commodity commodity = this.getCommodityById(commodityId);
         Provider provider = getProviderById(commodity.getProviderId());
         return provider.getName();
