@@ -8,16 +8,40 @@ import MailIcon from "../assets/images/icons/mail.png";
 import CalendarIcon from "../assets/images/icons/calendar.png";
 import LocationIcon from "../assets/images/icons/location.png";
 import ShopIcon from "../assets/images/icons/shop.png";
-import Huawei from "../assets/images/commodities/Huawei_small.png";
+import HistoryIcon from "../assets/images/icons/history.png"
+import {addToBuyList, getBuyList, getPurchasedList, purchaseBuyList, removeFromBuyList} from "../api/buyList.js";
 
 function User() {
     const username = sessionStorage.getItem('username');
     const [user, setUser] = useState({});
+    const [buyList, setBuyList] = useState({});
+    const [purchaseList, setPurchaseList] = useState({});
 
     async function fetchUser() {
         try {
             const response = await getUserById(username);
             setUser(response.data);
+            // console.warn("fetch")
+        } catch (error) {
+        }
+    }
+
+    async function fetchBuyList() {
+        try {
+            const response = await getBuyList(username);
+            setBuyList(response.data);
+            console.warn("fetch buy list")
+            // console.log(response)
+        } catch (error) {
+        }
+    }
+
+    async function fetchPurchasedList() {
+        try {
+            const response = await getPurchasedList(username);
+            setPurchaseList(response.data);
+            console.warn("fetch purchase list")
+            // console.log(response)
         } catch (error) {
         }
     }
@@ -25,6 +49,14 @@ function User() {
     useEffect(() => {
         fetchUser()
             .then(() => {
+            });
+        fetchBuyList()
+            .then(() => {
+
+            });
+        fetchPurchasedList()
+            .then(() => {
+
             });
     }, []);
 
@@ -43,8 +75,7 @@ function User() {
             fetchUser();
         };
 
-        return (
-            <div>
+        return (<>
                 <div className="credits">
                     <table className="user-info">
                         <tbody>
@@ -82,33 +113,105 @@ function User() {
                     </div>
 
                 </div>
-            </div>
+            </>
         );
     }
 
-    function BuyList(props) {
-        // async function fetchCommodity() {
-        //     try {
-        //         const response = await getCommodityById(username);
-        //
-        //         setCredit(response.data.credit);
-        //         setBirth(response.data.birthDate);
-        //         setEmail(response.data.email);
-        //         setAddress(response.data.address);
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
-        //
-        // useEffect(() => {
-        //     fetchUser().then((data) => {
-        //
-        //     });
-        // }, []);
+    const handleAddToBuyList = async (e, id) => {
+        e.preventDefault();
+        try {
+            await addToBuyList(username, id);
+            await fetchBuyList();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    const handleRemoveFromBuyList = async (e, id) => {
+        e.preventDefault();
+        try {
+            await removeFromBuyList(username, id);
+            await fetchBuyList();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    const EmptyTable = ({tableType}) => {
         return (
-            <div className="buy-list">
+            <div id="empty-table">
+                your {tableType.toLowerCase()} is empty
+            </div>
+        )
+    }
+
+    const handlePurchase = async (e) => {
+        e.preventDefault();
+        try {
+            await purchaseBuyList(username);
+            await fetchBuyList();
+            await fetchPurchasedList();
+        } catch (error) {
+            // console.error(error);
+        }
+    };
+
+    function commoditiesInfo(commodityList, isBuyList) {
+        const commodityInfo = [];
+
+        if (commodityList.length === 0) {
+            commodityInfo.push(
+                <EmptyTable tableType={isBuyList ? "cart" : "history"}/>
+            )
+        }
+
+        for (const x of Object.values(commodityList)) {
+            commodityInfo.push(
+                <div className="td" key={x.commodity.id}>
+                    <span>{x.commodity.name}</span>
+                    <span>
+                <img src={x.commodity.image} alt={x.commodity.name}/>
+                </span>
+                    <span>{x.commodity.categories.join(", ")}</span>
+                    <span>{x.commodity.price}</span>
+                    <span>{x.commodity.providerId}</span>
+                    <span className="rate">{x.commodity.rating}</span>
+                    <span className="stock">{x.commodity.inStock}</span>
+                    <span className="in-cart">
+
+                {isBuyList ? (
+                    <>
+                        <input
+                            type="button"
+                            onClick={(e) => handleRemoveFromBuyList(e, x.commodity.id)}
+                            id="minus"
+                            value="-"
+                        />
+                        <span id="num">{x.quantity}</span>
+                        <input
+                            type="button"
+                            onClick={(e) => handleAddToBuyList(e, x.commodity.id)}
+                            id="plus"
+                            value="+"
+                        />
+                    </>
+                ) : (
+                    <span id="num">{x.quantity}</span>
+                )}
+
+            </span>
+                </div>);
+        }
+
+        return commodityInfo;
+    }
+
+    function BuyList(props) {
+        const {buyList, fetchBuyList} = props;
+
+        const commodityInfo = commoditiesInfo(buyList, true);
+
+        return (<div className="buy-list">
                 <div className="title">
                     <img src={ShopIcon} alt="shop-icon"/>
                     <h4>Cart</h4>
@@ -124,79 +227,57 @@ function User() {
                         <span>In Stock</span>
                         <span>In Cart</span>
                     </div>
-                    <div className="td">
-                        <span>Galaxy S21</span>
-                        <span><img src={Huawei} alt="huawei"/></span>
-                        <span>Technology, Phone</span>
-                        <span>$21000000</span>
-                        <span>1234</span>
-                        <span className="rate">8.3</span>
-                        <span className="stock">17</span>
-                        <span className="in-cart">
-                    <span id="minus">-</span>
-                    <span id="num">1</span>
-                    <span id="plus">+</span>
-                </span>
-                    </div>
+                    {commodityInfo}
                 </div>
 
                 <div className="buy-list-pay">
-                    <input type="submit" value="Pay now!" className="submit"/>
+                    <input type="button" value="Pay now!" className="submit" onClick={handlePurchase}/>
                 </div>
             </div>
 
         )
     }
 
-    return (
-        <div>
+    function PurchaseHistory(props) {
+        const {purchasedList, fetchPurchasedList} = props;
+
+        const commodityInfo = commoditiesInfo(purchasedList, false);
+
+        console.log(commodityInfo)
+
+        return (
+            <div className="history">
+                <div className="title">
+                    <img src={HistoryIcon} alt="history-icon"/>
+                    <h4>History</h4>
+                </div>
+
+                <div className="history-table">
+                    <div className="th">
+                        <span>Image</span>
+                        <span>Name</span>
+                        <span>Categories</span>
+                        <span>Price</span>
+                        <span>Provider ID</span>
+                        <span>Rating</span>
+                        <span>In Stock</span>
+                        <span>Quantity</span>
+                    </div>
+                    {commodityInfo}
+                </div>
+            </div>
+        )
+    }
+
+    return (<div>
             <Header/>
 
             <div className="userWrapper">
                 <UserCredits user={user} fetchUser={fetchUser}/>
 
-                <BuyList/>
+                <BuyList buyList={buyList} fetchBuyList={fetchBuyList}/>
 
-
-                {/*    <div className="history">*/}
-                {/*        <div className="title">*/}
-                {/*            <img src="../assets/images/icons/history.png" alt="history-icon"/>*/}
-                {/*            <h4>History</h4>*/}
-                {/*        </div>*/}
-
-                {/*        <div className="history-table">*/}
-                {/*            <div className="th">*/}
-                {/*                <span>Image</span>*/}
-                {/*                <span>Name</span>*/}
-                {/*                <span>Categories</span>*/}
-                {/*                <span>Price</span>*/}
-                {/*                <span>Provider ID</span>*/}
-                {/*                <span>Rating</span>*/}
-                {/*                <span>In Stock</span>*/}
-                {/*                <span>Quantity</span>*/}
-                {/*            </div>*/}
-                {/*            <div className="td">*/}
-                {/*                <span><img src="../assets/images/commodities/spaghetti.png" alt="huawei"/></span>*/}
-                {/*                <span>Mom’s Spaghetti</span>*/}
-                {/*                <span>Food</span>*/}
-                {/*                <span>$60000</span>*/}
-                {/*                <span>313</span>*/}
-                {/*                <span className="rate">10</span>*/}
-                {/*                <span className="stock">0</span>*/}
-                {/*                <span> 3 </span>*/}
-                {/*            </div>*/}
-                {/*            <div className="td">*/}
-                {/*                <span><img src="../assets/images/commodities/mic.png" alt="huawei"/></span>*/}
-                {/*                <span>Dre’s Microphone</span>*/}
-                {/*                <span>Technology</span>*/}
-                {/*                <span>$4200000</span>*/}
-                {/*                <span>4321</span>*/}
-                {/*                <span className="rate">8.5</span>*/}
-                {/*                <span className="stock">22</span>*/}
-                {/*                <span> 1 </span>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
+                <PurchaseHistory purchasedList={purchaseList} fetchPurchasedList={fetchPurchasedList}/>
 
             </div>
 

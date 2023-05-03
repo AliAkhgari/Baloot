@@ -261,7 +261,7 @@ body {
     height: 4vw;
 }
 
-.buy-list .buy-list-table .in-cart #minus, #num, #plus {
+.buy-list .buy-list-table .in-cart #minus, #plus {
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 400;
@@ -269,10 +269,33 @@ body {
     line-height: 29px;
     text-align: center;
 
+    background: #FFFFFF;
     color: #000000;
 
     margin-left: 1vw;
     margin-right: 1vw;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+.buy-list .buy-list-table .in-cart #num {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+
+    background: #FFFFFF;
+    color: #000000;
+
+    margin-left: 1vw;
+    margin-right: 1vw;
+
+    border: none;
+
 }
 
 .buy-list .buy-list-pay {
@@ -295,6 +318,7 @@ body {
     color: #FFFFFF;
 
     width: 45%;
+    cursor: pointer;
 }
 
 
@@ -395,5 +419,14 @@ body {
     color: var(--beige);
     font-weight: bold;
     font-family: Inter, serif;
+}
+
+#empty-table {
+    color: var(--darkbrown);
+    text-align: center;
+    font-weight: bold;
+    font-family: Inter, serif;
+
+    margin-bottom: 5vw;
 }
 
