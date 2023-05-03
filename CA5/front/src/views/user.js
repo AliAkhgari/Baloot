@@ -63,6 +63,7 @@ function User() {
     function UserCredits(props) {
         const {user, fetchUser} = props;
         const [amount, setAmount] = useState('');
+        const [isModalOpen, setIsModalOpen] = useState(false);
 
         const handleAmountChange = (event) => {
             setAmount(event.target.value);
@@ -71,11 +72,21 @@ function User() {
         const handleSubmit = async (event) => {
             event.preventDefault();
             await addUserCredit(user.username, parseFloat(amount));
-            setAmount("");
+            setAmount('');
             fetchUser();
+            setIsModalOpen(false); // Close the modal after submitting
         };
 
-        return (<>
+        const handleOpenModal = () => {
+            setIsModalOpen(true);
+        };
+
+        const handleCloseModal = () => {
+            setIsModalOpen(false);
+        };
+
+        return (
+            <>
                 <div className="credits">
                     <table className="user-info">
                         <tbody>
@@ -107,11 +118,42 @@ function User() {
 
                     <div className="buy">
                         <span className="credit-value">${user.credit}</span>
-                        <input value={amount} onChange={handleAmountChange}
-                               placeholder="$Amount" className="amount"/>
-                        <button type="submit" className="submit" onClick={handleSubmit}>Add More Credit</button>
+                        <input
+                            value={amount}
+                            onChange={handleAmountChange}
+                            placeholder="$Amount"
+                            className="amount"
+                        />
+                        <button type="submit" className="submit" onClick={handleOpenModal}>
+                            Add More Credit
+                        </button>
                     </div>
+                </div>
 
+                {isModalOpen && (
+                    <Modal onClose={handleCloseModal} onConfirm={handleSubmit}>
+                        <h2>Add Credit</h2>
+                        <p>Are you sure you want to add ${amount} to your account?</p>
+                    </Modal>
+                )}
+            </>
+        );
+    }
+
+    function Modal(props) {
+        const { onClose, onConfirm, children } = props;
+
+        return (
+            <>
+                <div className="modal-overlay"></div>
+                <div className="modal">
+                    <div className="modal-content">
+                        {children}
+                        <div className="modal-buttons">
+                            <button id={"cancel-button"} onClick={onClose}>Close</button>
+                            <button id={"confirm-button"} onClick={onConfirm}>Confirm!</button>
+                        </div>
+                    </div>
                 </div>
             </>
         );
