@@ -1,10 +1,10 @@
 import "../styles/header.css";
-import {useEffect, useState} from "react";
-import {getUserById} from "../api/user.js";
+import React, {useEffect, useState} from "react";
 import {searchCommodities} from "../api/commodities.js";
 import search from "../assets/images/icons/search.png";
 import {Link} from "react-router-dom";
 import logo from "../assets/images/logo.png";
+import {getBuyList} from "../api/buyList.js";
 
 const Logo = () => {
     return (
@@ -93,17 +93,17 @@ const UserInfo = (props) => {
     const {username} = props;
     const [cartItems, setCartItems] = useState(0);
 
-    async function fetchUser() {
+    async function fetchBuyList() {
         try {
-            const response = await getUserById(username);
-            setCartItems(response.data.buyList.length);
+            const response = await getBuyList(username);
+            setCartItems(response.data.length);
         } catch (error) {
             console.log(error);
         }
     }
 
     useEffect(() => {
-        fetchUser().then((data) => {
+        fetchBuyList().then((data) => {
 
         });
     }, []);
@@ -111,10 +111,19 @@ const UserInfo = (props) => {
     return (
         <div className="account">
             <span className="username">#{username}</span>
-            <div className="cart-product">
-                <span className="cart-text">Cart</span>
-                <span className="cart-number">{cartItems}</span>
-            </div>
+
+            {cartItems > 0 ? (
+                <div className="brown-cart-product">
+                    <span className="cart-text">Cart</span>
+                    <span className="cart-number">{cartItems}</span>
+                </div>
+            ) : (
+                <div className="cart-product">
+                    <span className="cart-text">Cart</span>
+                    <span className="cart-number">{cartItems}</span>
+                </div>
+            )}
+
         </div>
     )
 }

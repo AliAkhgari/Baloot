@@ -118,6 +118,43 @@
     color: #593C1C;
 }
 
+.account .brown-cart-product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: var(--darkbrown);
+
+    width: 8.5vw;
+    height: 3.5vw;
+    border-radius: 15px;
+}
+
+.account .brown-cart-product .cart-text {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+
+    margin-left: 10px;
+
+    color: #FFFFFF;
+}
+
+.account .brown-cart-product .cart-number {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+
+    margin-right: 20px;
+
+    color: #FFFFFF;
+
+}
+
 .searchbar {
     display: flex;
     justify-content: space-between;
