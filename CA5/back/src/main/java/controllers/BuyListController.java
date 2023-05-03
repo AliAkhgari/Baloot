@@ -1,42 +1,71 @@
 package controllers;
 
-
+import DTO.BuyListItem;
 import application.Baloot;
 import entities.Commodity;
 import entities.User;
 import exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Map;
 
-// /buyList -> get
-// /buyList/add -> post
-// /buyList/remove -> post
-// /buyList/purchase -> post
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class BuyListController {
-    @GetMapping(value = "/buy-list")
-    public ResponseEntity<ArrayList<Commodity>> getBuyList(HttpSession session) {
-        String username = (String) session.getAttribute("username");
+    // TODO: make it get and with username in url
+    @PostMapping(value = "/buy-list")
+    public ResponseEntity<ArrayList<BuyListItem>> getBuyList(@RequestBody Map<String, String> input) {
+        String username = input.get("username");
+        ArrayList<BuyListItem> buyListItems = new ArrayList<>();
+
         try {
-            ArrayList<Commodity> buyList = Baloot.getInstance().getUserBuyList(username);
-            return new ResponseEntity<>(buyList, HttpStatus.OK);
+            Map<String, Integer> buyList = Baloot.getInstance().getUserBuyList(username);
+            for (Map.Entry<String, Integer> entry : buyList.entrySet()) {
+                Commodity commodity = Baloot.getInstance().getCommodityById(entry.getKey());
+                int quantity = entry.getValue();
+
+                BuyListItem buyListItem = new BuyListItem(commodity, quantity);
+                buyListItems.add(buyListItem);
+            }
+            return new ResponseEntity<>(buyListItems, HttpStatus.OK);
+
             // TODO: delete exception
-        } catch (NotExistentUser e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (NotExistentUser | NotExistentCommodity ignored) {
+            return new ResponseEntity<>(buyListItems, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/purchased-list")
+    public ResponseEntity<ArrayList<BuyListItem>> getPurchasedList(@RequestBody Map<String, String> input) {
+        String username = input.get("username");
+        ArrayList<BuyListItem> purchasedListItems = new ArrayList<>();
+
+        try {
+            Map<String, Integer> purchasedList = Baloot.getInstance().getUserPurchasedList(username);
+            for (Map.Entry<String, Integer> entry : purchasedList.entrySet()) {
+                Commodity commodity = Baloot.getInstance().getCommodityById(entry.getKey());
+                int quantity = entry.getValue();
+
+                BuyListItem buyListItem = new BuyListItem(commodity, quantity);
+                purchasedListItems.add(buyListItem);
+            }
+            return new ResponseEntity<>(purchasedListItems, HttpStatus.OK);
+
+            // TODO: delete exception
+        } catch (NotExistentUser | NotExistentCommodity ignored) {
+            return new ResponseEntity<>(purchasedListItems, HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping(value = "/buy-list/add")
-    public ResponseEntity<String> addToBuyList(@RequestBody Map<String, String> input, HttpSession session) {
-        String username = (String) session.getAttribute("username");
+    public ResponseEntity<String> addToBuyList(@RequestBody Map<String, String> input) {
+        String username = input.get("username");
         try {
             Baloot.getInstance().addCommodityToUserBuyList(username, input.get("id"));
             return new ResponseEntity<>("commodity added to buy list successfully!", HttpStatus.OK);
@@ -49,8 +78,8 @@ public class BuyListController {
     }
 
     @PostMapping(value = "/buy-list/remove")
-    public ResponseEntity<String> removeFromBuyList(@RequestBody Map<String, String> input, HttpSession session) {
-        String username = (String) session.getAttribute("username");
+    public ResponseEntity<String> removeFromBuyList(@RequestBody Map<String, String> input) {
+        String username = input.get("username");
         try {
             Baloot.getInstance().removeCommodityFromUserBuyList(username, input.get("id"));
             return new ResponseEntity<>("commodity added to buy list successfully!", HttpStatus.OK);
@@ -62,13 +91,13 @@ public class BuyListController {
     }
 
     @PostMapping(value = "/buy-list/purchase")
-    public ResponseEntity<String> purchaseBuyList(@RequestBody Map<String, String> input, HttpSession session) {
-        String username = (String) session.getAttribute("username");
+    public ResponseEntity<String> purchaseBuyList(@RequestBody Map<String, String> input) {
+        String username = input.get("username");
         try {
             User user = Baloot.getInstance().getUserById(username);
             // TODO: make these two functions one in baloot
-            user.withdrawPayableAmount();
-            Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList((String) session.getAttribute("username"));
+            Baloot.getInstance().withdrawPayableAmount(user);
+            Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList(username);
             return new ResponseEntity<>("buy list purchased successfully!", HttpStatus.OK);
             //TODO: remove not necessary exceptions
         } catch (InsufficientCredit | MissingUserId | NotExistentUser e) {
@@ -76,80 +105,3 @@ public class BuyListController {
         }
     }
 }
-
-//@WebServlet(name = "Buy List Page", value = "/buyList")
-//public class BuyListController extends HttpServlet {
-//    private static void loadPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
-//        User user;
-//        try {
-//            user = Baloot.getInstance().getUserById(String.valueOf(session.getAttribute("username")));
-//        } catch (NotExistentUser e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        request.setAttribute("user", user);
-//        request.getRequestDispatcher("buyList.jsp").forward(request, response);
-//    }
-//
-//    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        if (session.getAttribute("username") == null)
-//            response.sendRedirect(request.getContextPath() + "/login");
-//        else {
-//            loadPage(request, response, session);
-//        }
-//    }
-//
-//    @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-//        HttpSession session = request.getSession();
-//
-//        User user;
-//        Commodity commodity;
-//        try {
-//            user = Baloot.getInstance().getUserById(String.valueOf(session.getAttribute("username")));
-//        } catch (NotExistentUser e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        if (request.getParameter("userId") != null) {
-//            try {
-//                user.withdrawPayableAmount();
-//                Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList((String) session.getAttribute("username"));
-//            } catch (InsufficientCredit | MissingUserId | NotExistentUser e) {
-//                session.setAttribute("errorMessage", e.getMessage());
-//                response.sendRedirect(request.getContextPath() + "/error");
-//                return;
-//            }
-//        }
-//
-//        if (request.getParameter("commodityId") != null) {
-//            try {
-//                int commodityId = Integer.parseInt(request.getParameter("commodityId"));
-//                commodity = Baloot.getInstance().getCommodityById(commodityId);
-//                user.removeItemFromBuyList(commodity);
-//            } catch (CommodityIsNotInBuyList | NotExistentCommodity e) {
-//                session.setAttribute("errorMessage", e.getMessage());
-//                response.sendRedirect(request.getContextPath() + "/error");
-//                return;
-//            }
-//        }
-//
-//        if (request.getParameter("discountId") != null) {
-//            String discountCode = request.getParameter("discountId");
-//            try {
-//                Discount discount = Baloot.getInstance().getDiscountByCode(discountCode);
-//                Baloot.getInstance().checkDiscountExpiration(user, discount);
-//                user.setCurrentDiscount(discount);
-//            } catch (NotExistentDiscount | ExpiredDiscount e) {
-//                session.setAttribute("errorMessage", e.getMessage());
-//                response.sendRedirect(request.getContextPath() + "/error");
-//                return;
-//            }
-//        }
-//
-//        request.setAttribute("user", user);
-//        request.getRequestDispatcher("buyList.jsp").forward(request, response);
-//    }
-//}
