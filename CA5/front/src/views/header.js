@@ -31,11 +31,10 @@ const RegisterLogin = () => {
     )
 }
 
-const Searchbar = ({updateCommodities}) => {
+const Searchbar = (props) => {
+    const {fetchSearchedCommodities} = props;
     const [selectedOption, setSelectedOption] = useState("name");
     const [searchValue, setSearchValue] = useState("");
-
-    // updateCommodities(fetchCommodities());
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -44,28 +43,9 @@ const Searchbar = ({updateCommodities}) => {
         setSearchValue(event.target.value);
     };
 
-    // async function fetchCommodities() {
-    //     try {
-    //         const response = await fetchCommodities();
-    //         return response.data;
-    //     } catch (error) {
-    //         return [];
-    //     }
-    // }
-
-    async function fetchSearchedCommodities(searchOption, searchValue) {
-        try {
-            const response = await searchCommodities(searchOption, searchValue);
-            return response.data;
-        } catch (error) {
-            return [];
-        }
-    }
-
     const handleSearchClick = async () => {
         try {
-            const commodities = await fetchSearchedCommodities(selectedOption, searchValue);
-            updateCommodities(commodities);
+            await fetchSearchedCommodities(selectedOption, searchValue);
         } catch (error) {
             console.error(error);
         }
@@ -127,13 +107,13 @@ const UserInfo = (props) => {
         </div>
     )
 }
-const Header = ({updateCommodities}) => {
+const Header = ({fetchSearchedCommodities}) => {
     const username = sessionStorage.getItem('username');
 
     return (
         <div className={"header"}>
             <Logo/>
-            <Searchbar updateCommodities={updateCommodities}/>
+            <Searchbar fetchSearchedCommodities={fetchSearchedCommodities}/>
             {username ? <UserInfo username={username}/> : <RegisterLogin/>}
         </div>
 
