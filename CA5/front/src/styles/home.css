@@ -78,8 +78,8 @@ a {
 }
 
 .wrapper .filters .sort #name-filter-button {
-    background-color: #F7F0E9;
-    color: #A97B47;
+    /*background-color: #F7F0E9;*/
+    /*color: #A97B47;*/
 
     border: none;
     border-radius: 15px;
@@ -91,12 +91,14 @@ a {
 
     height: 4vw;
     width: 9vw;
+
+    cursor: pointer;
 }
 
 
 .wrapper .filters .sort #price-filter-button {
-    background: #A97B47;
-    color: #FFFFFF;
+    /*background: #A97B47;*/
+    /*color: #FFFFFF;*/
 
     border: none;
     border-radius: 15px;
@@ -108,4 +110,17 @@ a {
 
     height: 4vw;
     width: 9vw;
+
+    cursor: pointer;
+}
+
+.wrapper .filters .sort .button_active {
+    background: var(--lightbrown);
+    color: #FFFFFF;
+}
+
+
+.wrapper .filters .sort .button_deactivate {
+    background: #F7F0E9;
+    color: gray;
 }

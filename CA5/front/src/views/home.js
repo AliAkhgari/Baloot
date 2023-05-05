@@ -11,6 +11,9 @@ const Home = () => {
     const username = sessionStorage.getItem('username');
     const [commodities, setCommodities] = useState([]);
     const [allCommodities, setAllCommodities] = useState([]);
+    const [nameButtonActive, setNameButtonActive] = useState(false);
+    const [priceButtonActive, setPriceButtonActive] = useState(false);
+
 
     useEffect(() => {
         fetchCommodities().then(() => {
@@ -53,14 +56,36 @@ const Home = () => {
     }
 
     const handleAddToCart = async (e, id) => {
+        console.warn(id)
         e.preventDefault();
         try {
             await addToBuyList(username, id);
-            await fetchCommodities();
         } catch (error) {
             console.error(error);
         }
     };
+
+    function handleSortCommodities(sortMethod) {
+        if (sortMethod === "name") {
+            const sortedCommodities = [...commodities].sort((a, b) => {
+                if (a.name < b.name) return -1;
+                if (a.name > b.name) return 1;
+                return 0;
+            });
+            setAllCommodities(sortedCommodities);
+            setCommodities(sortedCommodities);
+            setNameButtonActive(true);
+            setPriceButtonActive(false);
+
+        } else if (sortMethod === "price") {
+            const sortedCommodities = [...commodities].sort((a, b) => a.price - b.price);
+            setAllCommodities(sortedCommodities);
+            setCommodities(sortedCommodities);
+            setNameButtonActive(false);
+            setPriceButtonActive(true);
+
+        }
+    }
 
     function commoditiesInfo(commodities) {
         console.log(commodities)
@@ -80,8 +105,8 @@ const Home = () => {
                         <input
                             type="button"
                             value="add to cart"
-                            onClick={(e) => handleAddToCart(e, x.commodity.id)}
-
+                            onClick={(e) =>
+                                handleAddToCart(e, x.id)}
                         />
                     </div>
                 </div>
@@ -105,8 +130,12 @@ const Home = () => {
                     </label>
                     <div className="sort">
                         <h4>sort by: </h4>
-                        <input type="button" value="name" id="name-filter-button"/>
-                        <input type="button" value="price" id="price-filter-button"/>
+                        <input type="button" value="name" id="name-filter-button"
+                               onClick={() => handleSortCommodities("name")}
+                               className={nameButtonActive ? 'button_active' : 'button_deactivate'}/>
+                        <input type="button" value="price" id="price-filter-button"
+                               onClick={() => handleSortCommodities("price")}
+                               className={priceButtonActive ? 'button_active' : 'button_deactivate'}/>
                     </div>
                 </div>
                 <div className="products">
