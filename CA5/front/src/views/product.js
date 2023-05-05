@@ -8,6 +8,7 @@ import StarIcon from "../assets/images/icons/star.png";
 import {addToBuyList} from "../api/buyList.js";
 import DislikeIcon from "../assets/images/icons/dislike.png"
 import LikeIcon from "../assets/images/icons/like.png"
+import {dislikeComment, likeComment} from "../api/comments.js";
 
 function Product() {
     const {id} = useParams();
@@ -138,10 +139,21 @@ function Product() {
         }
 
         const handleSubmitComment = async (event) => {
-            console.log(comment)
             event.preventDefault();
             await addComment(id, sessionStorage.getItem("username"), comment);
             setComment("");
+            await fetchCommodity();
+        };
+
+        const handleLikeComment = async (event, commentId) => {
+            event.preventDefault();
+            await likeComment(commentId, sessionStorage.getItem("username"));
+            await fetchCommodity();
+        };
+
+        const handleDislikeComment = async (event, commentId) => {
+            event.preventDefault();
+            await dislikeComment(commentId, sessionStorage.getItem("username"));
             await fetchCommodity();
         };
 
@@ -155,9 +167,12 @@ function Product() {
                         <div className="is-helpful">
                             <span>Is this comment helpful?</span>
                             <span className="like-number">{x.like}</span>
-                            <img src={LikeIcon} alt={"like-icon"}/>
-                            <span className="dislike-number">{x.dislike}</span>
-                            <img src={DislikeIcon} alt={"dislike-icon"}/>
+                            <img src={LikeIcon} alt={"like-icon"}
+                                 onClick={(e) =>
+                                     handleLikeComment(e, x.id)}/>
+                            <span className="dislike-number">{x.dislike} </span>
+                            <img src={DislikeIcon} alt={"dislike-icon"} onClick={(e) =>
+                                handleDislikeComment(e, x.id)}/>
                         </div>
                     </div>
                 );
@@ -166,7 +181,7 @@ function Product() {
             return commentsInfo;
         }
 
-        console.log(comments)
+        // console.log(comments)
         return (
             <div className="comments">
                 <div className="title">
