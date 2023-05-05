@@ -202,6 +202,8 @@ a {
     color: #593C1C;
 
     margin-left: 25vw;
+
+    cursor: pointer;
 }
 
 .product .rate-me {

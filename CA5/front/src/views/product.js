@@ -6,6 +6,7 @@ import {getProviderById} from "../api/provider.js";
 import Header from "./header.js";
 import StarIcon from "../assets/images/icons/star.png";
 import {addUserCredit} from "../api/user.js";
+import {addToBuyList} from "../api/buyList.js";
 
 function Product() {
     const {id} = useParams();
@@ -68,6 +69,16 @@ function Product() {
         );
     }
 
+    const handleAddToCart = async (e, id) => {
+        console.warn(id)
+        e.preventDefault();
+        try {
+            await addToBuyList(sessionStorage.getItem("username"), id);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     function productInfo() {
         if (!commodity.categories) {
             return null;
@@ -106,11 +117,55 @@ function Product() {
                     </div>
                     <div className="add-to-cart">
                         <span id="price">{commodity.price}$</span>
-                        <input type="button" value="add to card" id="add-to-cart-button"/>
+                        <input type="button" value="add to card" id="add-to-cart-button" onClick={handleAddToCart}/>
                     </div>
                     <StarRating/>
                 </div>
 
+            </div>
+        )
+    }
+
+    function comments() {
+        if (!commodity.comments) {
+            return null;
+        }
+        console.log(commodity.comments.length)
+        return (
+            <div className="comments">
+                <div className="title">
+                    <p id="comment-title">Comments</p>
+                    <p id="number-of-comments">({commodity.comments.length})</p>
+                </div>
+                <div className="contents">
+                    <h6>This was awsome!!!!</h6>
+                    <p>2023-03-20&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&nbsp;#username</p>
+                    <div className="is-helpful">
+                        <span>Is this comment helpful?</span>
+                        <span className="like-number">1</span>
+                        <img src="../assets/images/icons/like.png" alt={"like-icon"}/>
+                        <span className="dislike-number">1</span>
+                        <img src="../assets/images/icons/dislike.png" alt={"dislike-icon"}/>
+                    </div>
+                </div>
+                <div className="contents">
+                    <h6>This was awfullllllllllll!!!!</h6>
+                    <p>2023-03-20&nbsp;&nbsp;&nbsp; &nbsp;&bull;&nbsp;&nbsp; &nbsp;&nbsp;#username</p>
+                    <div className="is-helpful">
+                        <span>Is this comment helpful?</span>
+                        <span className="like-number">1</span>
+                        <img src="../assets/images/icons/like.png" alt={"like-icon"}/>
+                        <span className="dislike-number">1</span>
+                        <img src="../assets/images/icons/dislike.png" alt={"dislike-icon"}/>
+                    </div>
+                </div>
+                <div className="opinion">
+                    <span id="submit-opinion-text">Submit your opinion</span>
+                    <div className="opinion-box">
+                        <input type="text" id="textbox" name="textbox"/>
+                        <input type="submit" value="Post" id="submit-opinion-button"/>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -121,41 +176,7 @@ function Product() {
 
             <div className="product-wrapper">
                 {productInfo()}
-                <div className="comments">
-                    <div className="title">
-                        <p id="comment-title">Comments</p>
-                        <p id="number-of-comments">(2)</p>
-                    </div>
-                    <div className="contents">
-                        <h6>This was awsome!!!!</h6>
-                        <p>2023-03-20&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&nbsp;#username</p>
-                        <div className="is-helpful">
-                            <span>Is this comment helpful?</span>
-                            <span className="like-number">1</span>
-                            <img src="../assets/images/icons/like.png" alt={"like-icon"}/>
-                            <span className="dislike-number">1</span>
-                            <img src="../assets/images/icons/dislike.png" alt={"dislike-icon"}/>
-                        </div>
-                    </div>
-                    <div className="contents">
-                        <h6>This was awfullllllllllll!!!!</h6>
-                        <p>2023-03-20&nbsp;&nbsp;&nbsp; &nbsp;&bull;&nbsp;&nbsp; &nbsp;&nbsp;#username</p>
-                        <div className="is-helpful">
-                            <span>Is this comment helpful?</span>
-                            <span className="like-number">1</span>
-                            <img src="../assets/images/icons/like.png" alt={"like-icon"}/>
-                            <span className="dislike-number">1</span>
-                            <img src="../assets/images/icons/dislike.png" alt={"dislike-icon"}/>
-                        </div>
-                    </div>
-                    <div className="opinion">
-                        <span id="submit-opinion-text">Submit your opinion</span>
-                        <div className="opinion-box">
-                            <input type="text" id="textbox" name="textbox"/>
-                            <input type="submit" value="Post" id="submit-opinion-button"/>
-                        </div>
-                    </div>
-                </div>
+                {comments()}
                 <div className="suggest">
                     <div className="title">
                         You also might like...
