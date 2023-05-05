@@ -33,11 +33,10 @@ public class CommoditiesController {
 
     @PostMapping(value = "/commodities/{id}/rate")
     public ResponseEntity<String> rateCommodity(@PathVariable String id,
-                                                @RequestBody Map<String, String> input,
-                                                HttpSession session) {
+                                                @RequestBody Map<String, String> input) {
         try {
             int rate = Integer.parseInt(input.get("rate"));
-            String username = (String) session.getAttribute("username");
+            String username = input.get("username");
             Commodity commodity = Baloot.getInstance().getCommodityById(id);
             commodity.addRate(username, rate);
             return new ResponseEntity<>("rate added successfully!", HttpStatus.OK);

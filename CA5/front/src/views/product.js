@@ -43,7 +43,7 @@ function Product() {
 
         const handleRateSubmit = async (event) => {
             event.preventDefault();
-            await rateCommodity(id, rating);
+            await rateCommodity(id, rating, sessionStorage.getItem("username"));
             setRating(0);
             await fetchCommodity();
         };
