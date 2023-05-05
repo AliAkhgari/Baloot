@@ -1,18 +1,28 @@
 import React, {useEffect, useState} from "react";
 import "../styles/home.css";
-import "../styles/toggle_switch.css"
-import "../styles/commodities.css"
+import "../styles/toggle_switch.css";
+import "../styles/commodities.css";
 import Header from "./header.js";
 import {getCommodities, searchCommodities} from "../api/commodities.js";
 import {addToBuyList} from "../api/buyList.js";
 
-
 const Home = () => {
-    const username = sessionStorage.getItem('username');
+    const username = sessionStorage.getItem("username");
+
     const [commodities, setCommodities] = useState([]);
-    const [allCommodities, setAllCommodities] = useState([]);
-    const [nameButtonActive, setNameButtonActive] = useState(false);
-    const [priceButtonActive, setPriceButtonActive] = useState(false);
+    const [commoditiesHtml, setCommoditiesHtml] = useState([]);
+    const [shownCommodities, setShownCommodities] = useState([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [commoditiesPerPage] = useState(12);
+
+    const [sortByName, setSortByName] = useState(false);
+    const [sortByPrice, setSortByPrice] = useState(true);
+
+    const [searchOption, setSearchOption] = useState("");
+    const [searchValue, setSearchValue] = useState("");
+
+    const [showAvailableCommodities, setShowAvailableCommodities] = useState(false);
 
 
     useEffect(() => {
@@ -20,14 +30,22 @@ const Home = () => {
         });
     }, []);
 
+    useEffect(() => {
+        async function fetchCommoditiesInfo() {
+            await commoditiesInfo();
+        }
+
+        fetchCommoditiesInfo().then(r => {
+        });
+    }, [commodities, searchValue, searchOption, sortByPrice, sortByName, showAvailableCommodities, currentPage]);
+
     function handleAvailableCommodities() {
         const isChecked = document.getElementById("available-commodities-check").checked;
         console.warn(isChecked)
         if (isChecked) {
-            const filteredCommodities = commodities.filter(commodity => commodity.inStock > 0);
-            setCommodities(filteredCommodities);
+            setShowAvailableCommodities(true);
         } else {
-            setCommodities(allCommodities);
+            setShowAvailableCommodities(false);
         }
     }
 
@@ -35,24 +53,14 @@ const Home = () => {
         try {
             const response = await getCommodities();
             setCommodities(response.data);
-            setAllCommodities(response.data);
-            console.warn("fetch commmmm")
-            console.log(response.data)
         } catch (error) {
             return [];
         }
     }
 
     async function fetchSearchedCommodities(searchOption, searchValue) {
-        try {
-            const response = await searchCommodities(searchOption, searchValue);
-            setCommodities(response.data);
-            setAllCommodities(response.data);
-            console.warn("fetch commmmm")
-            console.log(response.data)
-        } catch (error) {
-            return [];
-        }
+        setSearchOption(searchOption);
+        setSearchValue(searchValue);
     }
 
     const handleAddToCart = async (e, id) => {
@@ -67,32 +75,52 @@ const Home = () => {
 
     function handleSortCommodities(sortMethod) {
         if (sortMethod === "name") {
-            const sortedCommodities = [...commodities].sort((a, b) => {
+            setSortByName(true);
+            setSortByPrice(false);
+        } else if (sortMethod === "price") {
+            setSortByPrice(true);
+            setSortByName(false);
+        }
+
+        setCurrentPage(1);
+    }
+
+    const commoditiesInfo = async () => {
+        let comms = commodities;
+
+        if (searchValue !== "") {
+            const results = await searchCommodities(searchOption, searchValue);
+            comms = results.data;
+        }
+
+        if (sortByPrice) {
+            comms = [...comms].sort((a, b) => a.price - b.price);
+        }
+
+        if (sortByName) {
+            comms = [...comms].sort((a, b) => {
                 if (a.name < b.name) return -1;
                 if (a.name > b.name) return 1;
                 return 0;
             });
-            setAllCommodities(sortedCommodities);
-            setCommodities(sortedCommodities);
-            setNameButtonActive(true);
-            setPriceButtonActive(false);
-
-        } else if (sortMethod === "price") {
-            const sortedCommodities = [...commodities].sort((a, b) => a.price - b.price);
-            setAllCommodities(sortedCommodities);
-            setCommodities(sortedCommodities);
-            setNameButtonActive(false);
-            setPriceButtonActive(true);
-
         }
-    }
 
-    function commoditiesInfo(commodities) {
-        console.log(commodities)
+        if (showAvailableCommodities) {
+            comms = comms.filter(commodity => commodity.inStock > 0);
+        }
+
+        setShownCommodities(comms);
+
         const commodityInfo = [];
 
-        for (const x of Object.values(commodities)) {
+        const indexOfLastCommodity = currentPage * commoditiesPerPage;
+        const indexOfFirstCommodity = indexOfLastCommodity - commoditiesPerPage;
+        const currentCommodities = comms.slice(
+            indexOfFirstCommodity,
+            indexOfLastCommodity
+        );
 
+        for (const x of Object.values(currentCommodities)) {
             commodityInfo.push(
                 <div className="cards">
                     <a href={"/" + x.id}>
@@ -110,10 +138,15 @@ const Home = () => {
                         />
                     </div>
                 </div>
-        );
+            );
         }
 
-        return commodityInfo;
+        setCommoditiesHtml(commodityInfo);
+    }
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(shownCommodities.length / commoditiesPerPage); i++) {
+        pageNumbers.push(i);
     }
 
     return (
@@ -132,21 +165,44 @@ const Home = () => {
                         <h4>sort by: </h4>
                         <input type="button" value="name" id="name-filter-button"
                                onClick={() => handleSortCommodities("name")}
-                               className={nameButtonActive ? 'button_active' : 'button_deactivate'}/>
+                               className={sortByName ? 'button_active' : 'button_deactivate'}/>
                         <input type="button" value="price" id="price-filter-button"
                                onClick={() => handleSortCommodities("price")}
-                               className={priceButtonActive ? 'button_active' : 'button_deactivate'}/>
+                               className={sortByPrice ? 'button_active' : 'button_deactivate'}/>
                     </div>
                 </div>
                 <div className="products">
-                    {commoditiesInfo(commodities)}
+                    {commoditiesHtml}
+                </div>
+                <div className="pagination">
+                    <button
+                        className={`arrow ${currentPage === 1 ? "disabled" : ""}`}
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        {"<"}
+                    </button>
+                    {pageNumbers.map((number) => (
+                        <button
+                            key={number}
+                            onClick={() => setCurrentPage(number)}
+                            className={`circle ${currentPage === number ? "active" : ""}`}
+                        >
+                            {number}
+                        </button>
+                    ))}
+                    <button
+                        className={`arrow ${currentPage === pageNumbers.length ? "disabled" : ""}`}
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                        disabled={currentPage === pageNumbers.length}
+                    >
+                        {">"}
+                    </button>
                 </div>
             </div>
-        </div>
-    )
-}
 
+        </div>
+    );
+};
 
 export default Home;
-
-
