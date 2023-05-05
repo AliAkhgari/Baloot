@@ -9,7 +9,7 @@ import java.util.Map;
 public class Commodity {
     private String id;
     private String name;
-    private int providerId;
+    private String providerId;
     private int price;
     private ArrayList<String> categories = new ArrayList<>();
     private float rating;
@@ -36,11 +36,11 @@ public class Commodity {
         this.name = name;
     }
 
-    public int getProviderId() {
+    public String getProviderId() {
         return providerId;
     }
 
-    public void setProviderId(int providerId) {
+    public void setProviderId(String providerId) {
         this.providerId = providerId;
     }
 

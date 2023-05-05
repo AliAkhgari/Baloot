@@ -170,9 +170,9 @@ public class Baloot {
         throw new NotExistentUser();
     }
 
-    public Provider getProviderById(int providerId) throws NotExistentProvider {
+    public Provider getProviderById(String providerId) throws NotExistentProvider {
         for (Provider provider : Database.getInstance().getProviders())
-            if (provider.getId() == providerId)
+            if (Objects.equals(provider.getId(), providerId))
                 return provider;
 
         throw new NotExistentProvider();
@@ -189,10 +189,10 @@ public class Baloot {
         return Database.getInstance().getCommodities();
     }
 
-    public ArrayList<Commodity> getCommoditiesProvidedByProvider(int providerId) {
+    public ArrayList<Commodity> getCommoditiesProvidedByProvider(String providerId) {
         ArrayList<Commodity> commodities = new ArrayList<>();
         for (Commodity commodity : Database.getInstance().getCommodities())
-            if (commodity.getProviderId() == providerId)
+            if (Objects.equals(commodity.getProviderId(), providerId))
                 commodities.add(commodity);
 
         return commodities;
@@ -250,7 +250,7 @@ public class Baloot {
     }
 
     public ArrayList<Commodity> filterCommoditiesByProviderName(String name) {
-        int providerId = -1;
+        String providerId = "";
         for (Provider provider : Database.getInstance().getProviders()) {
             if (provider.getName().equals(name)) {
                 providerId = provider.getId();
@@ -260,11 +260,11 @@ public class Baloot {
 
         ArrayList<Commodity> result = new ArrayList<>();
 
-        if (providerId == -1)
+        if (Objects.equals(providerId, ""))
             return result;
 
         for (Commodity commodity : Database.getInstance().getCommodities())
-            if (commodity.getProviderId() == providerId)
+            if (Objects.equals(commodity.getProviderId(), providerId))
                 result.add(commodity);
 
         return result;
