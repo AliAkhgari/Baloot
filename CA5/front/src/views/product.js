@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from "react";
 import "../styles/product.css"
 import {useParams} from "react-router-dom";
-import {getCommodityById, rateCommodity} from "../api/commodities.js";
+import {addComment, getComments, getCommodityById, rateCommodity} from "../api/commodities.js";
 import {getProviderById} from "../api/provider.js";
 import Header from "./header.js";
 import StarIcon from "../assets/images/icons/star.png";
-import {addUserCredit} from "../api/user.js";
 import {addToBuyList} from "../api/buyList.js";
+import DislikeIcon from "../assets/images/icons/dislike.png"
+import LikeIcon from "../assets/images/icons/like.png"
 
 function Product() {
     const {id} = useParams();
     const [commodity, setCommodity] = useState({});
     const [providerName, setProviderName] = useState("");
-    const [rating, setRating] = useState(2);
-    const [hover, setHover] = useState(null);
+    const [comments, setComments] = useState([]);
+    const [comment, setComment] = useState("");
 
     useEffect(() => {
         fetchCommodity().then(() => {
@@ -28,6 +29,9 @@ function Product() {
 
             const responseProvider = await getProviderById(responseCommodity.data.providerId);
             setProviderName(responseProvider.data.name);
+
+            const responseComments = await getComments(id);
+            setComments(responseComments.data);
         } catch (error) {
             console.log("Error:", error.message);
         }
@@ -38,7 +42,6 @@ function Product() {
 
         function handleStarClick(starNumber) {
             setRating(starNumber);
-            console.warn(starNumber)
         }
 
         const handleRateSubmit = async (event) => {
@@ -70,7 +73,6 @@ function Product() {
     }
 
     const handleAddToCart = async (e, id) => {
-        console.warn(id)
         e.preventDefault();
         try {
             await addToBuyList(sessionStorage.getItem("username"), id);
@@ -84,7 +86,6 @@ function Product() {
             return null;
         }
         const categoryList = [];
-        console.log(commodity)
         for (const x of Object.values(commodity.categories)) {
             categoryList.push(<li>
                     <p>{x}</p>
@@ -126,44 +127,61 @@ function Product() {
         )
     }
 
-    function comments() {
-        if (!commodity.comments) {
+    function commentsSection() {
+
+        if (!comments) {
             return null;
         }
-        console.log(commodity.comments.length)
+
+        function handleCommentChange(event) {
+            setComment(event.target.value);
+        }
+
+        const handleSubmitComment = async (event) => {
+            console.log(comment)
+            event.preventDefault();
+            await addComment(id, sessionStorage.getItem("username"), comment);
+            setComment("");
+            await fetchCommodity();
+        };
+
+        function showComments() {
+            const commentsInfo = [];
+            for (const x of Object.values(comments)) {
+                commentsInfo.push(
+                    <div className="contents">
+                        <h6>{x.text}</h6>
+                        <p>{x.date}&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&nbsp;#{x.userEmail}</p>
+                        <div className="is-helpful">
+                            <span>Is this comment helpful?</span>
+                            <span className="like-number">{x.like}</span>
+                            <img src={LikeIcon} alt={"like-icon"}/>
+                            <span className="dislike-number">{x.dislike}</span>
+                            <img src={DislikeIcon} alt={"dislike-icon"}/>
+                        </div>
+                    </div>
+                );
+            }
+
+            return commentsInfo;
+        }
+
+        console.log(comments)
         return (
             <div className="comments">
                 <div className="title">
                     <p id="comment-title">Comments</p>
-                    <p id="number-of-comments">({commodity.comments.length})</p>
+                    <p id="number-of-comments">({comments.length})</p>
                 </div>
-                <div className="contents">
-                    <h6>This was awsome!!!!</h6>
-                    <p>2023-03-20&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&nbsp;#username</p>
-                    <div className="is-helpful">
-                        <span>Is this comment helpful?</span>
-                        <span className="like-number">1</span>
-                        <img src="../assets/images/icons/like.png" alt={"like-icon"}/>
-                        <span className="dislike-number">1</span>
-                        <img src="../assets/images/icons/dislike.png" alt={"dislike-icon"}/>
-                    </div>
-                </div>
-                <div className="contents">
-                    <h6>This was awfullllllllllll!!!!</h6>
-                    <p>2023-03-20&nbsp;&nbsp;&nbsp; &nbsp;&bull;&nbsp;&nbsp; &nbsp;&nbsp;#username</p>
-                    <div className="is-helpful">
-                        <span>Is this comment helpful?</span>
-                        <span className="like-number">1</span>
-                        <img src="../assets/images/icons/like.png" alt={"like-icon"}/>
-                        <span className="dislike-number">1</span>
-                        <img src="../assets/images/icons/dislike.png" alt={"dislike-icon"}/>
-                    </div>
-                </div>
+                <>
+                    {showComments()}
+                </>
+
                 <div className="opinion">
                     <span id="submit-opinion-text">Submit your opinion</span>
                     <div className="opinion-box">
-                        <input type="text" id="textbox" name="textbox"/>
-                        <input type="submit" value="Post" id="submit-opinion-button"/>
+                        <input type="text" id="textbox" name="textbox" value={comment} onChange={handleCommentChange}/>
+                        <input type="submit" value="Post" id="submit-opinion-button" onClick={handleSubmitComment}/>
                     </div>
                 </div>
             </div>
@@ -176,7 +194,7 @@ function Product() {
 
             <div className="product-wrapper">
                 {productInfo()}
-                {comments()}
+                {commentsSection()}
                 <div className="suggest">
                     <div className="title">
                         You also might like...

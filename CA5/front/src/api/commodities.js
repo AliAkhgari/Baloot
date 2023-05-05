@@ -15,3 +15,11 @@ export function rateCommodity(id, rate, username) {
 export function searchCommodities(searchOption, searchValue) {
     return axios.post(`commodities/search`, {searchOption: searchOption, searchValue: searchValue})
 }
+
+export function addComment(id, username, comment) {
+    return axios.post(`commodities/${id}/comment`, {username: username, comment: comment})
+}
+
+export function getComments(id) {
+    return axios.get(`commodities/${id}/comment`)
+}

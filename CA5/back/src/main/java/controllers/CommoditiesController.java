@@ -3,7 +3,9 @@ package controllers;
 import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
+import entities.User;
 import exceptions.NotExistentCommodity;
+import exceptions.NotExistentUser;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,13 +51,18 @@ public class CommoditiesController {
 
     @PostMapping(value = "/commodities/{id}/comment")
     public ResponseEntity<String> addCommodityComment(@PathVariable String id,
-                                                      @RequestBody Map<String, String> input,
-                                                      HttpSession session) {
+                                                      @RequestBody Map<String, String> input) {
         int commentId = Baloot.getInstance().generateCommentId();
-        String username = (String) session.getAttribute("username");
+        String username = input.get("username");
         String commentText = input.get("comment");
 
-        Comment comment = new Comment(commentId, username, Integer.parseInt(id), commentText);
+        User user = null;
+        try {
+            user = Baloot.getInstance().getUserById(username);
+        } catch (NotExistentUser ignored) {
+        }
+
+        Comment comment = new Comment(commentId, user.getEmail(), Integer.parseInt(id), commentText);
         Baloot.getInstance().addComment(comment);
 
         return new ResponseEntity<>("comment added successfully!", HttpStatus.OK);
