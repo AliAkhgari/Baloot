@@ -107,13 +107,13 @@ const UserInfo = (props) => {
         </div>
     )
 }
-const Header = ({fetchSearchedCommodities}) => {
+const Header = ({fetchSearchedCommodities, showSearchbar}) => {
     const username = sessionStorage.getItem('username');
 
     return (
         <div className={"header"}>
             <Logo/>
-            <Searchbar fetchSearchedCommodities={fetchSearchedCommodities}/>
+            {showSearchbar && <Searchbar fetchSearchedCommodities={fetchSearchedCommodities}/>}
             {username ? <UserInfo username={username}/> : <RegisterLogin/>}
         </div>
 

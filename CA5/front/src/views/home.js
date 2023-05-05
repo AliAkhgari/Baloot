@@ -123,7 +123,7 @@ const Home = () => {
         for (const x of Object.values(currentCommodities)) {
             commodityInfo.push(
                 <div className="cards">
-                    <a href={"/" + x.id}>
+                    <a href={"product/" + x.id}>
                         <h3>{x.name}</h3>
                     </a>
                     <p>{x.inStock} left in stock</p>
@@ -153,7 +153,7 @@ const Home = () => {
 
     return (
         <div>
-            <Header fetchSearchedCommodities={fetchSearchedCommodities}/>
+            <Header fetchSearchedCommodities={fetchSearchedCommodities} showSearchbar={true}/>
 
             <div className="wrapper">
                 <div className="filters">

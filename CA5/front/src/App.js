@@ -8,6 +8,7 @@ import Home from "./views/home.js";
 import Logout from "./views/logout.js";
 import Signup from "./views/signup.js";
 import User from "./views/user.js";
+import Product from "./views/product.js";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path={"/logout"} element={<Logout/>}/>
                 <Route path={"/signup"} element={<Signup/>}/>
                 <Route path={"/user"} element={<User/>}/>
+                <Route path={"/product/:id"} element={<Product/>}/>
             </Routes>
         </Router>
     );
