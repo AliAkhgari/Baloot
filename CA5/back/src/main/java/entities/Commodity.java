@@ -1,5 +1,7 @@
 package entities;
 
+import exceptions.NotInStock;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +77,9 @@ public class Commodity {
         this.inStock = inStock;
     }
 
-    public void updateInStock(int amount) {
+    public void updateInStock(int amount) throws NotInStock {
+        if ((this.inStock + amount) < 0)
+            throw new NotInStock();
         this.inStock += amount;
     }
 
