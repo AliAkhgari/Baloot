@@ -96,11 +96,11 @@ public class BuyListController {
         try {
             User user = Baloot.getInstance().getUserById(username);
             // TODO: make these two functions one in baloot
-            Baloot.getInstance().withdrawPayableAmount(user);
             Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList(username);
+            Baloot.getInstance().withdrawPayableAmount(user);
             return new ResponseEntity<>("buy list purchased successfully!", HttpStatus.OK);
             //TODO: remove not necessary exceptions
-        } catch (InsufficientCredit | MissingUserId | NotExistentUser e) {
+        } catch (InsufficientCredit | MissingUserId | NotExistentUser | NotInStock e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
