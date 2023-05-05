@@ -18,8 +18,6 @@ public class Commodity {
     private Map<String, Integer> userRate = new HashMap<>();
     private float initRate;
 
-    private ArrayList<Comment> comments = new ArrayList<>();
-
     public String getId() {
         return id;
     }
@@ -81,14 +79,6 @@ public class Commodity {
         if ((this.inStock + amount) < 0)
             throw new NotInStock();
         this.inStock += amount;
-    }
-
-    public ArrayList<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(ArrayList<Comment> comments) {
-        this.comments = comments;
     }
 
     public String getImage() {
