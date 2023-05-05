@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import "../styles/product.css"
 import {useParams} from "react-router-dom";
-import {getCommodityById} from "../api/commodities.js";
+import {getCommodityById, rateCommodity} from "../api/commodities.js";
 import {getProviderById} from "../api/provider.js";
 import Header from "./header.js";
 import StarIcon from "../assets/images/icons/star.png";
+import {addUserCredit} from "../api/user.js";
 
 function Product() {
     const {id} = useParams();
@@ -31,6 +32,42 @@ function Product() {
         }
     };
 
+    function StarRating() {
+        const [rating, setRating] = useState(0);
+
+        function handleStarClick(starNumber) {
+            setRating(starNumber);
+            console.warn(starNumber)
+        }
+
+        const handleRateSubmit = async (event) => {
+            event.preventDefault();
+            await rateCommodity(id, rating);
+            setRating(0);
+            await fetchCommodity();
+        };
+
+        return (
+            <div className="rate-me">
+                <div className="stars">
+                    <span>rate now</span>
+                    <div className="rate-bar">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((starNumber) => (
+                            <img
+                                key={starNumber}
+                                src={StarIcon}
+                                alt="star-icon"
+                                onClick={() => handleStarClick(starNumber)}
+                                className={starNumber <= rating ? "star-icon-selected" : "star-icon-unselected"}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <input type="submit" value="submit" id="rate-submit-button" onClick={handleRateSubmit}/>
+            </div>
+        );
+    }
+
     function productInfo() {
         if (!commodity.categories) {
             return null;
@@ -38,8 +75,7 @@ function Product() {
         const categoryList = [];
         console.log(commodity)
         for (const x of Object.values(commodity.categories)) {
-            categoryList.push(
-                <li>
+            categoryList.push(<li>
                     <p>{x}</p>
                 </li>
             );
@@ -72,16 +108,7 @@ function Product() {
                         <span id="price">{commodity.price}$</span>
                         <input type="button" value="add to card" id="add-to-cart-button"/>
                     </div>
-
-                    <div className="rate-me">
-                        <div className="stars">
-                            <span>rate now</span>
-                            <div className="rate-bar">
-
-                            </div>
-                        </div>
-                        <input type="submit" value="submit" id="rate-submit-button"/>
-                    </div>
+                    <StarRating/>
                 </div>
 
             </div>

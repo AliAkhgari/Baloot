@@ -212,20 +212,12 @@ a {
     margin-left: 1.5vw;
 }
 
-.star-rating {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.star-icon-selected {
+    filter: none;
 }
 
-.star {
-    font-size: 24px;
-    cursor: pointer;
-    color: #ccc;
-}
-
-.star .filled {
-    color: #f1c40f;
+.star-icon-unselected {
+    filter: grayscale(100%);
 }
 
 .product .rate-me .stars span {
@@ -240,10 +232,12 @@ a {
 }
 
 .product .rate-me .stars .rate-bar img {
-    width: 1.6vw;
-    height: 1.6vw;
+    width: 2.1vw;
+    height: 2.1vw;
 
     margin-top: 1.5vw;
+
+    cursor: pointer;
 }
 
 .product .rate-me #rate-submit-button {
@@ -263,6 +257,8 @@ a {
 
     margin-left: 18vw;
     margin-bottom: 4vw;
+
+    cursor: pointer;
 }
 
 .product-wrapper .comments {
