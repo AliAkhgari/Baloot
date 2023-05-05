@@ -135,6 +135,8 @@ const Home = () => {
                             value="add to cart"
                             onClick={(e) =>
                                 handleAddToCart(e, x.id)}
+                            disabled={x.inStock === 0}
+                            className={x.inStock === 0 ? "disabled-button" : "enabled-button"}
                         />
                     </div>
                 </div>

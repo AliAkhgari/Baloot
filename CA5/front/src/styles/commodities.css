@@ -34,9 +34,9 @@
 }
 
 .cards img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 20px;
+    width: 16vw;
+    height: 15vw;
+    border-radius: 15px;
 }
 
 .cards h3 {
@@ -82,6 +82,12 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.cards .price-add .disabled-button {
+    border: 1px solid #dcd3d3;
+    color: #a19b9b;
+    cursor: auto;
 }
 
 .cards .price-add input {
@@ -136,8 +142,8 @@
 }
 
 .pagination button.circle.active {
-    background-color: #333;
-    color: #fff;
+    background-color: #e1dcdc;
+    color: gray;
 }
 
 .pagination button.arrow {
@@ -146,7 +152,7 @@
 }
 
 .pagination button.arrow.disabled {
-    color: #ccc;
+    color: gray;
     cursor: default;
 }
 
