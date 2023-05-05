@@ -85,6 +85,25 @@ function User() {
             setIsModalOpen(false);
         };
 
+        function Modal(props) {
+            const { onClose, onConfirm, children } = props;
+
+            return (
+                <>
+                    <div className="modal-overlay"></div>
+                    <div className="modal">
+                        <div className="modal-content">
+                            {children}
+                            <div className="modal-buttons">
+                                <button id={"cancel-button"} onClick={onClose}>Close</button>
+                                <button id={"confirm-button"} onClick={onConfirm}>Confirm!</button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
         return (
             <>
                 <div className="credits">
@@ -136,25 +155,6 @@ function User() {
                         <p>Are you sure you want to add ${amount} to your account?</p>
                     </Modal>
                 )}
-            </>
-        );
-    }
-
-    function Modal(props) {
-        const { onClose, onConfirm, children } = props;
-
-        return (
-            <>
-                <div className="modal-overlay"></div>
-                <div className="modal">
-                    <div className="modal-content">
-                        {children}
-                        <div className="modal-buttons">
-                            <button id={"cancel-button"} onClick={onClose}>Close</button>
-                            <button id={"confirm-button"} onClick={onConfirm}>Confirm!</button>
-                        </div>
-                    </div>
-                </div>
             </>
         );
     }
@@ -250,8 +250,36 @@ function User() {
 
     function BuyList(props) {
         const {buyList, fetchBuyList} = props;
+        const [isModalOpen, setIsModalOpen] = useState(false);
 
         const commodityInfo = commoditiesInfo(buyList, true);
+
+        const handleOpenModal = () => {
+            setIsModalOpen(true);
+        };
+
+        const handleCloseModal = () => {
+            setIsModalOpen(false);
+        };
+
+        function Modal(props) {
+            const { onClose, onConfirm, children } = props;
+
+            return (
+                <>
+                    <div className="modal-overlay"></div>
+                    <div className="modal">
+                        <div className="modal-content">
+                            {children}
+                            <div className="modal-buttons">
+                                <button id={"cancel-button"} onClick={onClose}>Close</button>
+                                <button id={"confirm-button"} onClick={onConfirm}>Confirm!</button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
 
         return (<div className="buy-list">
                 <div className="title">
@@ -273,8 +301,14 @@ function User() {
                 </div>
 
                 <div className="buy-list-pay">
-                    <input type="button" value="Pay now!" className="submit" onClick={handlePurchase}/>
+                    <input type="button" value="Pay now!" className="submit" onClick={handleOpenModal}/>
                 </div>
+                {isModalOpen && (
+                    <Modal onClose={handleCloseModal} onConfirm={handlePurchase}>
+                        <h2>Add Credit</h2>
+                        <p>Are you sure you want to add to your account?</p>
+                    </Modal>
+                )}
             </div>
 
         )
