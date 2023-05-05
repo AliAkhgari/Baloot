@@ -2,13 +2,15 @@ import React, {useEffect, useState} from "react";
 import "../styles/home.css";
 import "../styles/toggle_switch.css"
 import "../styles/commodities.css"
-import huaweiSmall from "../assets/images/commodities/Huawei_small.png"
 import Header from "./header.js";
 import {getCommodities, searchCommodities} from "../api/commodities.js";
+import {addToBuyList} from "../api/buyList.js";
 
 
 const Home = () => {
+    const username = sessionStorage.getItem('username');
     const [commodities, setCommodities] = useState([]);
+    const [allCommodities, setAllCommodities] = useState([]);
 
     useEffect(() => {
         fetchCommodities().then(() => {
@@ -16,13 +18,21 @@ const Home = () => {
     }, []);
 
     function handleAvailableCommodities() {
-        console.log(commodities)
+        const isChecked = document.getElementById("available-commodities-check").checked;
+        console.warn(isChecked)
+        if (isChecked) {
+            const filteredCommodities = commodities.filter(commodity => commodity.inStock > 0);
+            setCommodities(filteredCommodities);
+        } else {
+            setCommodities(allCommodities);
+        }
     }
 
     async function fetchCommodities() {
         try {
             const response = await getCommodities();
             setCommodities(response.data);
+            setAllCommodities(response.data);
             console.warn("fetch commmmm")
             console.log(response.data)
         } catch (error) {
@@ -34,12 +44,23 @@ const Home = () => {
         try {
             const response = await searchCommodities(searchOption, searchValue);
             setCommodities(response.data);
+            setAllCommodities(response.data);
             console.warn("fetch commmmm")
             console.log(response.data)
         } catch (error) {
             return [];
         }
     }
+
+    const handleAddToCart = async (e, id) => {
+        e.preventDefault();
+        try {
+            await addToBuyList(username, id);
+            await fetchCommodities();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     function commoditiesInfo(commodities) {
         console.log(commodities)
@@ -56,23 +77,14 @@ const Home = () => {
                     <img src={x.image} alt=""/>
                     <div className="price-add">
                         <h4>{x.price}$</h4>
-                        <input type="button" value="add to cart"/>
+                        <input
+                            type="button"
+                            value="add to cart"
+                            onClick={(e) => handleAddToCart(e, x.commodity.id)}
+
+                        />
                     </div>
                 </div>
-            //     <div className="td" key={x.commodity.id}>
-            //         <span>{x.commodity.name}</span>
-            //         <span>
-            //     <img src={x.commodity.image} alt={x.commodity.name}/>
-            //     </span>
-            //         <span>{x.commodity.categories.join(", ")}</span>
-            //         <span>{x.commodity.price}</span>
-            //         <span>{x.commodity.providerId}</span>
-            //         <span className="rate">{x.commodity.rating}</span>
-            //         <span className="stock">{x.commodity.inStock}</span>
-            //         <span className="in-cart">
-            //
-            // </span>
-            //     </div>
         );
         }
 
@@ -88,8 +100,7 @@ const Home = () => {
                     <h3>Available commodities</h3>
 
                     <label className="switch">
-                        <input type="checkbox" onClick={handleAvailableCommodities}/>
-                        {/*<input type="checkbox"/>*/}
+                        <input id={"available-commodities-check"} type="checkbox" onClick={handleAvailableCommodities}/>
                         <span className="slider"></span>
                     </label>
                     <div className="sort">
@@ -100,84 +111,6 @@ const Home = () => {
                 </div>
                 <div className="products">
                     {commoditiesInfo(commodities)}
-                    {/*<div className="cards">*/}
-                    {/*    <a href="/">*/}
-                    {/*        <h3>Huawei nova 9</h3>*/}
-                    {/*    </a>*/}
-                    {/*    <p>1 left in stock</p>*/}
-                    {/*    <img src={huaweiSmall} alt=""/>*/}
-                    {/*    <div className="price-add">*/}
-                    {/*        <h4>300$</h4>*/}
-                    {/*        <input type="button" value="add to cart"/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<div className="cards">*/}
-                    {/*    <a href="/">*/}
-                    {/*        <h3>Huawei nova 9</h3>*/}
-                    {/*    </a>*/}
-                    {/*    <p>1 left in stock</p>*/}
-                    {/*    <img src={huaweiSmall} alt=""/>*/}
-                    {/*    <div className="price-add">*/}
-                    {/*        <h4>300$</h4>*/}
-                    {/*        <input type="button" value="add to cart"/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<div className="cards">*/}
-                    {/*    <a href="/">*/}
-                    {/*        <h3>Huawei nova 9</h3>*/}
-                    {/*    </a>*/}
-                    {/*    <p>1 left in stock</p>*/}
-                    {/*    <img src={huaweiSmall} alt=""/>*/}
-                    {/*    <div className="price-add">*/}
-                    {/*        <h4>300$</h4>*/}
-                    {/*        <input type="button" value="add to cart"/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-
-                    {/*<div className="cards">*/}
-                    {/*    <a href="/">*/}
-                    {/*        <h3>Huawei nova 9</h3>*/}
-                    {/*    </a>*/}
-                    {/*    <p>1 left in stock</p>*/}
-                    {/*    <img src={huaweiSmall} alt=""/>*/}
-                    {/*    <div className="price-add">*/}
-                    {/*        <h4>300$</h4>*/}
-                    {/*        <input type="button" value="add to cart"/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<div className="cards">*/}
-                    {/*    <a href="/">*/}
-                    {/*        <h3>Huawei nova 9</h3>*/}
-                    {/*    </a>*/}
-                    {/*    <p>1 left in stock</p>*/}
-                    {/*    <img src={huaweiSmall} alt=""/>*/}
-                    {/*    <div className="price-add">*/}
-                    {/*        <h4>300$</h4>*/}
-                    {/*        <input type="button" value="add to cart"/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<div className="cards">*/}
-                    {/*    <a href="/">*/}
-                    {/*        <h3>Huawei nova 9</h3>*/}
-                    {/*    </a>*/}
-                    {/*    <p>1 left in stock</p>*/}
-                    {/*    <img src={huaweiSmall} alt=""/>*/}
-                    {/*    <div className="price-add">*/}
-                    {/*        <h4>300$</h4>*/}
-                    {/*        <input type="button" value="add to cart"/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<div className="cards">*/}
-                    {/*    <a href="/">*/}
-                    {/*        <h3>Huawei nova 9</h3>*/}
-                    {/*    </a>*/}
-                    {/*    <p>1 left in stock</p>*/}
-                    {/*    <img src={huaweiSmall} alt=""/>*/}
-                    {/*    <div className="price-add">*/}
-                    {/*        <h4>300$</h4>*/}
-                    {/*        <input type="button" value="add to cart"/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
                 </div>
             </div>
         </div>
