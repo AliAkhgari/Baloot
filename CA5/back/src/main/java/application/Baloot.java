@@ -125,7 +125,7 @@ public class Baloot {
         user.addCurrentDiscountToUsed();
     }
 
-    public void moveCommoditiesFromBuyListToPurchasedList(String userId) throws MissingUserId, NotExistentUser, InsufficientCredit {
+    public void moveCommoditiesFromBuyListToPurchasedList(String userId) throws MissingUserId, NotExistentUser, InsufficientCredit, NotInStock {
         if (userId == null) throw new MissingUserId();
 
         User user = getUserById(userId);
@@ -133,8 +133,10 @@ public class Baloot {
             user.addPurchasedItem(entry.getKey(), entry.getValue());
             try {
                 Commodity commodity = getCommodityById(entry.getKey());
-                commodity.updateInStock(-1);
+                commodity.updateInStock(-entry.getValue());
             } catch (NotExistentCommodity ignored) {
+            } catch (NotInStock e) {
+                throw new NotInStock();
             }
         }
 
