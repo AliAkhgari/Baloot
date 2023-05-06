@@ -115,6 +115,7 @@ function Product() {
                             <ul id="categories-list">
                                 {categoryList}
                             </ul>
+                            <div>Show more ...</div>
                         </div>
                         <div className="rating">
                             <img src={StarIcon} alt="star-icon"/>
@@ -124,7 +125,8 @@ function Product() {
                     </div>
                     <div className="add-to-cart">
                         <span id="price">{commodity.price}$</span>
-                        <input type="button" value="add to card" id="add-to-cart-button" onClick={handleAddToCart}/>
+                        <input type="button" value="add to card" id="add-to-cart-button"
+                               onClick={(e) => handleAddToCart(e, id)}/>
                     </div>
                     <StarRating/>
                 </div>
@@ -211,7 +213,6 @@ function Product() {
 
         function showSuggestion() {
             const suggestionInfo = [];
-            console.log(suggestedCommodities)
             for (const x of Object.values(suggestedCommodities)) {
                 suggestionInfo.push(
                     <div className="cards">
@@ -222,7 +223,8 @@ function Product() {
                         <img src={x.image}/>
                         <div className="price-add">
                             <h4>{x.price}$</h4>
-                            <input type="button" value="add to cart"/>
+                            <input type="button" value="add to cart"
+                                   onClick={(e) => handleAddToCart(e, x.id)}/>
                         </div>
                     </div>
                 );
