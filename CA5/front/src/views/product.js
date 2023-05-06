@@ -5,10 +5,12 @@ import {addComment, getComments, getCommodityById, getSuggestedCommodities, rate
 import {getProviderById} from "../api/provider.js";
 import Header from "./header.js";
 import StarIcon from "../assets/images/icons/star.png";
-import {addToBuyList} from "../api/buyList.js";
+import {addToBuyList, removeFromBuyList} from "../api/buyList.js";
 import DislikeIcon from "../assets/images/icons/dislike.png"
 import LikeIcon from "../assets/images/icons/like.png"
 import {dislikeComment, likeComment} from "../api/comments.js";
+import {useDispatch, useSelector} from "react-redux";
+import {addToCart, removeFromCart, selectCartItem} from "../components/cartItemCount";
 
 function Product() {
     const {id} = useParams();
@@ -18,11 +20,21 @@ function Product() {
     const [comment, setComment] = useState("");
     const [suggestedCommodities, setSuggestedCommodities] = useState([]);
 
+    const dispatch = useDispatch();
+
+    const username = sessionStorage.getItem("username");
+
+
     useEffect(() => {
         fetchCommodity().then(() => {
         });
 
     }, []);
+
+    function useCartItemNumber(id) {
+        const cartItem = useSelector(state => selectCartItem(state, id));
+        return cartItem || 0;
+    }
 
     const fetchCommodity = async () => {
         try {
@@ -52,7 +64,7 @@ function Product() {
 
         const handleRateSubmit = async (event) => {
             event.preventDefault();
-            await rateCommodity(id, rating, sessionStorage.getItem("username"));
+            await rateCommodity(id, rating, username);
             setRating(0);
             await fetchCommodity();
         };
@@ -78,19 +90,35 @@ function Product() {
         );
     }
 
-    const handleAddToCart = async (e, id) => {
+
+    const HandleAddToCart = async (e, id) => {
+        console.error(id)
         e.preventDefault();
         try {
-            await addToBuyList(sessionStorage.getItem("username"), id);
+            await addToBuyList(username, id);
+            dispatch(addToCart({id}));
         } catch (error) {
             console.error(error);
         }
     };
 
-    function productInfo() {
+    const HandleRemoveFromCart = async (e, id) => {
+        e.preventDefault();
+        try {
+            await removeFromBuyList(username, id);
+            dispatch(removeFromCart({id}));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    function ProductInfo() {
+        const cartItemNumber = useCartItemNumber(commodity.id);
         if (!commodity.categories) {
             return null;
         }
+
+
         const categoryList = [];
         for (const x of Object.values(commodity.categories)) {
             categoryList.push(<li>
@@ -125,8 +153,30 @@ function Product() {
                     </div>
                     <div className="add-to-cart">
                         <span id="price">{commodity.price}$</span>
-                        <input type="button" value="add to card" id="add-to-cart-button"
-                               onClick={(e) => handleAddToCart(e, id)}/>
+                        {cartItemNumber === 0 ?
+                            <input
+                                type="button"
+                                value="add to cart"
+                                id={"add-to-cart-button"}
+                                onClick={(e) => HandleAddToCart(e, commodity.id)}
+                                disabled={commodity.inStock === 0}
+                                className={commodity.inStock === 0 ? "disabled-button" : "enabled-button"}
+                            /> :
+                            <span className={"home-cart"}>
+                            <input
+                                type="button"
+                                onClick={(e) => HandleRemoveFromCart(e, commodity.id)}
+                                id="minus-home"
+                                value="-"
+                            />
+                            <span id="num-home">{cartItemNumber}</span>
+                            <input
+                                type="button"
+                                onClick={(e) => HandleAddToCart(e, commodity.id)}
+                                id="minus-home"
+                                value="+"
+                            />
+                        </span>}
                     </div>
                     <StarRating/>
                 </div>
@@ -147,20 +197,20 @@ function Product() {
 
         const handleSubmitComment = async (event) => {
             event.preventDefault();
-            await addComment(id, sessionStorage.getItem("username"), comment);
+            await addComment(id, username, comment);
             setComment("");
             await fetchCommodity();
         };
 
         const handleLikeComment = async (event, commentId) => {
             event.preventDefault();
-            await likeComment(commentId, sessionStorage.getItem("username"));
+            await likeComment(commentId, username);
             await fetchCommodity();
         };
 
         const handleDislikeComment = async (event, commentId) => {
             event.preventDefault();
-            await dislikeComment(commentId, sessionStorage.getItem("username"));
+            await dislikeComment(commentId, username);
             await fetchCommodity();
         };
 
@@ -211,24 +261,60 @@ function Product() {
 
     function suggestionSection() {
 
+
+        function SuggestionCard({x}) {
+            const cartItemNumber = useCartItemNumber(x.id);
+            console.log(cartItemNumber)
+
+            return (
+                <div className="cards">
+                    <a href={"/product/" + x.id}>
+                        <h3>{x.name}</h3>
+                    </a>
+                    <p>{x.inStock} left in stock</p>
+                    <img src={x.image} alt={"product-img"}/>
+                    <div className="price-add">
+                        <h4>{x.price}$</h4>
+
+                        {cartItemNumber === 0 ?
+                            <input
+                                type="button"
+                                value="add to cart"
+                                id={"add-to-cart-button"}
+                                onClick={(e) => HandleAddToCart(e, x.id)}
+                                disabled={x.inStock === 0}
+                                className={x.inStock === 0 ? "disabled-button" : "enabled-button"}
+                            /> :
+                            <span className={"home-cart"}>
+                            <input
+                                type="button"
+                                onClick={(e) => HandleRemoveFromCart(e, x.id)}
+                                id="minus-home"
+                                value="-"
+                            />
+                            <span id="num-home">{cartItemNumber}</span>
+                            <input
+                                type="button"
+                                onClick={(e) => HandleAddToCart(e, x.id)}
+                                id="minus-home"
+                                value="+"
+                            />
+                        </span>}
+
+
+                    </div>
+                </div>
+            );
+        }
+
         function showSuggestion() {
+
             const suggestionInfo = [];
             for (const x of Object.values(suggestedCommodities)) {
-                suggestionInfo.push(
-                    <div className="cards">
-                        <a href={"/providers/" + x.id}>
-                            <h3>{x.name}</h3>
-                        </a>
-                        <p>{x.inStock} left in stock</p>
-                        <img src={x.image}/>
-                        <div className="price-add">
-                            <h4>{x.price}$</h4>
-                            <input type="button" value="add to cart"
-                                   onClick={(e) => handleAddToCart(e, x.id)}/>
-                        </div>
-                    </div>
-                );
+                // console.log(x.id)
+                suggestionInfo.push(<SuggestionCard x={x}/>);
             }
+
 
             return suggestionInfo;
         }
@@ -250,7 +336,7 @@ function Product() {
             <Header showSearchbar={false}/>
 
             <div className="product-wrapper">
-                {productInfo()}
+                {ProductInfo()}
                 {commentsSection()}
                 {suggestionSection()}
 

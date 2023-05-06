@@ -4,7 +4,9 @@ import "../styles/toggle_switch.css";
 import "../styles/commodities.css";
 import Header from "./header.js";
 import {getCommodities, searchCommodities} from "../api/commodities.js";
-import {addToBuyList} from "../api/buyList.js";
+import {addToBuyList, removeFromBuyList} from "../api/buyList.js";
+import {useDispatch, useSelector} from 'react-redux';
+import {addToCart, removeFromCart, selectCartItem} from '../components/cartItemCount.js';
 
 const Home = () => {
     const username = sessionStorage.getItem("username");
@@ -24,6 +26,9 @@ const Home = () => {
 
     const [showAvailableCommodities, setShowAvailableCommodities] = useState(false);
 
+    const dispatch = useDispatch();
+
+
 
     useEffect(() => {
         fetchCommodities().then(() => {
@@ -31,6 +36,8 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
+        // commoditiesInfo().then(r => {
+        // });
         async function fetchCommoditiesInfo() {
             await commoditiesInfo();
         }
@@ -39,9 +46,14 @@ const Home = () => {
         });
     }, [commodities, searchValue, searchOption, sortByPrice, sortByName, showAvailableCommodities, currentPage]);
 
+
+    function useCartItemNumber(id) {
+        const cartItem = useSelector(state => selectCartItem(state, id));
+        return cartItem || 0;
+    }
+
     function handleAvailableCommodities() {
         const isChecked = document.getElementById("available-commodities-check").checked;
-        console.warn(isChecked)
         if (isChecked) {
             setShowAvailableCommodities(true);
         } else {
@@ -63,11 +75,21 @@ const Home = () => {
         setSearchValue(searchValue);
     }
 
-    const handleAddToCart = async (e, id) => {
-        console.warn(id)
+    const HandleAddToCart = async (e, id) => {
         e.preventDefault();
         try {
             await addToBuyList(username, id);
+            dispatch(addToCart({id}));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const HandleRemoveFromCart = async (e, id) => {
+        e.preventDefault();
+        try {
+            await removeFromBuyList(username, id);
+            dispatch(removeFromCart({id}));
         } catch (error) {
             console.error(error);
         }
@@ -85,7 +107,48 @@ const Home = () => {
         setCurrentPage(1);
     }
 
-    const commoditiesInfo = async () => {
+    function CommodityCard({commodity}) {
+        const cartItemNumber = useCartItemNumber(commodity.id);
+
+        return (
+            <div className="cards">
+                <a href={"product/" + commodity.id}>
+                    <h3>{commodity.name}</h3>
+                </a>
+                <p>{commodity.inStock} left in stock</p>
+                <img src={commodity.image} alt=""/>
+                <div className="price-add-home">
+                    <h4>{commodity.price}$</h4>
+
+                    {cartItemNumber === 0 ?
+                        <input
+                            type="button"
+                            value="add to cart"
+                            onClick={(e) => HandleAddToCart(e, commodity.id)}
+                            disabled={commodity.inStock === 0}
+                            className={commodity.inStock === 0 ? "disabled-button" : "enabled-button"}
+                        /> :
+                        <span className={"home-cart"}>
+                            <input
+                                type="button"
+                                onClick={(e) => HandleRemoveFromCart(e, commodity.id)}
+                                id="minus-home"
+                                value="-"
+                            />
+                            <span id="num-home">{cartItemNumber}</span>
+                            <input
+                                type="button"
+                                onClick={(e) => HandleAddToCart(e, commodity.id)}
+                                id="plus-home"
+                                value="+"
+                            />
+                        </span>}
+                </div>
+            </div>
+        );
+    }
+
+    const getShownCommodities = async () => {
         let comms = commodities;
 
         if (searchValue !== "") {
@@ -110,41 +173,39 @@ const Home = () => {
         }
 
         setShownCommodities(comms);
+    }
 
+    const commoditiesInfo = async () => {
         const commodityInfo = [];
+        await getShownCommodities();
 
         const indexOfLastCommodity = currentPage * commoditiesPerPage;
         const indexOfFirstCommodity = indexOfLastCommodity - commoditiesPerPage;
-        const currentCommodities = comms.slice(
+        const currentCommodities = shownCommodities.slice(
             indexOfFirstCommodity,
             indexOfLastCommodity
         );
 
         for (const x of Object.values(currentCommodities)) {
-            commodityInfo.push(
-                <div className="cards">
-                    <a href={"product/" + x.id}>
-                        <h3>{x.name}</h3>
-                    </a>
-                    <p>{x.inStock} left in stock</p>
-                    <img src={x.image} alt=""/>
-                    <div className="price-add">
-                        <h4>{x.price}$</h4>
-                        <input
-                            type="button"
-                            value="add to cart"
-                            onClick={(e) =>
-                                handleAddToCart(e, x.id)}
-                            disabled={x.inStock === 0}
-                            className={x.inStock === 0 ? "disabled-button" : "enabled-button"}
-                        />
-                    </div>
-                </div>
-            );
+            commodityInfo.push(<CommodityCard commodity={x}/>);
         }
 
-        setCommoditiesHtml(commodityInfo);
-    }
+        setCommoditiesHtml(commodityInfo)
+    };
+
+    useEffect(() => {
+        // commoditiesInfo().then(r => {
+        // });
+        async function fetchCommoditiesInfo() {
+            await commoditiesInfo();
+        }
+
+        fetchCommoditiesInfo().then(r => {
+        });
+    }, [commodities, searchValue, searchOption, sortByPrice, sortByName, showAvailableCommodities, currentPage]);
+
+
+
 
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(shownCommodities.length / commoditiesPerPage); i++) {

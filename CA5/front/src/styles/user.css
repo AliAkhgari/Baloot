@@ -344,7 +344,7 @@ body {
     height: 4vw;
 }
 
-.buy-list .buy-list-table .in-cart #minus, #plus {
+#minus, #plus {
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 400;
@@ -363,7 +363,8 @@ body {
     cursor: pointer;
 }
 
-.buy-list .buy-list-table .in-cart #num {
+
+#num {
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 400;
