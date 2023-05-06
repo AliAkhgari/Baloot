@@ -1,0 +1,17 @@
+import React from 'react';
+import {Navigate} from "react-router-dom";
+
+const withAuth = (Component) => {
+    return (props) => {
+        const username = sessionStorage.getItem("username");
+        const isAuthenticated = !!username;
+
+        if (isAuthenticated) {
+            return <Component {...props} />;
+        } else {
+            return <Navigate replace to="/login" />;
+        }
+    };
+};
+
+export default withAuth;
