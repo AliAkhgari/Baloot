@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../styles/product.css"
 import {useParams} from "react-router-dom";
-import {addComment, getComments, getCommodityById, rateCommodity} from "../api/commodities.js";
+import {addComment, getComments, getCommodityById, getSuggestedCommodities, rateCommodity} from "../api/commodities.js";
 import {getProviderById} from "../api/provider.js";
 import Header from "./header.js";
 import StarIcon from "../assets/images/icons/star.png";
@@ -16,6 +16,7 @@ function Product() {
     const [providerName, setProviderName] = useState("");
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState("");
+    const [suggestedCommodities, setSuggestedCommodities] = useState([]);
 
     useEffect(() => {
         fetchCommodity().then(() => {
@@ -33,6 +34,10 @@ function Product() {
 
             const responseComments = await getComments(id);
             setComments(responseComments.data);
+
+            const responseSuggested = await getSuggestedCommodities(id);
+            setSuggestedCommodities(responseSuggested.data);
+
         } catch (error) {
             console.log("Error:", error.message);
         }
@@ -181,7 +186,6 @@ function Product() {
             return commentsInfo;
         }
 
-        // console.log(comments)
         return (
             <div className="comments">
                 <div className="title">
@@ -203,6 +207,42 @@ function Product() {
         )
     }
 
+    function suggestionSection() {
+
+        function showSuggestion() {
+            const suggestionInfo = [];
+            console.log(suggestedCommodities)
+            for (const x of Object.values(suggestedCommodities)) {
+                suggestionInfo.push(
+                    <div className="cards">
+                        <a href={"/providers/" + x.id}>
+                            <h3>{x.name}</h3>
+                        </a>
+                        <p>{x.inStock} left in stock</p>
+                        <img src={x.image}/>
+                        <div className="price-add">
+                            <h4>{x.price}$</h4>
+                            <input type="button" value="add to cart"/>
+                        </div>
+                    </div>
+                );
+            }
+
+            return suggestionInfo;
+        }
+
+        return (
+            <div className="suggest">
+                <div className="title">
+                    You also might like...
+                </div>
+                <div className="products">
+                    {showSuggestion()}
+                </div>
+            </div>
+        )
+    }
+
     return (
         <>
             <Header showSearchbar={false}/>
@@ -210,57 +250,8 @@ function Product() {
             <div className="product-wrapper">
                 {productInfo()}
                 {commentsSection()}
-                <div className="suggest">
-                    <div className="title">
-                        You also might like...
-                    </div>
-                    <div className="products">
-                        <div className="cards">
-                            <a href="#">
-                                <h3>Huawei nova 9</h3>
-                            </a>
-                            <p>1 left in stock</p>
-                            <img src="../assets/images/commodities/Huawei_small.png"/>
-                            <div className="price-add">
-                                <h4>300$</h4>
-                                <input type="button" value="add to cart"/>
-                            </div>
-                        </div>
-                        <div className="cards">
-                            <a href="#">
-                                <h3>Huawei nova 9</h3>
-                            </a>
-                            <p>1 left in stock</p>
-                            <img src="../assets/images/commodities/Huawei_small.png"/>
-                            <div className="price-add">
-                                <h4>300$</h4>
-                                <input type="button" value="add to cart"/>
-                            </div>
-                        </div>
-                        <div className="cards">
-                            <a href="#">
-                                <h3>Huawei nova 9</h3>
-                            </a>
-                            <p>1 left in stock</p>
-                            <img src="../assets/images/commodities/Huawei_small.png"/>
-                            <div className="price-add">
-                                <h4>300$</h4>
-                                <input type="button" value="add to cart"/>
-                            </div>
-                        </div>
-                        <div className="cards">
-                            <a href="#">
-                                <h3>Huawei nova 9</h3>
-                            </a>
-                            <p>1 left in stock</p>
-                            <img src="../assets/images/commodities/Huawei_small.png"/>
-                            <div className="price-add">
-                                <h4>300$</h4>
-                                <input type="button" value="add to cart"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {suggestionSection()}
+
             </div>
         </>
 

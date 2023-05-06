@@ -6,7 +6,6 @@ import entities.Commodity;
 import entities.User;
 import exceptions.NotExistentCommodity;
 import exceptions.NotExistentUser;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,6 +87,17 @@ public class CommoditiesController {
         };
 
         return new ResponseEntity<>(commodities, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/commodities/{id}/suggested")
+    public ResponseEntity<ArrayList<Commodity>> getSuggestedCommodities(@PathVariable String id) {
+        try {
+            Commodity commodity = Baloot.getInstance().getCommodityById(id);
+            ArrayList<Commodity> suggestedCommodities = Baloot.getInstance().suggestSimilarCommodities(commodity);
+            return new ResponseEntity<>(suggestedCommodities, HttpStatus.OK);
+        } catch (NotExistentCommodity ignored) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
     }
 
 }

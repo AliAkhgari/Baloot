@@ -23,3 +23,7 @@ export function addComment(id, username, comment) {
 export function getComments(id) {
     return axios.get(`commodities/${id}/comment`)
 }
+
+export function getSuggestedCommodities(id) {
+    return axios.get(`/commodities/${id}/suggested`)
+}
