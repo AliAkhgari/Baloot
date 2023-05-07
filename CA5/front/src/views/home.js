@@ -13,7 +13,7 @@ const Home = () => {
 
     const [commodities, setCommodities] = useState([]);
     const [commoditiesHtml, setCommoditiesHtml] = useState([]);
-    const [shownCommodities, setShownCommodities] = useState([]);
+    const [finalProducts, setFinalProducts] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [commoditiesPerPage] = useState(12);
@@ -28,29 +28,27 @@ const Home = () => {
 
     const dispatch = useDispatch();
 
-
-
-    useEffect(() => {
-        fetchCommodities().then(() => {
-        });
-    }, []);
-
-    useEffect(() => {
-        // commoditiesInfo().then(r => {
-        // });
-        async function fetchCommoditiesInfo() {
-            await commoditiesInfo();
-        }
-
-        fetchCommoditiesInfo().then(r => {
-        });
-    }, [commodities, searchValue, searchOption, sortByPrice, sortByName, showAvailableCommodities, currentPage]);
-
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(finalProducts.length / commoditiesPerPage); i++) {
+        pageNumbers.push(i);
+    }
 
     function useCartItemNumber(id) {
         const cartItem = useSelector(state => selectCartItem(state, id));
         return cartItem || 0;
     }
+
+    useEffect(() => {
+        fetchCommodities().then(r => {
+        });
+    }, []);
+
+    useEffect(() => {
+        showCommodities().then(r => {
+        });
+
+    }, [commodities, searchValue, searchOption, sortByPrice, sortByName, showAvailableCommodities, currentPage]);
+
 
     function handleAvailableCommodities() {
         const isChecked = document.getElementById("available-commodities-check").checked;
@@ -66,7 +64,15 @@ const Home = () => {
             const response = await getCommodities();
             setCommodities(response.data);
         } catch (error) {
-            return [];
+            console.error(error);
+        }
+    }
+
+    async function showCommodities() {
+        try {
+            await commoditiesInfo();
+        } catch (error) {
+            console.error(error)
         }
     }
 
@@ -148,20 +154,23 @@ const Home = () => {
         );
     }
 
-    const getShownCommodities = async () => {
-        let comms = commodities;
+    const commoditiesInfo = async () => {
+        const commodityInfo = [];
+
+        let products = commodities;
 
         if (searchValue !== "") {
             const results = await searchCommodities(searchOption, searchValue);
-            comms = results.data;
+            products = results.data;
+            setCurrentPage(1);
         }
 
         if (sortByPrice) {
-            comms = [...comms].sort((a, b) => a.price - b.price);
+            products = [...products].sort((a, b) => a.price - b.price);
         }
 
         if (sortByName) {
-            comms = [...comms].sort((a, b) => {
+            products = [...products].sort((a, b) => {
                 if (a.name < b.name) return -1;
                 if (a.name > b.name) return 1;
                 return 0;
@@ -169,19 +178,14 @@ const Home = () => {
         }
 
         if (showAvailableCommodities) {
-            comms = comms.filter(commodity => commodity.inStock > 0);
+            products = products.filter(commodity => commodity.inStock > 0);
         }
 
-        setShownCommodities(comms);
-    }
-
-    const commoditiesInfo = async () => {
-        const commodityInfo = [];
-        await getShownCommodities();
+        setFinalProducts(products);
 
         const indexOfLastCommodity = currentPage * commoditiesPerPage;
         const indexOfFirstCommodity = indexOfLastCommodity - commoditiesPerPage;
-        const currentCommodities = shownCommodities.slice(
+        const currentCommodities = products.slice(
             indexOfFirstCommodity,
             indexOfLastCommodity
         );
@@ -190,26 +194,37 @@ const Home = () => {
             commodityInfo.push(<CommodityCard commodity={x}/>);
         }
 
-        setCommoditiesHtml(commodityInfo)
+        setCommoditiesHtml(commodityInfo);
     };
 
-    useEffect(() => {
-        // commoditiesInfo().then(r => {
-        // });
-        async function fetchCommoditiesInfo() {
-            await commoditiesInfo();
-        }
-
-        fetchCommoditiesInfo().then(r => {
-        });
-    }, [commodities, searchValue, searchOption, sortByPrice, sortByName, showAvailableCommodities, currentPage]);
-
-
-
-
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(shownCommodities.length / commoditiesPerPage); i++) {
-        pageNumbers.push(i);
+    function pagination() {
+        return (
+            <div className="pagination">
+                <button
+                    className={`arrow ${currentPage === 1 ? "disabled" : ""}`}
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                >
+                    {"<"}
+                </button>
+                {pageNumbers.map((number) => (
+                    <button
+                        key={number}
+                        onClick={() => setCurrentPage(number)}
+                        className={`circle ${currentPage === number ? "active" : ""}`}
+                    >
+                        {number}
+                    </button>
+                ))}
+                <button
+                    className={`arrow ${currentPage === pageNumbers.length ? "disabled" : ""}`}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    disabled={currentPage === pageNumbers.length}
+                >
+                    {">"}
+                </button>
+            </div>
+        )
     }
 
     return (
@@ -221,7 +236,8 @@ const Home = () => {
                     <h3>Available commodities</h3>
 
                     <label className="switch">
-                        <input id={"available-commodities-check"} type="checkbox" onClick={handleAvailableCommodities}/>
+                        <input id={"available-commodities-check"} type="checkbox"
+                               onClick={handleAvailableCommodities}/>
                         <span className="slider"></span>
                     </label>
                     <div className="sort">
@@ -237,31 +253,7 @@ const Home = () => {
                 <div className="products">
                     {commoditiesHtml}
                 </div>
-                <div className="pagination">
-                    <button
-                        className={`arrow ${currentPage === 1 ? "disabled" : ""}`}
-                        onClick={() => setCurrentPage(currentPage - 1)}
-                        disabled={currentPage === 1}
-                    >
-                        {"<"}
-                    </button>
-                    {pageNumbers.map((number) => (
-                        <button
-                            key={number}
-                            onClick={() => setCurrentPage(number)}
-                            className={`circle ${currentPage === number ? "active" : ""}`}
-                        >
-                            {number}
-                        </button>
-                    ))}
-                    <button
-                        className={`arrow ${currentPage === pageNumbers.length ? "disabled" : ""}`}
-                        onClick={() => setCurrentPage(currentPage + 1)}
-                        disabled={currentPage === pageNumbers.length}
-                    >
-                        {">"}
-                    </button>
-                </div>
+                {pagination()}
             </div>
 
         </div>

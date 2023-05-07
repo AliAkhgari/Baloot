@@ -9,9 +9,7 @@ const Logo = () => {
     return (
         <Link to={`/`}>
             <div className={"logo-container"}>
-                <a href={"/"}>
-                    <img src={logo} alt={"logo"} className={"logo"}/>
-                </a>
+                <img src={logo} alt={"logo"} className={"logo"}/>
                 <span className={"logo-name"}>Baloot</span>
             </div>
         </Link>
@@ -83,9 +81,10 @@ const UserInfo = (props) => {
     }
 
     useEffect(() => {
-        fetchBuyList().then((data) => {
+        fetchBuyList().then(() => {
 
         });
+        // eslint-disable-next-line
     }, []);
 
     return (
