@@ -123,6 +123,8 @@ public class User {
     }
 
     public void addCurrentDiscountToUsed() {
+        if (this.currentDiscount == null)
+            return;
         this.usedDiscounts.add(this.currentDiscount);
         this.currentDiscount = null;
     }

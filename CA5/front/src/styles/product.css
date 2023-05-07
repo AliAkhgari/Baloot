@@ -49,9 +49,9 @@ a {
 
 .product .commodity-picture img {
     width: 45vw;
-    height: 45vw;
+    height: 40vw;
 
-    border-radius: 15px;
+    border-radius: 20px;
 }
 
 .product .commodity-info .box {
@@ -59,7 +59,7 @@ a {
     flex-direction: row;
 
     width: 100%;
-    height: 70%;
+    height: 60%;
 }
 
 .product .commodity-info .box .info #commodity-title {
@@ -186,7 +186,7 @@ a {
     color: #593C1C;
 }
 
-.product .add-to-cart #add-to-cart-button {
+.product .add-to-cart .enabled-button {
     background: #FFFFFF;
     border: 1px solid #593C1C;
     border-radius: 15px;
@@ -201,9 +201,43 @@ a {
 
     color: #593C1C;
 
-    margin-left: 25vw;
+    margin-left: 23vw;
 
     cursor: pointer;
+}
+
+.product .add-to-cart .disabled-button {
+    background: #FFFFFF;
+    border: 1px solid #c7beb8;
+    border-radius: 15px;
+
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.3vw;
+
+    height: 5vw;
+    width: 11vw;
+
+    color: #c7beb8;
+
+    margin-left: 20vw;
+    margin-right: 2vw;
+
+}
+
+.product #product-cart {
+    display: flex;
+    align-items: center;
+
+    background: #FFFFFF;
+    border: 1px solid #593C1C;
+    border-radius: 15px;
+    padding: 0;
+
+    height: 3vw;
+
+    margin-left: 23vw;
 }
 
 .product .rate-me {

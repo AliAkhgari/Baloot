@@ -314,12 +314,14 @@ function User() {
                     const response = await applyDiscount(discountCode, username);
                     return response.data;
                 } catch (error) {
+                    console.log("ppppppppp")
                     toast.error(error.response.data);
                     return 0;
                 }
             }
 
             const handleApplyDiscount = () => {
+                console.log("kkkkkkk")
                 addDiscount(discountCode).then((discountAmount) => {
                     if (discountAmount === 0) {
                         setDiscount(0);

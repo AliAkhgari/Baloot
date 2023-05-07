@@ -106,6 +106,13 @@ public class Commodity {
         }
 
         this.rating = ((this.initRate + sum) / (this.userRate.size() + 1));
+    }
 
+    public Map<String, Integer> getUserRate() {
+        return userRate;
+    }
+
+    public void setUserRate(Map<String, Integer> userRate) {
+        this.userRate = userRate;
     }
 }

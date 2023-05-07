@@ -11,6 +11,7 @@ import LikeIcon from "../assets/images/icons/like.png"
 import {dislikeComment, likeComment} from "../api/comments.js";
 import {useDispatch, useSelector} from "react-redux";
 import {addToCart, removeFromCart, selectCartItem} from "../components/cartItemCount";
+import {toast, ToastContainer} from "react-toastify";
 
 function Product() {
     const {id} = useParams();
@@ -51,7 +52,7 @@ function Product() {
             setSuggestedCommodities(responseSuggested.data);
 
         } catch (error) {
-            console.log("Error:", error.message);
+            toast.error(error.response.data);
         }
     };
 
@@ -92,13 +93,13 @@ function Product() {
 
 
     const HandleAddToCart = async (e, id) => {
-        console.error(id)
         e.preventDefault();
         try {
             await addToBuyList(username, id);
             dispatch(addToCart({id}));
         } catch (error) {
             console.error(error);
+            toast.error(error.response.data);
         }
     };
 
@@ -109,6 +110,7 @@ function Product() {
             dispatch(removeFromCart({id}));
         } catch (error) {
             console.error(error);
+            toast.error(error.response.data);
         }
     };
 
@@ -117,7 +119,6 @@ function Product() {
         if (!commodity.categories) {
             return null;
         }
-
 
         const categoryList = [];
         for (const x of Object.values(commodity.categories)) {
@@ -143,12 +144,11 @@ function Product() {
                             <ul id="categories-list">
                                 {categoryList}
                             </ul>
-                            <div>Show more ...</div>
                         </div>
                         <div className="rating">
                             <img src={StarIcon} alt="star-icon"/>
                             <span id="rate">{commodity.rating}</span>
-                            <span id="rate-number">(12)</span>
+                            <span id="rate-number">({Object.keys(commodity.userRate).length})</span>
                         </div>
                     </div>
                     <div className="add-to-cart">
@@ -162,7 +162,7 @@ function Product() {
                                 disabled={commodity.inStock === 0}
                                 className={commodity.inStock === 0 ? "disabled-button" : "enabled-button"}
                             /> :
-                            <span className={"home-cart"}>
+                            <span id={"product-cart"}>
                             <input
                                 type="button"
                                 onClick={(e) => HandleRemoveFromCart(e, commodity.id)}
@@ -261,10 +261,8 @@ function Product() {
 
     function suggestionSection() {
 
-
         function SuggestionCard({x}) {
             const cartItemNumber = useCartItemNumber(x.id);
-            console.log(cartItemNumber)
 
             return (
                 <div className="cards">
@@ -280,7 +278,7 @@ function Product() {
                             <input
                                 type="button"
                                 value="add to cart"
-                                id={"add-to-cart-button"}
+                                // id={"add-to-cart-button"}
                                 onClick={(e) => HandleAddToCart(e, x.id)}
                                 disabled={x.inStock === 0}
                                 className={x.inStock === 0 ? "disabled-button" : "enabled-button"}
@@ -308,25 +306,29 @@ function Product() {
         }
 
         function showSuggestion() {
-
             const suggestionInfo = [];
             for (const x of Object.values(suggestedCommodities)) {
-                // console.log(x.id)
                 suggestionInfo.push(<SuggestionCard x={x}/>);
             }
-
 
             return suggestionInfo;
         }
 
         return (
             <div className="suggest">
-                <div className="title">
-                    You also might like...
-                </div>
-                <div className="products">
-                    {showSuggestion()}
-                </div>
+                {showSuggestion().length === 0 ?
+                    (<></>)
+                    : (
+                        <>
+                            <div className="title">
+                                You also might like...
+                            </div>
+                            <div className="products">
+                                {showSuggestion()}
+                            </div>
+                        </>
+                    )
+                }
             </div>
         )
     }
@@ -336,6 +338,7 @@ function Product() {
             <Header showSearchbar={false}/>
 
             <div className="product-wrapper">
+                <ToastContainer/>
                 {ProductInfo()}
                 {commentsSection()}
                 {suggestionSection()}
