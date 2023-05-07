@@ -85,10 +85,11 @@ body {
 
 }
 
-.modal-content .modal-buttons #confirm-button {
+.modal-content #confirm-button {
     font-family: Inter, sans-serif;
     font-style: normal;
     font-size: 1.2vw;
+    width: 30%;
 
     color: white;
     border: none;
@@ -98,6 +99,57 @@ body {
     border-radius: 10px;
     cursor: pointer;
 
+}
+
+.modal-content #confirm-button-confirmed {
+    font-family: Inter, sans-serif;
+    font-style: normal;
+    font-size: 1.2vw;
+    width: 30%;
+
+    color: white;
+    border: none;
+    background: var(--lightbrown);
+
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.modal-content #discount-code {
+    font-family: Inter, sans-serif;
+    font-style: normal;
+    font-size: 1.2vw;
+    width: 50%;
+
+    margin-right: 30px;
+
+    color: gray;
+    border: 1px solid var(--gray);
+    border-radius: 15px;
+    background: var(--white);
+}
+
+.product-name {
+    margin-right: 10px;
+}
+
+.product-quantity {
+    margin-right: 1px;
+}
+
+.product-subtotal {
+    float: right;
+    color: var(--lightbrown);
+    flex-grow: 1;
+    text-align: right;
+}
+
+.invalidated-total {
+    text-decoration: line-through;
+}
+
+#discount-price {
+    color: red;
 }
 
 .userWrapper {

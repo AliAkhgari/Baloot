@@ -10,7 +10,14 @@ import CalendarIcon from "../assets/images/icons/calendar.png";
 import LocationIcon from "../assets/images/icons/location.png";
 import ShopIcon from "../assets/images/icons/shop.png";
 import HistoryIcon from "../assets/images/icons/history.png"
-import {addToBuyList, getBuyList, getPurchasedList, purchaseBuyList, removeFromBuyList} from "../api/buyList.js";
+import {
+    addToBuyList,
+    applyDiscount,
+    getBuyList,
+    getPurchasedList,
+    purchaseBuyList,
+    removeFromBuyList
+} from "../api/buyList.js";
 import {Link} from "react-router-dom";
 
 function User() {
@@ -23,7 +30,6 @@ function User() {
         try {
             const response = await getUserById(username);
             setUser(response.data);
-            // console.warn("fetch")
         } catch (error) {
         }
     }
@@ -32,8 +38,6 @@ function User() {
         try {
             const response = await getBuyList(username);
             setBuyList(response.data);
-            console.warn("fetch buy list")
-            // console.log(response)
         } catch (error) {
         }
     }
@@ -42,8 +46,6 @@ function User() {
         try {
             const response = await getPurchasedList(username);
             setPurchaseList(response.data);
-            console.warn("fetch purchase list")
-            // console.log(response)
         } catch (error) {
         }
     }
@@ -204,8 +206,9 @@ function User() {
             await purchaseBuyList(username);
             await fetchBuyList();
             await fetchPurchasedList();
+            await fetchUser();
         } catch (error) {
-            // console.error(error);
+            console.error(error);
         }
     };
 
@@ -278,51 +281,99 @@ function User() {
         const ProductModal = ({ products, show, onClose }) => {
             const [discountCode, setDiscountCode] = useState('');
             const [discount, setDiscount] = useState(0);
+            const [isSubmitted, setIsSubmitted] = useState(true);
 
-            const totalPrice = products.reduce((acc, cur) => acc + cur.price, 0);
-            const discountedPrice = totalPrice - discount;
+            const totalPrice = products.reduce((total, product) => total + product.commodity.price * product.quantity, 0);
+            const discountedPrice = totalPrice * (1 - discount / 100);
 
             const handleDiscountCodeChange = (event) => {
                 setDiscountCode(event.target.value);
             };
 
+            async function addDiscount(discountCode) {
+                try {
+                    const response = await applyDiscount(discountCode, username);
+                    console.warn("fuckkkk : " + response.data);
+                    return response.data;
+                } catch (error) {
+                    console.error("fuckkkk : " + error);
+                    return 0;
+                }
+            }
+
             const handleApplyDiscount = () => {
-                // Add your discount code validation logic here
-                setDiscount(10); // Example: apply a fixed discount of 10
+                addDiscount(discountCode).then((discountAmount) => {
+                    if (discountAmount === 0) {
+                        setDiscount(0);
+                    } else {
+                        setDiscount(discountAmount.discount);
+                        setIsSubmitted(false);
+                    }
+                });
             };
 
             return (
-                <Modal show={show} onHide={onClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Products</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <ul>
-                            {products.map((product) => (
-                                <li key={product.id}>{product.name}</li>
-                            ))}
-                        </ul>
-                        <div>
-                            <label htmlFor="discount-code">Discount Code:</label>
-                            <input
-                                id="discount-code"
-                                type="text"
-                                value={discountCode}
-                                onChange={handleDiscountCodeChange}
-                            />
-                            <button onClick={handleApplyDiscount}>Apply</button>
+                <Modal show={show} onHide={onClose} className="modal-overlay">
+                    <div className="modal">
+                        <div className="modal-content">
+                            <h2>Your cart</h2>
+                            <p>
+                                {products.length > 0 ? (
+                                    <>
+                                        <ul>
+                                            {products.map((product) => (
+                                                <li>
+                                                    <span className="product-name">{product.commodity.name}</span>
+                                                    <span className="product-quantity">x {product.quantity}</span>
+                                                    <span
+                                                        className="product-subtotal">${product.commodity.price * product.quantity}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <div>
+                                            <input
+                                                id="discount-code"
+                                                type="text"
+                                                value={discountCode}
+                                                placeholder={"Code"}
+                                                onChange={handleDiscountCodeChange}
+                                            />
+                                            {isSubmitted ?
+                                                (<button id={"confirm-button"}
+                                                         onClick={handleApplyDiscount}>Submit</button>)
+                                                : (<button id={"confirm-button-confirmed"}>Submitted</button>)
+                                            }
+                                        </div>
+                                        <div>
+                                            <p className={isSubmitted ? '' : 'invalidated-total'}>total: ${totalPrice}</p>
+                                            {discount !== 0 ?
+                                                (<>
+                                                    <span>with discount: </span>
+                                                    <span id={"discount-price"}>${discountedPrice}</span>
+                                                </>)
+                                                : (<></>)}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <p>No products found.</p>
+                                )}
+
+                            </p>
+                            <div className="modal-buttons">
+                                <button id="cancel-button" onClick={onClose}>
+                                    Close
+                                </button>
+                                {products.length > 0 ? (
+                                    <button id="confirm-button" onClick={handlePurchase}>
+                                        Buy!
+                                    </button>) : (<></>)}
+                            </div>
                         </div>
-                        <div>
-                            <p>Total Price before Discount: {totalPrice}</p>
-                            <p>Total Price after Discount: {discountedPrice}</p>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button onClick={onClose}>Close</button>
-                    </Modal.Footer>
+                    </div>
                 </Modal>
             );
         };
+
 
         return (<div className="buy-list">
                 <div className="title">
@@ -347,7 +398,7 @@ function User() {
                     <input type="button" value="Pay now!" className="submit" onClick={handleOpenModal}/>
                 </div>
                 {isModalOpen && (
-                    <ProductModal show={isModalOpen} onClose={handleCloseModal} />
+                    <ProductModal show={isModalOpen} onClose={handleCloseModal} products={buyList}/>
                 )}
             </div>
 
@@ -358,8 +409,6 @@ function User() {
         const {purchasedList, fetchPurchasedList} = props;
 
         const commodityInfo = commoditiesInfo(purchasedList, false);
-
-        console.log(commodityInfo)
 
         return (
             <div className="history">
