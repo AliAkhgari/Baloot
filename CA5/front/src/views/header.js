@@ -7,19 +7,20 @@ import {getBuyList} from "../api/buyList.js";
 
 const Logo = () => {
     return (
-        <div className={"logo-container"}>
-            <a href={"/"}>
-                <img src={logo} alt={"logo"} className={"logo"}/>
-            </a>
-            <span className={"logo-name"}>Baloot</span>
-        </div>
+        <Link to={`/`}>
+            <div className={"logo-container"}>
+                <a href={"/"}>
+                    <img src={logo} alt={"logo"} className={"logo"}/>
+                </a>
+                <span className={"logo-name"}>Baloot</span>
+            </div>
+        </Link>
     )
 }
 
 const RegisterLogin = () => {
     return (
         <div className="login-signup">
-            {/*TODO: convert id to class because they are same!*/}
             <Link to="/signup">
                 <input type="button" value="Register" id="signup-button"/>
             </Link>
