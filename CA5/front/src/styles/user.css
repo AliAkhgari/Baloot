@@ -334,11 +334,6 @@ body {
     padding: 1vw;
 }
 
-.buy-list-table .td img {
-    max-width: 50%;
-    height: auto;
-}
-
 .buy-list-table .th span {
     flex-basis: calc(100% / 8);
     text-align: center;
@@ -508,9 +503,12 @@ body {
     padding: 1vw;
 }
 
+.buy-list-table .td img,
 .history .history-table .td img {
-    max-width: 50%;
-    height: auto;
+    width: 10vw;
+    height: 7vw;
+
+    border-radius: 10px;
 }
 
 .history .history-table .th span {
