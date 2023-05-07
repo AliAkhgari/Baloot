@@ -195,8 +195,8 @@ a {
     font-weight: 400;
     font-size: 1.3vw;
 
-    height: 5vw;
-    width: 11vw;
+    height: 3vw;
+    width: 9vw;
 
     color: #593C1C;
 
@@ -446,9 +446,7 @@ a {
 
 .comments .opinion .opinion-box {
     display: flex;
-    margin-top: 2vw;
-    margin-left: 1.5vw;
-    margin-bottom: 2vw;
+    margin: 2vw 2.5vw 2vw 1.5vw;
 }
 
 .comments .opinion .opinion-box #textbox {

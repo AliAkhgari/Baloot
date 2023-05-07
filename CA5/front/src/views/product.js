@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import "../styles/product.css"
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {addComment, getComments, getCommodityById, getSuggestedCommodities, rateCommodity} from "../api/commodities.js";
 import {getProviderById} from "../api/provider.js";
 import Header from "./header.js";
@@ -139,7 +139,7 @@ function Product() {
                             <p id="commodity-title">{commodity.name}</p>
                             <br></br>
                             <p id="commodity-in-stock-number">{commodity.inStock} left in stock</p>
-                            <p id="provider">by <a href={"provider/" + commodity.providerId}>{providerName}</a></p>
+                            <p id="provider">by <a href={"/provider/" + commodity.providerId}>{providerName}</a></p>
                             <span id="category-text">Category(s)</span>
                             <ul id="categories-list">
                                 {categoryList}
@@ -157,7 +157,6 @@ function Product() {
                             <input
                                 type="button"
                                 value="add to cart"
-                                id={"add-to-cart-button"}
                                 onClick={(e) => HandleAddToCart(e, commodity.id)}
                                 disabled={commodity.inStock === 0}
                                 className={commodity.inStock === 0 ? "disabled-button" : "enabled-button"}
@@ -217,10 +216,11 @@ function Product() {
         function showComments() {
             const commentsInfo = [];
             for (const x of Object.values(comments)) {
+                console.log(x)
                 commentsInfo.push(
                     <div className="contents">
                         <h6>{x.text}</h6>
-                        <p>{x.date}&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&nbsp;#{x.userEmail}</p>
+                        <p>{x.date}&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&nbsp;#{x.username}</p>
                         <div className="is-helpful">
                             <span>Is this comment helpful?</span>
                             <span className="like-number">{x.like}</span>
@@ -270,7 +270,9 @@ function Product() {
                         <h3>{x.name}</h3>
                     </a>
                     <p>{x.inStock} left in stock</p>
-                    <img src={x.image} alt={"product-img"}/>
+                    <Link to={`/product/` + x.id}>
+                        <img src={x.image} alt={"product-img"}/>
+                    </Link>
                     <div className="price-add">
                         <h4>{x.price}$</h4>
 
@@ -278,7 +280,6 @@ function Product() {
                             <input
                                 type="button"
                                 value="add to cart"
-                                // id={"add-to-cart-button"}
                                 onClick={(e) => HandleAddToCart(e, x.id)}
                                 disabled={x.inStock === 0}
                                 className={x.inStock === 0 ? "disabled-button" : "enabled-button"}

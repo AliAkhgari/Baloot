@@ -1,10 +1,11 @@
 import Header from "./header";
 import {getAllProvidedCommodities, getProviderById} from "../api/provider";
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {addToCart, removeFromCart, selectCartItem} from "../components/cartItemCount";
 import {addToBuyList, removeFromBuyList} from "../api/buyList";
+import "../styles/provider.css"
 
 function ProviderPage() {
     const {id} = useParams();
@@ -73,13 +74,14 @@ function ProviderPage() {
     function Commodity({x}) {
         const cartItemNumber = useCartItemNumber(x.id);
         return (
-            <div className="products">
                 <div className="cards">
                     <a href={"/product/" + x.id}>
                         <h3>{x.name}</h3>
                     </a>
                     <p>{x.inStock} left in stock</p>
-                    <img src={x.image} alt={"product-img"}/>
+                    <Link to={`/product/` + x.id}>
+                        <img src={x.image} alt={"product-img"}/>
+                    </Link>
                     <div className="price-add">
                         <h4>{x.price}$</h4>
 
@@ -87,7 +89,6 @@ function ProviderPage() {
                             <input
                                 type="button"
                                 value="add to cart"
-                                id={"add-to-cart-button"}
                                 onClick={(e) => HandleAddToCart(e, x.id)}
                                 disabled={x.inStock === 0}
                                 className={x.inStock === 0 ? "disabled-button" : "enabled-button"}
@@ -107,10 +108,7 @@ function ProviderPage() {
                                 value="+"
                             />
                         </span>}
-
-
                     </div>
-                </div>
             </div>
         );
     }
@@ -119,10 +117,8 @@ function ProviderPage() {
 
         const suggestionInfo = [];
         for (const x of Object.values(products)) {
-            // console.log(x.id)
             suggestionInfo.push(<Commodity x={x}/>);
         }
-
 
         return suggestionInfo;
     }
@@ -131,19 +127,14 @@ function ProviderPage() {
         <>
             <Header/>
             <div className={"provider-wrapper"}>
+                <img src={provider.image} alt={"provider-img"}/>
                 <div className={"provider-info"}>
-                    <img src={provider.image} alt={"provider-img"}/>
-                    <p>{provider.name}</p>
+                    <span className={"provider-name"}>{provider.name}</span>
+                    <span className={"since"}>since {new Date(provider.registryDate).getFullYear()}</span>
                 </div>
-                {/*<div className={"products"}>*/}
-                {/*    <p>All provided commodities</p>*/}
-                {/*    <div className={"cards"}>*/}
-                {/*        {showCommodities()}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
 
-                <div className="products">
-                    <div className="title">
+                <div className="provided">
+                    <div className="provided-title">
                         All provided commodities
                     </div>
                     <div className="products">

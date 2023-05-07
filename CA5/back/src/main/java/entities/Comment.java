@@ -9,22 +9,21 @@ public class Comment {
 
     int id;
     private String userEmail;
+    private String username;
     private int commodityId;
     private String text;
     private String date;
-
     private int like;
     private int dislike;
-    private int neutral;
-
     private Map<String, String> userVote = new HashMap<>();
 
     public Comment() {
     }
 
-    public Comment(int id, String userEmail, int commodityId, String text) {
+    public Comment(int id, String userEmail, String username, int commodityId, String text) {
         this.id = id;
         this.userEmail = userEmail;
+        this.username = username;
         this.commodityId = commodityId;
         this.text = text;
         this.date = getCurrentDate();
@@ -50,6 +49,14 @@ public class Comment {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public int getCommodityId() {
@@ -95,7 +102,6 @@ public class Comment {
 
         this.like = 0;
         this.dislike = 0;
-        this.neutral = 0;
 
         for (String key : userVote.keySet()) {
             if (userVote.get(key).equals("like"))
@@ -103,7 +109,7 @@ public class Comment {
             else if (userVote.get(key).equals("dislike"))
                 this.dislike += 1;
             else if (userVote.get(key).equals("neutral"))
-                this.neutral += 1;
+                ;
         }
     }
 
