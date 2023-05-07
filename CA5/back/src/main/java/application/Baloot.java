@@ -108,7 +108,6 @@ public class Baloot {
     public float getCurrentBuyListPrice(User user) {
         float total = 0;
         for (var entry : new ArrayList<>(user.getBuyList().entrySet())) {
-            user.addPurchasedItem(entry.getKey(), entry.getValue());
             try {
                 Commodity commodity = getCommodityById(entry.getKey());
                 total += commodity.getPrice() * entry.getValue();

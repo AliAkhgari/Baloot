@@ -8,6 +8,7 @@ import {addToBuyList, removeFromBuyList} from "../api/buyList.js";
 import {useDispatch, useSelector} from 'react-redux';
 import {addToCart, removeFromCart, selectCartItem} from '../components/cartItemCount.js';
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
 const Home = () => {
     const username = sessionStorage.getItem("username");
@@ -65,7 +66,7 @@ const Home = () => {
             const response = await getCommodities();
             setCommodities(response.data);
         } catch (error) {
-            console.error(error);
+            toast.error(error.response.data);
         }
     }
 
@@ -73,7 +74,7 @@ const Home = () => {
         try {
             await commoditiesInfo();
         } catch (error) {
-            console.error(error)
+            toast.error(error.response.data);
         }
     }
 
@@ -86,9 +87,10 @@ const Home = () => {
         e.preventDefault();
         try {
             await addToBuyList(username, id);
+            console.log("add to cart home")
             dispatch(addToCart({id}));
         } catch (error) {
-            console.error(error);
+            toast.error(error.response.data);
         }
     };
 
@@ -98,7 +100,7 @@ const Home = () => {
             await removeFromBuyList(username, id);
             dispatch(removeFromCart({id}));
         } catch (error) {
-            console.error(error);
+            toast.error(error.response.data);
         }
     };
 

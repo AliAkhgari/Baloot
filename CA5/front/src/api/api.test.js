@@ -1,7 +1,5 @@
-import {getComments, getCommodities, getCommodityById, rateCommodity} from "./commodities.js";
-import {getUserById} from "./user.js";
-import {addToBuyList, getBuyList, getPurchasedList, purchaseBuyList} from "./buyList.js";
-import {getProviderById} from "./provider.js";
+
+import {getDiscount} from "./buyList";
 
 // getUserById("amir")
 //     .then(response => console.log(response.data))
@@ -54,6 +52,10 @@ import {getProviderById} from "./provider.js";
 //     .then(response => console.log(response.data))
 //     .catch(error => console.error(error));
 
-getComments("1")
-    .then(response => console.log(response.data))
-    .catch(error => console.error(error));
+// getComments("1")
+//     .then(response => console.log(response.data))
+//     .catch(error => console.error(error));
+
+// getDiscount("EVERYTHINGOFFTWENTYFIVE")
+//     .then(response => console.log(response.data))
+//     .catch(error => console.error(error));

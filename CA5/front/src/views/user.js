@@ -19,12 +19,16 @@ import {
     removeFromBuyList
 } from "../api/buyList.js";
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {addToCart, removeFromCart} from "../components/cartItemCount";
+import {toast, ToastContainer} from "react-toastify";
 
 function User() {
     const username = sessionStorage.getItem('username');
     const [user, setUser] = useState({});
     const [buyList, setBuyList] = useState({});
     const [purchaseList, setPurchaseList] = useState({});
+    const dispatch = useDispatch();
 
     async function fetchUser() {
         try {
@@ -47,6 +51,7 @@ function User() {
             const response = await getPurchasedList(username);
             setPurchaseList(response.data);
         } catch (error) {
+            toast.error(error.response.data);
         }
     }
 
@@ -75,10 +80,14 @@ function User() {
 
         const handleSubmit = async (event) => {
             event.preventDefault();
-            await addUserCredit(user.username, parseFloat(amount));
+            console.log(amount)
+            await addUserCredit(user.username, amount)
+                .then(() => {})
+                .catch((error) => {toast.error(error.response.data)})
+
             setAmount('');
-            fetchUser();
-            setIsModalOpen(false); // Close the modal after submitting
+            await fetchUser();
+            setIsModalOpen(false);
         };
 
         const handleOpenModal = () => {
@@ -163,7 +172,9 @@ function User() {
                 </div>
 
                 {isModalOpen && (
-                    <Modal onClose={handleCloseModal} onConfirm={handleSubmit}>
+                    <Modal
+                        onClose={handleCloseModal}
+                        onConfirm={(e) => handleSubmit(e)}>
                         <h2>Add Credit</h2>
                         <p>Are you sure you want to add ${amount} to your account?</p>
                     </Modal>
@@ -177,6 +188,8 @@ function User() {
         try {
             await addToBuyList(username, id);
             await fetchBuyList();
+
+            dispatch(addToCart({id}));
         } catch (error) {
             console.error(error);
         }
@@ -187,6 +200,7 @@ function User() {
         try {
             await removeFromBuyList(username, id);
             await fetchBuyList();
+            dispatch(removeFromCart({id}));
         } catch (error) {
             console.error(error);
         }
@@ -200,6 +214,10 @@ function User() {
         )
     }
 
+    const resetCart = () => ({
+        type: 'cart/reset',
+    });
+
     const handlePurchase = async (e) => {
         e.preventDefault();
         try {
@@ -207,8 +225,9 @@ function User() {
             await fetchBuyList();
             await fetchPurchasedList();
             await fetchUser();
+            dispatch(resetCart());
         } catch (error) {
-            console.error(error);
+            toast.error(error.response.data);
         }
     };
 
@@ -265,7 +284,7 @@ function User() {
     }
 
     function BuyList(props) {
-        const {buyList, fetchBuyList} = props;
+        const {buyList} = props;
         const [isModalOpen, setIsModalOpen] = useState(false);
 
         const commodityInfo = commoditiesInfo(buyList, true);
@@ -293,10 +312,9 @@ function User() {
             async function addDiscount(discountCode) {
                 try {
                     const response = await applyDiscount(discountCode, username);
-                    console.warn("fuckkkk : " + response.data);
                     return response.data;
                 } catch (error) {
-                    console.error("fuckkkk : " + error);
+                    toast.error(error.response.data);
                     return 0;
                 }
             }
@@ -406,7 +424,7 @@ function User() {
     }
 
     function PurchaseHistory(props) {
-        const {purchasedList, fetchPurchasedList} = props;
+        const {purchasedList} = props;
 
         const commodityInfo = commoditiesInfo(purchasedList, false);
 
@@ -438,6 +456,8 @@ function User() {
             <Header/>
 
             <div className="userWrapper">
+                <ToastContainer/>
+
                 <UserCredits user={user} fetchUser={fetchUser}/>
 
                 <BuyList buyList={buyList} fetchBuyList={fetchBuyList}/>

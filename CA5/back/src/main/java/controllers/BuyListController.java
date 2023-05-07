@@ -122,19 +122,4 @@ public class BuyListController {
         }
     }
 
-//    @PostMapping(value = "/buy-list/discount/{id}")
-//    public ResponseEntity<Object> checkDiscount(@PathVariable String id, @RequestBody Map<String, String> input) {
-//        try {
-//            Discount discount = Baloot.getInstance().getDiscountByCode(id);
-//            User user = Baloot.getInstance().getUserById(input.get("username"));
-//
-//            Baloot.getInstance().checkDiscountExpiration(user, discount);
-//            return new ResponseEntity<>(discount, HttpStatus.OK);
-//        } catch (NotExistentDiscount | NotExistentUser e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        } catch (ExpiredDiscount e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
 }
