@@ -11,6 +11,7 @@ const Logout = () => {
 
     useEffect(() => {
         sessionStorage.clear();
+        console.log(sessionStorage.getItem("username"));
         dispatch(resetCart());
 
         toast.success("You have been logged out!");

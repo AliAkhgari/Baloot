@@ -42,10 +42,8 @@ public class LoginController {
             Baloot.getInstance().addUser(newUser);
             return new ResponseEntity<>("signup successfully!", HttpStatus.OK);
         } catch (UsernameAlreadyTaken e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-
     }
 }
 
