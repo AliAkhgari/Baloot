@@ -19,3 +19,11 @@ export function getPurchasedList(username) {
 export function purchaseBuyList(username) {
     return axios.post(`/buy-list/purchase`, {username: username});
 }
+
+// export function getDiscount(id) {
+//     return axios.get(`/buy-list/discount/${id}`);
+// }
+
+export function applyDiscount(id, username) {
+    return axios.post(`/buy-list/discount/${id}`, {username: username});
+}
