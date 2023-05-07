@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import "../styles/user.css"
 import "../styles/footer.css"
 import Header from "./header.js";
+import { Modal } from 'react-bootstrap';
 import {addUserCredit, getUserById} from "../api/user.js";
 import UserIcon from "../assets/images/icons/user.png";
 import MailIcon from "../assets/images/icons/mail.png";
@@ -262,24 +263,54 @@ function User() {
             setIsModalOpen(false);
         };
 
-        function Modal(props) {
-            const { onClose, onConfirm, children } = props;
+        const ProductModal = ({ products, show, onClose }) => {
+            const [discountCode, setDiscountCode] = useState('');
+            const [discount, setDiscount] = useState(0);
+
+            const totalPrice = products.reduce((acc, cur) => acc + cur.price, 0);
+            const discountedPrice = totalPrice - discount;
+
+            const handleDiscountCodeChange = (event) => {
+                setDiscountCode(event.target.value);
+            };
+
+            const handleApplyDiscount = () => {
+                // Add your discount code validation logic here
+                setDiscount(10); // Example: apply a fixed discount of 10
+            };
 
             return (
-                <>
-                    <div className="modal-overlay"></div>
-                    <div className="modal">
-                        <div className="modal-content">
-                            {children}
-                            <div className="modal-buttons">
-                                <button id={"cancel-button"} onClick={onClose}>Close</button>
-                                <button id={"confirm-button"} onClick={onConfirm}>Confirm!</button>
-                            </div>
+                <Modal show={show} onHide={onClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Products</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ul>
+                            {products.map((product) => (
+                                <li key={product.id}>{product.name}</li>
+                            ))}
+                        </ul>
+                        <div>
+                            <label htmlFor="discount-code">Discount Code:</label>
+                            <input
+                                id="discount-code"
+                                type="text"
+                                value={discountCode}
+                                onChange={handleDiscountCodeChange}
+                            />
+                            <button onClick={handleApplyDiscount}>Apply</button>
                         </div>
-                    </div>
-                </>
+                        <div>
+                            <p>Total Price before Discount: {totalPrice}</p>
+                            <p>Total Price after Discount: {discountedPrice}</p>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button onClick={onClose}>Close</button>
+                    </Modal.Footer>
+                </Modal>
             );
-        }
+        };
 
         return (<div className="buy-list">
                 <div className="title">
@@ -304,10 +335,7 @@ function User() {
                     <input type="button" value="Pay now!" className="submit" onClick={handleOpenModal}/>
                 </div>
                 {isModalOpen && (
-                    <Modal onClose={handleCloseModal} onConfirm={handlePurchase}>
-                        <h2>Add Credit</h2>
-                        <p>Are you sure you want to add to your account?</p>
-                    </Modal>
+                    <ProductModal show={isModalOpen} onClose={handleCloseModal} />
                 )}
             </div>
 

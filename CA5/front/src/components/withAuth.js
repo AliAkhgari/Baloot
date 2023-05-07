@@ -8,9 +8,9 @@ const withAuth = (Component) => {
 
         if (isAuthenticated) {
             return <Component {...props} />;
-        } else {
-            return <Navigate replace to="/login" />;
         }
+        return <Navigate replace to="/login" />;
+
     };
 };
 

@@ -10,13 +10,13 @@ const Logout = () => {
     });
 
     useEffect(() => {
-        sessionStorage.removeItem("username");
+        sessionStorage.clear();
         dispatch(resetCart());
 
         toast.success("You have been logged out!");
 
         setTimeout(() => {
-            window.location.replace("/");
+            window.location.replace("/login");
         }, 2000);
     }, []);
 
