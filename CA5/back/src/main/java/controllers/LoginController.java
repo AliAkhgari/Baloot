@@ -4,6 +4,7 @@ import application.Baloot;
 import entities.User;
 import exceptions.IncorrectPassword;
 import exceptions.NotExistentUser;
+import exceptions.UsernameAlreadyTaken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +38,14 @@ public class LoginController {
         String password = input.get("password");
 
         User newUser = new User(username, password, email, birthDate, address);
-        Baloot.getInstance().addUser(newUser);
+        try {
+            Baloot.getInstance().addUser(newUser);
+            return new ResponseEntity<>("signup successfully!", HttpStatus.OK);
+        } catch (UsernameAlreadyTaken e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>("signup successfully!", HttpStatus.OK);
+
     }
 }
 

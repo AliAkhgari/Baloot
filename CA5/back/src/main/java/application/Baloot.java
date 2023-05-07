@@ -305,7 +305,11 @@ public class Baloot {
         return user.getPurchasedList();
     }
 
-    public void addUser(User user) {
+    public void addUser(User user) throws UsernameAlreadyTaken {
+        for (User user1 : Database.getInstance().getUsers())
+            if (user1.getUsername().equals(user.getUsername()))
+                throw new UsernameAlreadyTaken();
+        
         Database.getInstance().addUser(user);
     }
 
