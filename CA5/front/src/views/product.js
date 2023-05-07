@@ -58,16 +58,19 @@ function Product() {
 
     function StarRating() {
         const [rating, setRating] = useState(0);
+        const [isSubmitting, setIsSubmitting] = useState(false);
 
         function handleStarClick(starNumber) {
             setRating(starNumber);
         }
 
         const handleRateSubmit = async (event) => {
+            setIsSubmitting(true);
             event.preventDefault();
             await rateCommodity(id, rating, username);
             setRating(0);
             await fetchCommodity();
+            setIsSubmitting(false);
         };
 
         return (
@@ -86,7 +89,11 @@ function Product() {
                         ))}
                     </div>
                 </div>
-                <input type="submit" value="submit" id="rate-submit-button" onClick={handleRateSubmit}/>
+                {/*<input type="submit" value="submit" id="rate-submit-button" onClick={handleRateSubmit}/>*/}
+
+                <input type="submit" id={isSubmitting ? 'submit-rate-button-loading' : "rate-submit-button"}
+                       value={isSubmitting ? 'Loading' : 'Post'} disabled={isSubmitting}
+                       onClick={handleRateSubmit} />
             </div>
         );
     }
@@ -185,6 +192,8 @@ function Product() {
     }
 
     function commentsSection() {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [isSubmitting, setIsSubmitting] = useState(false);
 
         if (!comments) {
             return null;
@@ -195,10 +204,12 @@ function Product() {
         }
 
         const handleSubmitComment = async (event) => {
+            setIsSubmitting(true);
             event.preventDefault();
             await addComment(id, username, comment);
             setComment("");
             await fetchCommodity();
+            setIsSubmitting(false);
         };
 
         const handleLikeComment = async (event, commentId) => {
@@ -252,7 +263,9 @@ function Product() {
                     <span id="submit-opinion-text">Submit your opinion</span>
                     <div className="opinion-box">
                         <input type="text" id="textbox" name="textbox" value={comment} onChange={handleCommentChange}/>
-                        <input type="submit" value="Post" id="submit-opinion-button" onClick={handleSubmitComment}/>
+                        <input type="submit" id={isSubmitting ? 'submit-button-loading' : "submit-opinion-button"}
+                               value={isSubmitting ? 'Loading' : 'Post'} disabled={isSubmitting}
+                               onClick={handleSubmitComment} />
                     </div>
                 </div>
             </div>

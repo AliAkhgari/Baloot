@@ -275,7 +275,7 @@ a {
     cursor: pointer;
 }
 
-.product .rate-me #rate-submit-button {
+.product .rate-me #rate-submit-button, #submit-rate-button-loading {
     font-family: 'Inter', serif;
     font-style: normal;
     font-weight: 500;
@@ -295,6 +295,14 @@ a {
 
     cursor: pointer;
 }
+
+.product .rate-me #submit-rate-button-loading {
+    cursor: progress;
+    background-color: var(--lightbrown);
+    color: #ece6e6;
+}
+
+
 
 .product-wrapper .comments {
     display: flex;
@@ -442,6 +450,22 @@ a {
     width: 8%;
 
     cursor: pointer;
+}
+
+.comments .opinion .opinion-box #submit-button-loading {
+    height: 3vw;
+    margin-left: 1.5vw;
+    margin-top: 3vw;
+
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.5vw;
+
+    background-color: var(--lightbrown);
+    color: #ece6e6;
+    mix-blend-mode: normal;
+    border-radius: 15px;
 }
 
 .comments .opinion .opinion-box {
