@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import "../styles/user.css"
 import "../styles/footer.css"
 import Header from "./header.js";
-import { Modal } from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import {addUserCredit, getUserById} from "../api/user.js";
 import UserIcon from "../assets/images/icons/user.png";
 import MailIcon from "../assets/images/icons/mail.png";
@@ -11,6 +11,7 @@ import LocationIcon from "../assets/images/icons/location.png";
 import ShopIcon from "../assets/images/icons/shop.png";
 import HistoryIcon from "../assets/images/icons/history.png"
 import {addToBuyList, getBuyList, getPurchasedList, purchaseBuyList, removeFromBuyList} from "../api/buyList.js";
+import {Link} from "react-router-dom";
 
 function User() {
     const username = sessionStorage.getItem('username');
@@ -132,6 +133,15 @@ function User() {
                         <tr>
                             <td><img src={LocationIcon} alt="location"/></td>
                             <td><span>{user.address}</span></td>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr>
+                            <Link to={`/logout`}>
+                                <button type="submit" className="submit" id={"logout-button"}>
+                                    logout
+                                </button>
+                            </Link>
                         </tr>
                         </tbody>
                     </table>
@@ -358,8 +368,8 @@ function User() {
 
                 <div className="history-table">
                     <div className="th">
-                        <span>Image</span>
                         <span>Name</span>
+                        <span>Image</span>
                         <span>Categories</span>
                         <span>Price</span>
                         <span>Provider ID</span>

@@ -216,23 +216,19 @@ body {
     width: 95%;
 }
 
+#logout-button {
+    margin-top: 15px;
+    background: var(--darkbrown);
 
-/*.credits .buy input:hover {*/
-/*    border: 2px solid var(--darkbrown);*/
-/*    color: var(--darkbrown);*/
-/*}*/
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
 
-/*.credits .buy input:last-child {*/
-/*    border: 2px solid var(--darkbrown);*/
-/*    background-color: var(--darkbrown);*/
-/*    color: var(--cream);*/
-/*}*/
+    border-radius: 10px;
 
-/*.credits .buy input:last-child:hover {*/
-/*    border: 2px solid var(--lightbrown);*/
-/*    background-color: var(--lightbrown);*/
-/*    color: var(--beige);*/
-/*}*/
+    width: 120%;
+}
 
 .buy-list {
     display: flex;

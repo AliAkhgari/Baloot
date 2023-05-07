@@ -1,6 +1,5 @@
 @charset "utf-8";
 @import "../assets/fonts/Inter/inter_font.css";
-@import "normalize.css";
 
 :root {
     --darkbrown: #593C1C;
@@ -73,6 +72,8 @@ a {
     font-weight: 600;
     font-size: 1.4vw;
     line-height: 39px;
+
+    margin-right: 10px;
 
     color: #593C1C;
 }
