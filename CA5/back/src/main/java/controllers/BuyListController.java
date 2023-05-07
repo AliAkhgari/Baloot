@@ -3,17 +3,16 @@ package controllers;
 import DTO.BuyListItem;
 import application.Baloot;
 import entities.Commodity;
+import entities.Discount;
 import entities.User;
 import exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -96,12 +95,46 @@ public class BuyListController {
         try {
             User user = Baloot.getInstance().getUserById(username);
             // TODO: make these two functions one in baloot
-            Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList(username);
+
             Baloot.getInstance().withdrawPayableAmount(user);
+            Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList(username);
             return new ResponseEntity<>("buy list purchased successfully!", HttpStatus.OK);
             //TODO: remove not necessary exceptions
         } catch (InsufficientCredit | MissingUserId | NotExistentUser | NotInStock e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping(value = "/buy-list/discount/{id}")
+    public ResponseEntity<Object> applyDiscount(@RequestBody Map<String, String> input, @PathVariable String id) {
+        try {
+            Discount discount = Baloot.getInstance().getDiscountByCode(id);
+            User user = Baloot.getInstance().getUserById(input.get("username"));
+
+            Baloot.getInstance().checkDiscountExpiration(user, discount);
+            user.setCurrentDiscount(discount);
+
+            return new ResponseEntity<>(discount, HttpStatus.OK);
+        } catch (NotExistentDiscount | NotExistentUser e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ExpiredDiscount e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+//    @PostMapping(value = "/buy-list/discount/{id}")
+//    public ResponseEntity<Object> checkDiscount(@PathVariable String id, @RequestBody Map<String, String> input) {
+//        try {
+//            Discount discount = Baloot.getInstance().getDiscountByCode(id);
+//            User user = Baloot.getInstance().getUserById(input.get("username"));
+//
+//            Baloot.getInstance().checkDiscountExpiration(user, discount);
+//            return new ResponseEntity<>(discount, HttpStatus.OK);
+//        } catch (NotExistentDiscount | NotExistentUser e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        } catch (ExpiredDiscount e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
 }

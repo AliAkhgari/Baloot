@@ -107,10 +107,11 @@ public class Baloot {
 
     public float getCurrentBuyListPrice(User user) {
         float total = 0;
-        for (String commodityId : new ArrayList<>(user.getBuyList().keySet())) {
+        for (var entry : new ArrayList<>(user.getBuyList().entrySet())) {
+            user.addPurchasedItem(entry.getKey(), entry.getValue());
             try {
-                Commodity commodity = getCommodityById(commodityId);
-                total += commodity.getPrice();
+                Commodity commodity = getCommodityById(entry.getKey());
+                total += commodity.getPrice() * entry.getValue();
             } catch (NotExistentCommodity ignored) {
             }
         }
