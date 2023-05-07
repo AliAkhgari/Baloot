@@ -260,7 +260,9 @@ const Home = () => {
                 </div>
                 {pagination()}
             </div>
-
+            <footer>
+                <p> 2023 @UT </p>
+            </footer>
         </div>
     );
 };

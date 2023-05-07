@@ -142,6 +142,9 @@ function ProviderPage() {
                     </div>
                 </div>
             </div>
+            <footer>
+                <p> 2023 @UT </p>
+            </footer>
         </>
     )
 }

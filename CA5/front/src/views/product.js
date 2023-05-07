@@ -358,6 +358,9 @@ function Product() {
                 {suggestionSection()}
 
             </div>
+            <footer>
+                <p> 2023 @UT </p>
+            </footer>
         </>
 
     )
