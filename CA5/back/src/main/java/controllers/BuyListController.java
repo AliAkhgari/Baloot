@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -94,13 +93,11 @@ public class BuyListController {
         String username = input.get("username");
         try {
             User user = Baloot.getInstance().getUserById(username);
-            // TODO: make these two functions one in baloot
-
             Baloot.getInstance().withdrawPayableAmount(user);
-            Baloot.getInstance().moveCommoditiesFromBuyListToPurchasedList(username);
+
             return new ResponseEntity<>("buy list purchased successfully!", HttpStatus.OK);
             //TODO: remove not necessary exceptions
-        } catch (InsufficientCredit | MissingUserId | NotExistentUser | NotInStock e) {
+        } catch (InsufficientCredit | NotExistentUser | NotInStock e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

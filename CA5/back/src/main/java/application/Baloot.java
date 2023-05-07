@@ -118,17 +118,12 @@ public class Baloot {
         return total;
     }
 
-    public void withdrawPayableAmount(User user) throws InsufficientCredit {
+    public void withdrawPayableAmount(User user) throws InsufficientCredit, NotInStock {
         float amount = getCurrentBuyListPrice(user);
         float discount_amount = user.getCurrentDiscountAmount() * amount;
         user.withdrawCredit(amount - discount_amount);
         user.addCurrentDiscountToUsed();
-    }
 
-    public void moveCommoditiesFromBuyListToPurchasedList(String userId) throws MissingUserId, NotExistentUser, InsufficientCredit, NotInStock {
-        if (userId == null) throw new MissingUserId();
-
-        User user = getUserById(userId);
         for (var entry : new ArrayList<>(user.getBuyList().entrySet())) {
             user.addPurchasedItem(entry.getKey(), entry.getValue());
             try {
@@ -142,6 +137,24 @@ public class Baloot {
 
         user.setBuyList(new HashMap<>());
     }
+
+//    public void moveCommoditiesFromBuyListToPurchasedList(String userId) throws MissingUserId, NotExistentUser, InsufficientCredit, NotInStock {
+//        if (userId == null) throw new MissingUserId();
+//
+//        User user = getUserById(userId);
+//        for (var entry : new ArrayList<>(user.getBuyList().entrySet())) {
+//            user.addPurchasedItem(entry.getKey(), entry.getValue());
+//            try {
+//                Commodity commodity = getCommodityById(entry.getKey());
+//                commodity.updateInStock(-entry.getValue());
+//            } catch (NotExistentCommodity ignored) {
+//            } catch (NotInStock e) {
+//                throw new NotInStock();
+//            }
+//        }
+//
+//        user.setBuyList(new HashMap<>());
+//    }
 
     public void userVoteComment(String userId, String commentId, String vote) throws MissingUserId, MissingCommentId, MissingVoteValue, NotExistentUser, NotExistentComment, InvalidVoteFormat {
         if (userId == null)
