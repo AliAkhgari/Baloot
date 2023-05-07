@@ -1,6 +1,5 @@
 import "../styles/header.css";
 import React, {useEffect, useState} from "react";
-import {searchCommodities} from "../api/commodities.js";
 import search from "../assets/images/icons/search.png";
 import {Link} from "react-router-dom";
 import logo from "../assets/images/logo.png";
@@ -90,19 +89,21 @@ const UserInfo = (props) => {
 
     return (
         <div className="account">
-            <span className="username">#{username}</span>
+            <Link to={`/user`} className="username">#{username}</Link>
 
-            {cartItems > 0 ? (
-                <div className="brown-cart-product">
-                    <span className="cart-text">Cart</span>
-                    <span className="cart-number">{cartItems}</span>
-                </div>
-            ) : (
-                <div className="cart-product">
-                    <span className="cart-text">Cart</span>
-                    <span className="cart-number">{cartItems}</span>
-                </div>
-            )}
+            <Link to={`/user`}>
+                {cartItems > 0 ? (
+                    <div className="brown-cart-product">
+                        <span className="cart-text">Cart</span>
+                        <span className="cart-number">{cartItems}</span>
+                    </div>
+                ) : (
+                    <div className="cart-product">
+                        <span className="cart-text">Cart</span>
+                        <span className="cart-number">{cartItems}</span>
+                    </div>
+                )}
+            </Link>
 
         </div>
     )
