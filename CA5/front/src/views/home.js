@@ -7,6 +7,7 @@ import {getCommodities, searchCommodities} from "../api/commodities.js";
 import {addToBuyList, removeFromBuyList} from "../api/buyList.js";
 import {useDispatch, useSelector} from 'react-redux';
 import {addToCart, removeFromCart, selectCartItem} from '../components/cartItemCount.js';
+import {Link} from "react-router-dom";
 
 const Home = () => {
     const username = sessionStorage.getItem("username");
@@ -122,7 +123,9 @@ const Home = () => {
                     <h3>{commodity.name}</h3>
                 </a>
                 <p>{commodity.inStock} left in stock</p>
-                <img src={commodity.image} alt=""/>
+                <Link to={`/product/` + commodity.id}>
+                    <img src={commodity.image} alt=""/>
+                </Link>
                 <div className="price-add-home">
                     <h4>{commodity.price}$</h4>
 

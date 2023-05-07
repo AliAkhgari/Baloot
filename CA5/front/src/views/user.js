@@ -223,7 +223,9 @@ function User() {
                 <div className="td" key={x.commodity.id}>
                     <span>{x.commodity.name}</span>
                     <span>
+                        <Link to={`/product/` + x.commodity.id}>
                 <img src={x.commodity.image} alt={x.commodity.name}/>
+                            </Link>
                 </span>
                     <span>{x.commodity.categories.join(", ")}</span>
                     <span>{x.commodity.price}</span>
