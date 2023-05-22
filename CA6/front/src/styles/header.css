@@ -1,0 +1,217 @@
+@charset "utf-8";
+@import "../assets/fonts/Inter/inter_font.css";
+
+:root {
+    --darkbrown: #593C1C;
+    --lightbrown: #a87a46;
+    --red: #C82525;
+    --gray: #909090;
+    --blue: #315FD8;
+    --cream: #F7F0E9;
+    --white: #F5F5F5;
+    --beige: #FFC700;
+}
+
+.header {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 7vw;
+    background: var(--white);
+    margin: auto;
+    box-shadow: 0 4px 4px rgba(208, 208, 208, 0.25);
+}
+
+.header .logo-container {
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+    margin-top: 15px;
+}
+
+.header .logo {
+    height: auto;
+    width: 5.5vw;
+}
+
+.header .logo-name {
+    text-decoration: none;
+    color: var(--lightbrown);
+    margin-left: 15px;
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 2.9vw;
+    line-height: 51px;
+    text-align: center;
+}
+
+
+
+.account {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.account .username {
+    color: var(--darkbrown);
+    margin-right: 45px;
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+    text-align: center;
+}
+
+.account .cart {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--darkbrown);
+    width: 8.5vw;
+    height: 3.5vw;
+    border-radius: 15px;
+}
+
+.account .cart-product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F7F0E9;
+    width: 8.5vw;
+    height: 3.5vw;
+    border-radius: 15px;
+}
+
+.account .cart-product .cart-text {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+    margin-left: 10px;
+    color: #593C1C;
+}
+
+.account .cart-product .cart-number {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+    margin-right: 20px;
+    color: #593C1C;
+}
+
+.account .brown-cart-product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--darkbrown);
+    width: 8.5vw;
+    height: 3.5vw;
+    border-radius: 15px;
+}
+
+.account .brown-cart-product .cart-text {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+    margin-left: 10px;
+    color: #FFFFFF;
+}
+
+.account .brown-cart-product .cart-number {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.5vw;
+    line-height: 34px;
+    margin-right: 20px;
+    color: #FFFFFF;
+}
+
+.searchbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    background: #F7F0E9;
+    color: var(--darkbrown);
+    border-radius: 15px;
+    width: 35vw;
+    height: auto;
+}
+
+.searchbar .combobox {
+    background: #D8C1A8;
+    mix-blend-mode: normal;
+    border-radius: 15px;
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.5vw;
+    border: none;
+    text-align: center;
+    color: #593C1C;
+    height: 4vw;
+    width: 9vw;
+}
+
+.searchbar img {
+    width: 2vw;
+    height: auto;
+    background-color: var(--cream);
+}
+
+.searchbar button {
+    border: none;
+    background: var(--cream);
+    cursor: pointer;
+}
+
+.combobox option {
+    padding: 5px;
+    background-color: #D8C1A8;
+    color: #000000;
+}
+
+
+.searchbar input {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.3vw;
+    color: #919191;
+    background: #F7F0E9;
+    margin-left: -15%;
+    margin-top: 3%;
+    border: none;
+}
+
+.account .login-signup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.login-signup #signup-button,
+.login-signup #login-button {
+    background-color: #F7F0E9;
+    color: #A97B47;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Inter', serif;
+    font-weight: 400;
+    font-size: 1.7vw;
+    margin-right: 2vw;
+    height: 4vw;
+    width: 9vw;
+    cursor: pointer;
+}
