@@ -4,6 +4,7 @@ import search from "../assets/images/icons/search.png";
 import {Link} from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import {getBuyList} from "../api/buyList.js";
+//FIXME: cart update
 
 const Logo = () => {
     return (

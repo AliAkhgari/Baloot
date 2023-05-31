@@ -10,6 +10,7 @@ import {addToCart, removeFromCart, selectCartItem} from '../components/cartItemC
 import {Link} from "react-router-dom";
 import {toast} from "react-toastify";
 
+//FIXME: pagination
 const Home = () => {
     const username = sessionStorage.getItem("username");
 
