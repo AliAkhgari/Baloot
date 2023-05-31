@@ -3,6 +3,7 @@ package services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Discount;
+import exceptions.NotExistentDiscount;
 import org.springframework.stereotype.Service;
 import repositories.DiscountRepository;
 import utils.Request;
@@ -34,7 +35,8 @@ public class DiscountService {
         }
     }
 
-//    public Discount getDiscountById(String id) {
-//        return this.discountRepository.fin
-//    }
+    public Discount getDiscountById(String id) throws NotExistentDiscount {
+        return discountRepository.findById(id)
+                .orElseThrow(NotExistentDiscount::new);
+    }
 }
