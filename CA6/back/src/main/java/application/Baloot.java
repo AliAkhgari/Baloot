@@ -1,7 +1,10 @@
 package application;
 
 import database.Database;
-import entities.*;
+import entities.Comment;
+import entities.Commodity;
+import entities.Provider;
+import entities.User;
 import exceptions.*;
 import utils.SortCommodities;
 
@@ -36,7 +39,7 @@ public class Baloot {
             dataParser.getProvidersList();
             dataParser.getCommoditiesList();
             dataParser.getCommentsList();
-            dataParser.getDiscountsList();
+//            dataParser.getDiscountsList();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -339,16 +342,8 @@ public class Baloot {
         return provider.getName();
     }
 
-    public Discount getDiscountByCode(String discountCode) throws NotExistentDiscount {
-        for (Discount discount : Database.getInstance().getDiscounts()) {
-            if (discount.getDiscountCode().equals(discountCode))
-                return discount;
-        }
-        throw new NotExistentDiscount();
-    }
-
-    public void checkDiscountExpiration(User user, Discount discount) throws ExpiredDiscount {
-        if (user.getUsedDiscounts().contains(discount)) {
+    public void checkDiscountExpiration(User user, String discountCode) throws ExpiredDiscount {
+        if (user.getUsedDiscounts().contains(discountCode)) {
             throw new ExpiredDiscount();
         }
     }

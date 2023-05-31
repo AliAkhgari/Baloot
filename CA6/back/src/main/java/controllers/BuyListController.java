@@ -9,6 +9,7 @@ import exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import services.DiscountService;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,6 +18,12 @@ import java.util.Map;
 @RestController
 public class BuyListController {
     // TODO: make it get and with username in url
+    private DiscountService discountService;
+
+    public BuyListController(DiscountService discountService) {
+        this.discountService = discountService;
+    }
+
     @PostMapping(value = "/buy-list")
     public ResponseEntity<ArrayList<BuyListItem>> getBuyList(@RequestBody Map<String, String> input) {
         String username = input.get("username");
@@ -105,10 +112,10 @@ public class BuyListController {
     @PostMapping(value = "/buy-list/discount/{id}")
     public ResponseEntity<Object> applyDiscount(@RequestBody Map<String, String> input, @PathVariable String id) {
         try {
-            Discount discount = Baloot.getInstance().getDiscountByCode(id);
+            Discount discount = discountService.getDiscountById(id);
             User user = Baloot.getInstance().getUserById(input.get("username"));
 
-            Baloot.getInstance().checkDiscountExpiration(user, discount);
+            Baloot.getInstance().checkDiscountExpiration(user, discount.getDiscountCode());
             user.setCurrentDiscount(discount);
 
             return new ResponseEntity<>(discount, HttpStatus.OK);

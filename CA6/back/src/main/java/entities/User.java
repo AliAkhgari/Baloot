@@ -18,7 +18,7 @@ public class User {
     private Map<Integer, Integer> commoditiesRates = new HashMap<>();
     private Map<String, Integer> buyList = new HashMap<>();
     private Map<String, Integer> purchasedList = new HashMap<>();
-    private ArrayList<Discount> usedDiscounts = new ArrayList<>();
+    private ArrayList<String> usedDiscounts = new ArrayList<>();
     private Discount currentDiscount = null;
 
     public User() {
@@ -114,18 +114,18 @@ public class User {
         this.purchasedList = purchased_list;
     }
 
-    public ArrayList<Discount> getUsedDiscounts() {
+    public ArrayList<String> getUsedDiscounts() {
         return usedDiscounts;
     }
 
-    public void setUsedDiscounts(ArrayList<Discount> usedDiscounts) {
+    public void setUsedDiscounts(ArrayList<String> usedDiscounts) {
         this.usedDiscounts = usedDiscounts;
     }
 
     public void addCurrentDiscountToUsed() {
         if (this.currentDiscount == null)
             return;
-        this.usedDiscounts.add(this.currentDiscount);
+        this.usedDiscounts.add(this.currentDiscount.getDiscountCode());
         this.currentDiscount = null;
     }
 
