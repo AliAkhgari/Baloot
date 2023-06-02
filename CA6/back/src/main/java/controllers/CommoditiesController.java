@@ -95,7 +95,6 @@ public class CommoditiesController {
 
     @GetMapping(value = "/commodities/{id}/comment")
     public ResponseEntity<List<Comment>> getCommodityComment(@PathVariable String id) {
-//        ArrayList<Comment> comments = Baloot.getInstance().getCommentsForCommodity(Integer.parseInt(id));
         List<Comment> comments = commentService.getCommentsForCommodity(id);
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
@@ -120,7 +119,6 @@ public class CommoditiesController {
             default -> new ArrayList<>();
         };
 
-
         return new ResponseEntity<>(commodities, HttpStatus.OK);
     }
 
@@ -129,7 +127,7 @@ public class CommoditiesController {
         try {
             Commodity commodity = commodityService.getCommodityById(id);
 
-            ArrayList<Commodity> suggestedCommodities = Baloot.getInstance().suggestSimilarCommodities(commodity);
+            ArrayList<Commodity> suggestedCommodities = commodityService.suggestSimilarCommodities(commodity);
             return new ResponseEntity<>(suggestedCommodities, HttpStatus.OK);
         } catch (NotExistentCommodity ignored) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);

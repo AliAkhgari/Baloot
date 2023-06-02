@@ -9,10 +9,11 @@ import repositories.CommodityRepository;
 import utils.Request;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 import static defines.Endpoints.COMMODITIES_ENDPOINT;
 import static defines.Endpoints.HOST;
+import static defines.defines.MAX_NUMBER_OF_COMMODITY_SUGGESTIONS;
 
 @Service
 public class CommodityService {
@@ -61,5 +62,40 @@ public class CommodityService {
 
     public List<Commodity> findByProviderContaining(String providerName) {
         return commodityRepository.searchCommoditiesByProviderId(providerName);
+    }
+
+    public int isInSimilarCategoryWithFirstCommodity(Commodity c1, Commodity c2) {
+        for (String category : c2.getCategories())
+            if (c1.getCategories().contains(category))
+                return 1;
+
+        return 0;
+    }
+
+    public ArrayList<Commodity> suggestSimilarCommodities(Commodity commodity) {
+        ArrayList<Commodity> results = new ArrayList<>();
+        Hashtable<Commodity, Float> commodityScore = new Hashtable<>();
+
+        for (Commodity commodity1 : getAllCommodities()) {
+            if (commodity == commodity1)
+                continue;
+
+            float score = 11 * isInSimilarCategoryWithFirstCommodity(commodity, commodity1) + commodity1.getRating();
+            commodityScore.put(commodity1, score);
+        }
+
+        List<Map.Entry<Commodity, Float>> list = new ArrayList<>(commodityScore.entrySet());
+        list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+
+        int count = 0;
+        for (Map.Entry<Commodity, Float> entry : list) {
+            results.add(entry.getKey());
+
+            count += 1;
+            if (count >= MAX_NUMBER_OF_COMMODITY_SUGGESTIONS)
+                break;
+        }
+
+        return results;
     }
 }
