@@ -1,41 +1,21 @@
 package entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "providers")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Provider {
+    @Id
     private String id;
     private String name;
     private String registryDate;
-
     private String image;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getRegistryDate() {
-        return registryDate;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setRegistryDate(String registryDate) {
-        this.registryDate = registryDate;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 }
