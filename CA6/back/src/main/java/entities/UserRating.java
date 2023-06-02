@@ -25,9 +25,9 @@ public class UserRating {
 //    @JoinColumn(name = "username", foreignKey = @ForeignKey(name = "fk_user_rating_user"))
 //    private User user;
 
-    public UserRating(String commodityId, String username, int score, Commodity commodity) {
+    public UserRating(Commodity commodity, User user, int score) {
         this.score = score;
-        this.id = new UserRatingId(commodityId, username);
+        this.id = new UserRatingId(commodity.getId(), user.getUsername());
         this.commodity = commodity;
     }
 
