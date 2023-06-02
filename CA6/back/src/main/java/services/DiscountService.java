@@ -17,8 +17,6 @@ import static defines.Endpoints.HOST;
 @Service
 public class DiscountService {
     private final DiscountRepository discountRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     public DiscountService(DiscountRepository discountRepository) {
         this.discountRepository = discountRepository;
         this.fetchAndSaveDiscountsFromApi();
@@ -26,6 +24,7 @@ public class DiscountService {
 
     public void fetchAndSaveDiscountsFromApi() {
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
             String discountsString = Request.makeGetRequest(HOST + DISCOUNTS_ENDPOINT);
             List<Discount> discountList = objectMapper.readValue(discountsString, new TypeReference<>() {
             });
