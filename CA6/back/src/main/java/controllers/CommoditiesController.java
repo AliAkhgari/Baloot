@@ -6,12 +6,14 @@ import entities.Commodity;
 import entities.User;
 import entities.UserRating;
 import exceptions.NotExistentCommodity;
+import exceptions.NotExistentProvider;
 import exceptions.NotExistentUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import services.CommentService;
 import services.CommodityService;
+import services.ProviderService;
 import services.UserRatingService;
 
 import java.util.ArrayList;
@@ -24,11 +26,13 @@ public class CommoditiesController {
     private final CommentService commentService;
     private final CommodityService commodityService;
     private final UserRatingService userRatingService;
+    private final ProviderService providerService;
 
-    public CommoditiesController(CommentService commentService, CommodityService commodityService, UserRatingService userRatingService) {
+    public CommoditiesController(CommentService commentService, CommodityService commodityService, UserRatingService userRatingService, ProviderService providerService) {
         this.commentService = commentService;
         this.commodityService = commodityService;
         this.userRatingService = userRatingService;
+        this.providerService = providerService;
     }
 
     @GetMapping(value = "/commodities")
@@ -98,16 +102,24 @@ public class CommoditiesController {
     }
 
     @PostMapping(value = "/commodities/search")
-    public ResponseEntity<ArrayList<Commodity>> searchCommodities(@RequestBody Map<String, String> input) {
+    public ResponseEntity<List<Commodity>> searchCommodities(@RequestBody Map<String, String> input) {
         String searchOption = input.get("searchOption");
         String searchValue = input.get("searchValue");
 
-        ArrayList<Commodity> commodities = switch (searchOption) {
-            case "name" -> Baloot.getInstance().filterCommoditiesByName(searchValue);
-            case "category" -> Baloot.getInstance().filterCommoditiesByCategory(searchValue);
-            case "provider" -> Baloot.getInstance().filterCommoditiesByProviderName(searchValue);
+
+        List<Commodity> commodities = switch (searchOption) {
+            case "name" -> commodityService.searchCommoditiesByName(searchValue);
+            case "category" -> commodityService.searchCommoditiesByCategory(searchValue);
+            case "provider" -> {
+                try {
+                    yield commodityService.findByProviderContaining(providerService.getProviderByName(searchValue).getId());
+                } catch (NotExistentProvider e) {
+                    yield new ArrayList<>();
+                }
+            }
             default -> new ArrayList<>();
         };
+
 
         return new ResponseEntity<>(commodities, HttpStatus.OK);
     }

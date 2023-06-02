@@ -39,4 +39,12 @@ public class ProviderService {
         return providerRepository.findById(id)
                 .orElseThrow(NotExistentProvider::new);
     }
+
+    public Provider getProviderByName(String name) throws NotExistentProvider {
+        Provider provider = providerRepository.findByName(name);
+        if (provider == null)
+            throw new NotExistentProvider();
+
+        return provider;
+    }
 }

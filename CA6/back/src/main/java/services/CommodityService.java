@@ -29,6 +29,9 @@ public class CommodityService {
             String CommoditiesString = Request.makeGetRequest(HOST + COMMODITIES_ENDPOINT);
             List<Commodity> commodityList = objectMapper.readValue(CommoditiesString, new TypeReference<>() {
             });
+            for (Commodity commodity : commodityList)
+                commodity.setInitRate(commodity.getRating());
+
             commodityRepository.saveAll(commodityList);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -42,5 +45,21 @@ public class CommodityService {
 
     public List<Commodity> getAllCommodities() {
         return commodityRepository.findAll();
+    }
+
+    public void save(Commodity commodity) {
+        commodityRepository.save(commodity);
+    }
+
+    public List<Commodity> searchCommoditiesByCategory(String category) {
+        return commodityRepository.findByCategoriesContainingIgnoreCase(category);
+    }
+
+    public List<Commodity> searchCommoditiesByName(String name) {
+        return commodityRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Commodity> findByProviderContaining(String providerName) {
+        return commodityRepository.searchCommoditiesByProviderId(providerName);
     }
 }
