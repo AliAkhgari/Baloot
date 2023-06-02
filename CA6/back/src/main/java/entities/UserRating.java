@@ -11,17 +11,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserRating {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String commodityId;
-    private String username;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private Long id;
+    @EmbeddedId
+    private UserRatingId id;
     private int score;
 
     public UserRating(String commodityId, String username, int score) {
-        this.commodityId = commodityId;
-        this.username = username;
         this.score = score;
+        this.id = new UserRatingId(commodityId, username);
     }
 
 }
