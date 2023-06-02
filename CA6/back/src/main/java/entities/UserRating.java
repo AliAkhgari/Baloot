@@ -11,12 +11,19 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserRating {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    private Long id;
     @EmbeddedId
     private UserRatingId id;
     private int score;
+
+    @ManyToOne
+    @MapsId("commodityId")
+    @JoinColumn(name = "commodity_id", foreignKey = @ForeignKey(name = "fk_user_rating_commodity"))
+    private Commodity commodity;
+
+//    @ManyToOne
+//    @MapsId("username")
+//    @JoinColumn(name = "username", foreignKey = @ForeignKey(name = "fk_user_rating_user"))
+//    private User user;
 
     public UserRating(String commodityId, String username, int score) {
         this.score = score;
