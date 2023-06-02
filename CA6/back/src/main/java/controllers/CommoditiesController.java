@@ -4,6 +4,7 @@ import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
 import entities.User;
+import entities.UserRating;
 import exceptions.NotExistentCommodity;
 import exceptions.NotExistentUser;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import services.CommentService;
 import services.CommodityService;
+import services.UserRatingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,12 @@ import java.util.Map;
 public class CommoditiesController {
     private final CommentService commentService;
     private final CommodityService commodityService;
+    private final UserRatingService userRatingService;
 
-    public CommoditiesController(CommentService commentService, CommodityService commodityService) {
+    public CommoditiesController(CommentService commentService, CommodityService commodityService, UserRatingService userRatingService) {
         this.commentService = commentService;
         this.commodityService = commodityService;
+        this.userRatingService = userRatingService;
     }
 
     @GetMapping(value = "/commodities")
@@ -36,6 +40,7 @@ public class CommoditiesController {
     public ResponseEntity<Commodity> getCommodity(@PathVariable String id) {
         try {
             Commodity commodity = commodityService.getCommodityById(id);
+
             return new ResponseEntity<>(commodity, HttpStatus.OK);
 
         } catch (NotExistentCommodity e) {
@@ -48,15 +53,20 @@ public class CommoditiesController {
                                                 @RequestBody Map<String, String> input) {
         try {
             int rate = Integer.parseInt(input.get("rate"));
-            String username = input.get("username");
+            User user = Baloot.getInstance().getUserById(input.get("username"));
             Commodity commodity = commodityService.getCommodityById(id);
 
-            commodity.addRate(username, rate);
+            userRatingService.addRate(new UserRating(commodity, user, rate));
+            commodity.updateRating(userRatingService.getAverageScoreByCommodityId(id));
+            commodityService.save(commodity);
+
             return new ResponseEntity<>("rate added successfully!", HttpStatus.OK);
         } catch (NotExistentCommodity e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (NumberFormatException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotExistentUser e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -80,8 +90,9 @@ public class CommoditiesController {
     }
 
     @GetMapping(value = "/commodities/{id}/comment")
-    public ResponseEntity<ArrayList<Comment>> getCommodityComment(@PathVariable String id) {
-        ArrayList<Comment> comments = Baloot.getInstance().getCommentsForCommodity(Integer.parseInt(id));
+    public ResponseEntity<List<Comment>> getCommodityComment(@PathVariable String id) {
+//        ArrayList<Comment> comments = Baloot.getInstance().getCommentsForCommodity(Integer.parseInt(id));
+        List<Comment> comments = commentService.getCommentsForCommodity(id);
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
