@@ -1,79 +1,46 @@
 package entities;
 
 import exceptions.NotInStock;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "commodities")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Commodity {
+    @Id
     private String id;
     private String name;
     private String providerId;
     private int price;
-    private ArrayList<String> categories = new ArrayList<>();
+
+    @Column
+    @ElementCollection(targetClass = String.class)
+    private Set<String> categories;
+
     private float rating;
     private int inStock;
+
+    @Column(length = 1024)
     private String image;
-    private Map<String, Integer> userRate = new HashMap<>();
+
+    @OneToMany
+    private List<UserRating> userRatings = new ArrayList<>();
+
     private float initRate;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
-
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public ArrayList<String> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(ArrayList<String> categories) {
-        this.categories = categories;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-        this.initRate = rating;
-    }
-
-    public int getInStock() {
-        return inStock;
-    }
-
-    public void setInStock(int inStock) {
-        this.inStock = inStock;
-    }
 
     public void updateInStock(int amount) throws NotInStock {
         if ((this.inStock + amount) < 0)
@@ -81,38 +48,22 @@ public class Commodity {
         this.inStock += amount;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String imgURL) {
-        this.image = imgURL;
-    }
-
     public void decreaseInStock() {
         this.inStock -= 1;
     }
 
     public void addRate(String username, int score) {
-        userRate.put(username, score);
+        userRatings.add(new UserRating(id, username, score));
 
         this.calcRating();
     }
 
     private void calcRating() {
         float sum = 0;
-        for (Map.Entry<String, Integer> entry : this.userRate.entrySet()) {
-            sum += entry.getValue();
+        for (UserRating userRating : this.userRatings) {
+            sum += userRating.getScore();
         }
 
-        this.rating = ((this.initRate + sum) / (this.userRate.size() + 1));
-    }
-
-    public Map<String, Integer> getUserRate() {
-        return userRate;
-    }
-
-    public void setUserRate(Map<String, Integer> userRate) {
-        this.userRate = userRate;
+        this.rating = ((this.initRate + sum) / (this.userRatings.size() + 1));
     }
 }
