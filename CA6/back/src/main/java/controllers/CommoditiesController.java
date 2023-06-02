@@ -9,6 +9,8 @@ import exceptions.NotExistentUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import services.CommentService;
+import services.CommodityService;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,6 +18,14 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class CommoditiesController {
+    private CommentService commentService;
+    private CommodityService commodityService;
+
+    public CommoditiesController(CommentService commentService, CommodityService commodityService) {
+        this.commentService = commentService;
+        this.commodityService = commodityService;
+    }
+
     @GetMapping(value = "/commodities")
     public ResponseEntity<ArrayList<Commodity>> getCommodities() {
         return new ResponseEntity<>(Baloot.getInstance().getCommodities(), HttpStatus.OK);
@@ -24,7 +34,8 @@ public class CommoditiesController {
     @GetMapping(value = "/commodities/{id}")
     public ResponseEntity<Commodity> getCommodity(@PathVariable String id) {
         try {
-            Commodity commodity = Baloot.getInstance().getCommodityById(id);
+//            Commodity commodity = Baloot.getInstance().getCommodityById(id);
+            Commodity commodity = commodityService.getCommodityById(id);
             return new ResponseEntity<>(commodity, HttpStatus.OK);
 
         } catch (NotExistentCommodity e) {
@@ -38,7 +49,9 @@ public class CommoditiesController {
         try {
             int rate = Integer.parseInt(input.get("rate"));
             String username = input.get("username");
-            Commodity commodity = Baloot.getInstance().getCommodityById(id);
+//            Commodity commodity = Baloot.getInstance().getCommodityById(id);
+            Commodity commodity = commodityService.getCommodityById(id);
+
             commodity.addRate(username, rate);
             return new ResponseEntity<>("rate added successfully!", HttpStatus.OK);
         } catch (NotExistentCommodity e) {
@@ -51,7 +64,7 @@ public class CommoditiesController {
     @PostMapping(value = "/commodities/{id}/comment")
     public ResponseEntity<String> addCommodityComment(@PathVariable String id,
                                                       @RequestBody Map<String, String> input) {
-        int commentId = Baloot.getInstance().generateCommentId();
+//        int commentId = Baloot.getInstance().generateCommentId();
         String username = input.get("username");
         String commentText = input.get("comment");
 
@@ -61,8 +74,9 @@ public class CommoditiesController {
         } catch (NotExistentUser ignored) {
         }
 
-        Comment comment = new Comment(commentId, user.getEmail(), user.getUsername(), Integer.parseInt(id), commentText);
-        Baloot.getInstance().addComment(comment);
+        Comment comment = new Comment(user.getEmail(), Integer.parseInt(id), commentText);
+        comment.setUsername(username);
+        commentService.addComment(comment);
 
         return new ResponseEntity<>("comment added successfully!", HttpStatus.OK);
     }
@@ -92,7 +106,9 @@ public class CommoditiesController {
     @GetMapping(value = "/commodities/{id}/suggested")
     public ResponseEntity<ArrayList<Commodity>> getSuggestedCommodities(@PathVariable String id) {
         try {
-            Commodity commodity = Baloot.getInstance().getCommodityById(id);
+//            Commodity commodity = Baloot.getInstance().getCommodityById(id);
+            Commodity commodity = commodityService.getCommodityById(id);
+
             ArrayList<Commodity> suggestedCommodities = Baloot.getInstance().suggestSimilarCommodities(commodity);
             return new ResponseEntity<>(suggestedCommodities, HttpStatus.OK);
         } catch (NotExistentCommodity ignored) {
