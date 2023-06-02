@@ -39,4 +39,8 @@ public class CommodityService {
         return commodityRepository.findById(id)
                 .orElseThrow(NotExistentCommodity::new);
     }
+
+    public List<Commodity> getAllCommodities() {
+        return commodityRepository.findAll();
+    }
 }

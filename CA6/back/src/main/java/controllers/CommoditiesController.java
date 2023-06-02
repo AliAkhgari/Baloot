@@ -13,13 +13,14 @@ import services.CommentService;
 import services.CommodityService;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class CommoditiesController {
-    private CommentService commentService;
-    private CommodityService commodityService;
+    private final CommentService commentService;
+    private final CommodityService commodityService;
 
     public CommoditiesController(CommentService commentService, CommodityService commodityService) {
         this.commentService = commentService;
@@ -27,14 +28,13 @@ public class CommoditiesController {
     }
 
     @GetMapping(value = "/commodities")
-    public ResponseEntity<ArrayList<Commodity>> getCommodities() {
-        return new ResponseEntity<>(Baloot.getInstance().getCommodities(), HttpStatus.OK);
+    public ResponseEntity<List<Commodity>> getCommodities() {
+        return new ResponseEntity<>(commodityService.getAllCommodities(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/commodities/{id}")
     public ResponseEntity<Commodity> getCommodity(@PathVariable String id) {
         try {
-//            Commodity commodity = Baloot.getInstance().getCommodityById(id);
             Commodity commodity = commodityService.getCommodityById(id);
             return new ResponseEntity<>(commodity, HttpStatus.OK);
 
@@ -49,7 +49,6 @@ public class CommoditiesController {
         try {
             int rate = Integer.parseInt(input.get("rate"));
             String username = input.get("username");
-//            Commodity commodity = Baloot.getInstance().getCommodityById(id);
             Commodity commodity = commodityService.getCommodityById(id);
 
             commodity.addRate(username, rate);
@@ -64,7 +63,6 @@ public class CommoditiesController {
     @PostMapping(value = "/commodities/{id}/comment")
     public ResponseEntity<String> addCommodityComment(@PathVariable String id,
                                                       @RequestBody Map<String, String> input) {
-//        int commentId = Baloot.getInstance().generateCommentId();
         String username = input.get("username");
         String commentText = input.get("comment");
 
@@ -106,7 +104,6 @@ public class CommoditiesController {
     @GetMapping(value = "/commodities/{id}/suggested")
     public ResponseEntity<ArrayList<Commodity>> getSuggestedCommodities(@PathVariable String id) {
         try {
-//            Commodity commodity = Baloot.getInstance().getCommodityById(id);
             Commodity commodity = commodityService.getCommodityById(id);
 
             ArrayList<Commodity> suggestedCommodities = Baloot.getInstance().suggestSimilarCommodities(commodity);

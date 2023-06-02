@@ -21,7 +21,6 @@ public class ProviderService {
     public ProviderService(ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
         this.fetchAndSaveProvidersFromApi();
-
     }
 
     public void fetchAndSaveProvidersFromApi() {
