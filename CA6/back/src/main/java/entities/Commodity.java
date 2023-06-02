@@ -1,5 +1,7 @@
 package entities;
 
+import com.mysql.cj.Query;
+import com.mysql.cj.Session;
 import exceptions.NotInStock;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -37,9 +39,6 @@ public class Commodity {
     @Column(length = 1024)
     private String image;
 
-    @OneToMany
-    private List<UserRating> userRatings = new ArrayList<>();
-
     private float initRate;
 
     public void updateInStock(int amount) throws NotInStock {
@@ -52,18 +51,7 @@ public class Commodity {
         this.inStock -= 1;
     }
 
-    public void addRate(String username, int score) {
-        userRatings.add(new UserRating(id, username, score));
-
-        this.calcRating();
-    }
-
-    private void calcRating() {
-        float sum = 0;
-        for (UserRating userRating : this.userRatings) {
-            sum += userRating.getScore();
-        }
-
-        this.rating = ((this.initRate + sum) / (this.userRatings.size() + 1));
+    public void updateRating(Float averageRate) {
+        this.rating = (averageRate + this.initRate) / 2;
     }
 }

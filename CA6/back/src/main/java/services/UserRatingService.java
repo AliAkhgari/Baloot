@@ -15,4 +15,8 @@ public class UserRatingService {
     public void addRate(UserRating userRating) {
         userRatingRepository.save(userRating);
     }
+
+    public Float getAverageScoreByCommodityId(String commodityId) {
+        return userRatingRepository.getAverageScoreByCommodityId(commodityId);
+    }
 }
