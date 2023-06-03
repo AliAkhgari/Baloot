@@ -54,4 +54,8 @@ public class CommentService {
         return commentRepository.findById(id)
                 .orElseThrow(NotExistentComment::new);
     }
+
+    public void save(Comment comment) {
+        commentRepository.save(comment);
+    }
 }
