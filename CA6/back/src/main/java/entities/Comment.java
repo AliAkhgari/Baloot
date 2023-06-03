@@ -1,6 +1,5 @@
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Setter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "comments")
@@ -21,18 +19,25 @@ public class Comment {
     private Long id;
     private String userEmail;
     private String username;
-    private int commodityId;
+    private String commodityId;
     private String text;
     private String date;
     private int likeCount = 0;
     private int dislikeCount = 0;
-    @JsonIgnore
-    @OneToMany
-    private List<CommentReaction> commentReactions;
 
-    public Comment(String userEmail, int commodityId, String text) {
-        this.userEmail = userEmail;
-        this.commodityId = commodityId;
+    @ManyToOne
+    @MapsId("commodityId")
+    @JoinColumn(name = "commodityId", foreignKey = @ForeignKey(name = "fk_comments_commodity"))
+    private Commodity commodity;
+
+    @ManyToOne
+    @MapsId("username")
+    @JoinColumn(name = "username", foreignKey = @ForeignKey(name = "fk_comments_user"))
+    private User user;
+
+    public Comment(User user, Commodity commodity, String text) {
+        this.userEmail = user.getEmail();
+        this.commodityId = commodity.getId();
         this.text = text;
         this.date = currentDate();
     }
@@ -43,26 +48,26 @@ public class Comment {
         return dateFormat.format(currentDate);
     }
 
-    public void addUserVote(String vote) {
-        CommentReaction commentReaction = new CommentReaction(id, username, vote);
-        commentReactions.add(commentReaction);
-
-        updateVoteCounts();
-    }
-
-    private void updateVoteCounts() {
-        int likeCount = 0;
-        int dislikeCount = 0;
-
-        for (CommentReaction commentReaction : commentReactions) {
-            if (commentReaction.getReaction().equals("like")) {
-                likeCount++;
-            } else if (commentReaction.getReaction().equals("dislike")) {
-                dislikeCount++;
-            }
-        }
-
-        this.likeCount = likeCount;
-        this.dislikeCount = dislikeCount;
-    }
+//    public void addUserVote(String vote) {
+//        CommentReaction commentReaction = new CommentReaction(id, username, vote);
+//        commentReactions.add(commentReaction);
+//
+//        updateVoteCounts();
+//    }
+//
+//    private void updateVoteCounts() {
+//        int likeCount = 0;
+//        int dislikeCount = 0;
+//
+//        for (CommentReaction commentReaction : commentReactions) {
+//            if (commentReaction.getReaction().equals("like")) {
+//                likeCount++;
+//            } else if (commentReaction.getReaction().equals("dislike")) {
+//                dislikeCount++;
+//            }
+//        }
+//
+//        this.likeCount = likeCount;
+//        this.dislikeCount = dislikeCount;
+//    }
 }
