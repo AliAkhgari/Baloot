@@ -1,6 +1,5 @@
 package controllers;
 
-import application.Baloot;
 import entities.User;
 import exceptions.IncorrectPassword;
 import exceptions.NotExistentUser;
@@ -26,7 +25,7 @@ public class LoginController {
         try {
             String username = input.get("username");
             String password = input.get("password");
-            Baloot.getInstance().login(username, password);
+            userService.login(username, password);
             return new ResponseEntity<>("login successfully!", HttpStatus.OK);
         } catch (NotExistentUser e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

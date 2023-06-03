@@ -3,6 +3,7 @@ package services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.User;
+import exceptions.IncorrectPassword;
 import exceptions.NotExistentUser;
 import exceptions.UsernameAlreadyTaken;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,21 @@ public class UserService {
             throw new UsernameAlreadyTaken();
         }
 
+        userRepository.save(user);
+    }
+
+    public void login(String username, String password) throws NotExistentUser, IncorrectPassword {
+        if (!userRepository.existsById(username)) {
+            throw new NotExistentUser();
+        }
+
+        User user = getUserById(username);
+        if (!password.equals(user.getPassword())) {
+            throw new IncorrectPassword();
+        }
+    }
+
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 }
