@@ -1,16 +1,12 @@
 package entities;
 
 import exceptions.NotInStock;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "commodities")
@@ -21,12 +17,13 @@ public class Commodity {
     @Id
     private String id;
     private String name;
+    // TODO: foreign key
     private String providerId;
     private int price;
 
     @Column
     @ElementCollection(targetClass = String.class)
-    private Set<String> categories;
+    private List<String> categories;
 
     private float rating;
     private int inStock;
