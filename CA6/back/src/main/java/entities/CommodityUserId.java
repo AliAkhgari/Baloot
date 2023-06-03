@@ -11,11 +11,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserRatingId implements Serializable {
+public class CommodityUserId implements Serializable {
     private String commodityId;
     private String username;
 
-    public UserRatingId(String commodityId, String username) {
+    public CommodityUserId(String commodityId, String username) {
         this.commodityId = commodityId;
         this.username = username;
     }

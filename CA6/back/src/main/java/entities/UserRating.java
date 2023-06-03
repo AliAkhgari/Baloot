@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRating {
     @EmbeddedId
-    private UserRatingId id;
+    private CommodityUserId id;
     private int score;
 
     @ManyToOne
@@ -27,7 +27,7 @@ public class UserRating {
 
     public UserRating(Commodity commodity, User user, int score) {
         this.score = score;
-        this.id = new UserRatingId(commodity.getId(), user.getUsername());
+        this.id = new CommodityUserId(commodity.getId(), user.getUsername());
         this.commodity = commodity;
     }
 
