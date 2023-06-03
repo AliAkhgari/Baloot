@@ -11,16 +11,24 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CommentReaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private Long commentId;
-    private String username;
+    @EmbeddedId
+    private CommentUserId id;
     private String reaction;
 
-    public CommentReaction(Long commentId, String username, String reaction) {
-        this.commentId = commentId;
-        this.username = username;
+    @ManyToOne
+    @MapsId("commentId")
+    @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "fk_comment_reaction_comment"))
+    private Comment comment;
+
+    @ManyToOne
+    @MapsId("username")
+    @JoinColumn(name = "username", foreignKey = @ForeignKey(name = "fk_comment_reaction_user"))
+    private User user;
+
+    public CommentReaction(Comment comment, User user, String reaction) {
+        this.comment = comment;
+        this.user = user;
         this.reaction = reaction;
+        this.id = new CommentUserId(comment.getId(), user.getUsername());
     }
 }

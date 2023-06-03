@@ -2,6 +2,7 @@ package services;
 
 import entities.Comment;
 import entities.CommentReaction;
+import entities.User;
 import org.springframework.stereotype.Service;
 import repositories.CommentReactionRepository;
 
@@ -13,8 +14,16 @@ public class CommentReactionService {
         this.commentReactionRepository = commentReactionRepository;
     }
 
-    public void addReaction(Comment comment, String reaction) {
-        CommentReaction commentReaction = new CommentReaction(comment.getCommodity(), comment.getUser(), reaction);
+    public void addReaction(Comment comment, User user, String reaction) {
+        CommentReaction commentReaction = new CommentReaction(comment, user, reaction);
         commentReactionRepository.save(commentReaction);
+    }
+
+    public int getNumberOfLikes(Long commentId) {
+        return commentReactionRepository.getLikeCountByCommodityId(commentId);
+    }
+
+    public int getNumberOfDislikes(Long commentId) {
+        return commentReactionRepository.getDislikeCountByCommodityId(commentId);
     }
 }
