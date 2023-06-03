@@ -31,9 +31,8 @@ public class CommentService {
             List<Comment> commentList = objectMapper.readValue(commentsString, new TypeReference<>() {
             });
 
-//          TODO: setUsername
             for (Comment comment : commentList) {
-                comment.setUsername("ff");
+                comment.setUsername("amir");
             }
 
             commentRepository.saveAll(commentList);
