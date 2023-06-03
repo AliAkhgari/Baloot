@@ -8,12 +8,19 @@ import exceptions.UsernameAlreadyTaken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import services.UserService;
 
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class LoginController {
+    private final UserService userService;
+
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<String> login(@RequestBody Map<String, String> input) {
         try {
@@ -39,7 +46,8 @@ public class LoginController {
 
         User newUser = new User(username, password, email, birthDate, address);
         try {
-            Baloot.getInstance().addUser(newUser);
+            userService.addUser(newUser);
+
             return new ResponseEntity<>("signup successfully!", HttpStatus.OK);
         } catch (UsernameAlreadyTaken e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

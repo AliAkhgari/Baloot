@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.User;
 import exceptions.NotExistentUser;
+import exceptions.UsernameAlreadyTaken;
 import org.springframework.stereotype.Service;
 import repositories.UserRepository;
 import utils.Request;
@@ -38,5 +39,15 @@ public class UserService {
     public User getUserById(String id) throws NotExistentUser {
         return userRepository.findById(id)
                 .orElseThrow(NotExistentUser::new);
+    }
+
+    public void addUser(User user) throws UsernameAlreadyTaken {
+        String username = user.getUsername();
+
+        if (userRepository.existsById(username)) {
+            throw new UsernameAlreadyTaken();
+        }
+
+        userRepository.save(user);
     }
 }
