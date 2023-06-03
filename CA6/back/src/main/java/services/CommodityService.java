@@ -1,6 +1,7 @@
 package services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Commodity;
 import exceptions.NotExistentCommodity;
@@ -27,6 +28,7 @@ public class CommodityService {
     public void fetchAndSaveCommoditiesFromApi() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
+//            objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             String CommoditiesString = Request.makeGetRequest(HOST + COMMODITIES_ENDPOINT);
             List<Commodity> commodityList = objectMapper.readValue(CommoditiesString, new TypeReference<>() {
             });
@@ -53,15 +55,15 @@ public class CommodityService {
     }
 
     public List<Commodity> searchCommoditiesByCategory(String category) {
-        return commodityRepository.findByCategoriesContainingIgnoreCase(category);
+        return commodityRepository.findByCategories(category);
     }
 
     public List<Commodity> searchCommoditiesByName(String name) {
         return commodityRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public List<Commodity> findByProviderContaining(String providerName) {
-        return commodityRepository.searchCommoditiesByProviderId(providerName);
+    public List<Commodity> findByProviderContaining(String providerId) {
+        return commodityRepository.searchCommoditiesByProviderId(providerId);
     }
 
     public int isInSimilarCategoryWithFirstCommodity(Commodity c1, Commodity c2) {
