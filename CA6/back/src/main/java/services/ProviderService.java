@@ -2,6 +2,7 @@ package services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import entities.Commodity;
 import entities.Provider;
 import exceptions.NotExistentProvider;
 import org.springframework.stereotype.Service;

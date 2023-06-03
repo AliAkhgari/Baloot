@@ -1,6 +1,5 @@
 package controllers;
 
-import application.Baloot;
 import entities.Commodity;
 import entities.Provider;
 import exceptions.NotExistentProvider;
@@ -10,23 +9,25 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import services.CommodityService;
 import services.ProviderService;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class ProviderController {
-    private ProviderService providerService;
+    private final ProviderService providerService;
+    private final CommodityService commodityService;
 
-    public ProviderController(ProviderService providerService) {
+    public ProviderController(ProviderService providerService, CommodityService commodityService) {
         this.providerService = providerService;
+        this.commodityService = commodityService;
     }
 
     @GetMapping(value = "/providers/{id}")
     public ResponseEntity<Provider> getProvider(@PathVariable String id) {
         try {
-//            Provider provider = Baloot.getInstance().getProviderById(id);
             Provider provider = providerService.getProviderById(id);
             return new ResponseEntity<>(provider, HttpStatus.OK);
         } catch (NotExistentProvider e) {
@@ -35,8 +36,8 @@ public class ProviderController {
     }
 
     @GetMapping(value = "/providers/{id}/commodities")
-    public ResponseEntity<ArrayList<Commodity>> getProvidedCommodities(@PathVariable String id) {
-        ArrayList<Commodity> commodities = Baloot.getInstance().getCommoditiesProvidedByProvider(id);
+    public ResponseEntity<List<Commodity>> getProvidedCommodities(@PathVariable String id) {
+        List<Commodity> commodities = commodityService.findByProviderContaining(id);
         return new ResponseEntity<>(commodities, HttpStatus.OK);
     }
 }
