@@ -35,6 +35,7 @@ public class UserController {
             float credit = Float.parseFloat(input.get("credit"));
             User user = userService.getUserById(id);
             user.addCredit(credit);
+            userService.saveUser(user);
             return new ResponseEntity<>("credit added successfully!", HttpStatus.OK);
         } catch (InvalidCreditRange e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
