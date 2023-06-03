@@ -1,6 +1,5 @@
 package controllers;
 
-import application.Baloot;
 import entities.Comment;
 import entities.Commodity;
 import entities.User;
@@ -11,10 +10,7 @@ import exceptions.NotExistentUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import services.CommentService;
-import services.CommodityService;
-import services.ProviderService;
-import services.UserRatingService;
+import services.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +23,14 @@ public class CommoditiesController {
     private final CommodityService commodityService;
     private final UserRatingService userRatingService;
     private final ProviderService providerService;
+    private final UserService userService;
 
-    public CommoditiesController(CommentService commentService, CommodityService commodityService, UserRatingService userRatingService, ProviderService providerService) {
+    public CommoditiesController(CommentService commentService, CommodityService commodityService, UserRatingService userRatingService, ProviderService providerService, UserService userService) {
         this.commentService = commentService;
         this.commodityService = commodityService;
         this.userRatingService = userRatingService;
         this.providerService = providerService;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/commodities")
@@ -57,7 +55,8 @@ public class CommoditiesController {
                                                 @RequestBody Map<String, String> input) {
         try {
             int rate = Integer.parseInt(input.get("rate"));
-            User user = Baloot.getInstance().getUserById(input.get("username"));
+            User user = userService.getUserById(input.get("username"));
+
             Commodity commodity = commodityService.getCommodityById(id);
 
             userRatingService.addRate(new UserRating(commodity, user, rate));
@@ -82,11 +81,16 @@ public class CommoditiesController {
 
         User user = null;
         try {
-            user = Baloot.getInstance().getUserById(username);
+            user = userService.getUserById(username);
         } catch (NotExistentUser ignored) {
         }
 
-        Comment comment = new Comment(user.getEmail(), Integer.parseInt(id), commentText);
+        Comment comment = null;
+        try {
+            comment = new Comment(user, commodityService.getCommodityById(id), commentText);
+        } catch (NotExistentCommodity e) {
+            throw new RuntimeException(e);
+        }
         comment.setUsername(username);
         commentService.addComment(comment);
 
