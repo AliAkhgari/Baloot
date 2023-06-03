@@ -12,7 +12,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class CommentController {
-    private CommentService commentService;
+    private final CommentService commentService;
 
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
@@ -20,9 +20,7 @@ public class CommentController {
 
     @PostMapping(value = "/comment/{id}/like")
     public ResponseEntity<String> likeComment(@PathVariable String id, @RequestBody Map<String, String> input) {
-//        int commentId = Integer.parseInt(id);
         try {
-//            Comment comment = Baloot.getInstance().getCommentById(commentId);
             Comment comment = commentService.getCommentById(id);
             comment.addUserVote("like");
             return new ResponseEntity<>("comment liked successfully!", HttpStatus.OK);
@@ -33,9 +31,7 @@ public class CommentController {
 
     @PostMapping(value = "/comment/{id}/dislike")
     public ResponseEntity<String> dislikeComment(@PathVariable String id, @RequestBody Map<String, String> input) {
-//        int commentId = Integer.parseInt(id);
         try {
-//            Comment comment = Baloot.getInstance().getCommentById(commentId);
             Comment comment = commentService.getCommentById(id);
             comment.addUserVote("dislike");
             return new ResponseEntity<>("comment liked successfully!", HttpStatus.OK);
