@@ -59,6 +59,7 @@ public class UserService {
             throw new UsernameAlreadyTaken();
         }
 
+        user.setPassword(String.valueOf(user.getPassword().hashCode()));
         userRepository.save(user);
     }
 
