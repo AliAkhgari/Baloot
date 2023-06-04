@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useDispatch} from "react-redux";
+import Authentication from "../api/authentication";
 
 const Logout = () => {
     const dispatch = useDispatch();
@@ -13,6 +14,8 @@ const Logout = () => {
         sessionStorage.clear();
         console.log(sessionStorage.getItem("username"));
         dispatch(resetCart());
+
+        Authentication.logout();
 
         toast.success("You have been logged out!");
 

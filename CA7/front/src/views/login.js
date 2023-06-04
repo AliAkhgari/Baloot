@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/login_signup.css";
-import {loginForm} from "../api/login.js";
+import Authentication from "../api/authentication.js";
 import logo from "../assets/images/logo.png";
 
 const Login = () => {
@@ -10,7 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const handleLogin = (e) => {
         e.preventDefault();
-        loginForm(username, password)
+        Authentication.loginForm(username, password)
             .then((data) => {
                 sessionStorage.setItem('username', username);
                 toast.success(data.data);

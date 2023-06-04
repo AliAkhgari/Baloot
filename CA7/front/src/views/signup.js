@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import "../styles/login_signup.css"
 import logo from "../assets/images/logo.png";
 import {toast, ToastContainer} from "react-toastify";
-import {signupForm} from "../api/signup.js";
+import Authentication from "../api/authentication";
 
 const Signup = () => {
     const [address, setAddress] = useState("");
@@ -14,7 +14,7 @@ const Signup = () => {
     const handleSignup = (e) => {
         e.preventDefault();
         try {
-            signupForm(address, birth, email, username, password)
+            Authentication.signupForm(address, birth, email, username, password)
                 .then((data) => {
                     sessionStorage.setItem('username', username);
                     toast.success(data.data);
