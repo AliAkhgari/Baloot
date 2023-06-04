@@ -33,14 +33,18 @@ public class Commodity {
 
     private float initRate;
 
-    public void updateInStock(int amount) throws NotInStock {
-        if ((this.inStock + amount) < 0)
-            throw new NotInStock();
+//    @ManyToOne
+//    @MapsId("provider_id")
+//    @JoinColumn(name = "providerId", foreignKey = @ForeignKey(name = "fk_commodity_provider"))
+//    private Provider provider;
+
+    public void updateInStock(int amount) {
         this.inStock += amount;
     }
 
-    public void decreaseInStock() {
-        this.inStock -= 1;
+    public void isStockSufficient(int amount) throws NotInStock {
+        if ((this.inStock + amount) < 0)
+            throw new NotInStock();
     }
 
     public void updateRating(Float averageRate) {
