@@ -32,4 +32,8 @@ public class PurchasedList {
         this.user = user;
     }
 
+    public void increaseQuantity() {
+        this.quantity += 1;
+    }
+
 }
