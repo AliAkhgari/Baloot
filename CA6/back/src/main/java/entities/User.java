@@ -44,4 +44,9 @@ public class User {
 
         this.credit -= amount;
     }
+
+    public void checkCredit(float amount) throws InsufficientCredit {
+        if (amount > this.credit)
+            throw new InsufficientCredit();
+    }
 }
