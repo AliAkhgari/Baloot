@@ -81,3 +81,10 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: var(--darkbrown);
 }
+
+.github-oauth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh; /* Adjust as needed */
+}
