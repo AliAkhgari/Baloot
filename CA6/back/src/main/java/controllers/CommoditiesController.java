@@ -61,6 +61,7 @@ public class CommoditiesController {
 
             userRatingService.addRate(new UserRating(commodity, user, rate));
             commodity.updateRating(userRatingService.getAverageScoreByCommodityId(id));
+            commodity.setNumberOfRates(userRatingService.getNumberOfRatings(id));
             commodityService.save(commodity);
 
             return new ResponseEntity<>("rate added successfully!", HttpStatus.OK);

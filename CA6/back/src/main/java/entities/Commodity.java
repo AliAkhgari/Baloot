@@ -32,6 +32,7 @@ public class Commodity {
     private String image;
 
     private float initRate;
+    private long numberOfRates;
 
 //    @ManyToOne
 //    @MapsId("provider_id")
