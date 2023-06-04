@@ -13,17 +13,21 @@ const Signup = () => {
 
     const handleSignup = (e) => {
         e.preventDefault();
-        signupForm(address, birth, email, username, password)
-            .then((data) => {
-                sessionStorage.setItem('username', username);
-                toast.success(data.data);
-                setTimeout(() => {
-                    window.location.replace("/");
-                }, 2000);
-            })
-            .catch((error) => {
-                toast.error(error.response.data);
-            });
+        try {
+            signupForm(address, birth, email, username, password)
+                .then((data) => {
+                    sessionStorage.setItem('username', username);
+                    toast.success(data.data);
+                    setTimeout(() => {
+                        window.location.replace("/");
+                    }, 2000);
+                })
+                .catch((error) => {
+                    toast.error(error.response.data);
+                });
+        } catch (error) {
+            toast.error(error.message);
+        }
     };
 
 
