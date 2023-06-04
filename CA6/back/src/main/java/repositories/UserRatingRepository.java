@@ -11,4 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRatingRepository extends JpaRepository<UserRating, CommodityUserId> {
     @Query("SELECT AVG(u.score) FROM UserRating u WHERE u.commodity.id = :commodityId")
     Float getAverageScoreByCommodityId(@Param("commodityId") String commodityId);
+
+
+    @Query("SELECT COUNT(*) FROM UserRating u WHERE u.commodity.id = :commodity_id")
+    long getTableLength(String commodity_id);
 }

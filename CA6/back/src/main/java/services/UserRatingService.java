@@ -19,4 +19,8 @@ public class UserRatingService {
     public Float getAverageScoreByCommodityId(String commodityId) {
         return userRatingRepository.getAverageScoreByCommodityId(commodityId);
     }
+
+    public long getNumberOfRatings(String commodityId) {
+        return userRatingRepository.getTableLength(commodityId);
+    }
 }
