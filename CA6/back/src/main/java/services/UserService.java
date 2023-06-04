@@ -2,6 +2,7 @@ package services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import entities.Discount;
 import entities.User;
 import exceptions.IncorrectPassword;
 import exceptions.NotExistentUser;
@@ -19,6 +20,7 @@ import static defines.Endpoints.USERS_ENDPOINT;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private Discount currentDiscount;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -65,5 +67,13 @@ public class UserService {
 
     public void saveUser(User user) {
         userRepository.save(user);
+    }
+
+    public Discount getCurrentDiscount() {
+        return currentDiscount;
+    }
+
+    public void setCurrentDiscount(Discount currentDiscount) {
+        this.currentDiscount = currentDiscount;
     }
 }
