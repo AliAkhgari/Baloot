@@ -90,6 +90,11 @@ public class BuyListController {
             List<BuyList> buyListItems = buyListService.getUserItems(user);
 
             float amount = buyListService.getCurrentBuyListPrice(username);
+            float discount_amount = 0;
+            if (userService.getCurrentDiscount() != null)
+                discount_amount = (userService.getCurrentDiscount().getDiscount() / 100) * amount;
+
+            user.checkCredit(amount - discount_amount);
 
             for (BuyList buyListItem : buyListItems) {
                 buyListItem.getCommodity().isStockSufficient(-buyListItem.getQuantity());
@@ -104,10 +109,6 @@ public class BuyListController {
                 purchasedListService.addItem(purchasedListItem);
                 buyListService.deleteItem(buyListItem.getId());
             }
-
-            float discount_amount = 0;
-            if (userService.getCurrentDiscount() != null)
-                discount_amount = (userService.getCurrentDiscount().getDiscount() / 100) * amount;
 
             user.withdrawCredit(amount - discount_amount);
             userService.saveUser(user);
