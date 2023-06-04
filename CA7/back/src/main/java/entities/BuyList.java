@@ -32,4 +32,12 @@ public class BuyList {
         this.user = user;
     }
 
+    public void increaseQuantity() {
+        this.quantity += 1;
+    }
+
+    public void decreaseQuantity() {
+        this.quantity -= 1;
+    }
+
 }

@@ -1,12 +1,12 @@
 package services;
 
-import entities.Commodity;
 import entities.PurchasedList;
 import entities.User;
 import org.springframework.stereotype.Service;
 import repositories.PurchasedListRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PurchasedListService {
@@ -16,9 +16,14 @@ public class PurchasedListService {
         this.purchasedListRepository = purchasedListRepository;
     }
 
-    public void addItem(Commodity commodity, User user) {
-        PurchasedList purchasedList = new PurchasedList(commodity, user);
-        purchasedListRepository.save(purchasedList);
+    public void addItem(PurchasedList item) {
+        Optional<PurchasedList> purchasedListOptional = purchasedListRepository.findById(item.getId());
+
+        if (purchasedListOptional.isPresent()) {
+            purchasedListOptional.get().increaseQuantity();
+            purchasedListRepository.save(purchasedListOptional.get());
+        } else
+            purchasedListRepository.save(item);
     }
 
     public List<PurchasedList> getUserItems(User user) {

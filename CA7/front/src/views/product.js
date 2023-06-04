@@ -155,7 +155,7 @@ function Product() {
                         <div className="rating">
                             <img src={StarIcon} alt="star-icon"/>
                             <span id="rate">{commodity.rating}</span>
-                            <span id="rate-number">({Object.keys(commodity.userRate).length})</span>
+                            <span id="rate-number">({commodity.numberOfRates})</span>
                         </div>
                     </div>
                     <div className="add-to-cart">
@@ -227,18 +227,17 @@ function Product() {
         function showComments() {
             const commentsInfo = [];
             for (const x of Object.values(comments)) {
-                console.log(x)
                 commentsInfo.push(
                     <div className="contents">
                         <h6>{x.text}</h6>
                         <p>{x.date}&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&nbsp;#{x.username}</p>
                         <div className="is-helpful">
                             <span>Is this comment helpful?</span>
-                            <span className="like-number">{x.like}</span>
+                            <span className="like-number">{x.likeCount}</span>
                             <img src={LikeIcon} alt={"like-icon"}
                                  onClick={(e) =>
                                      handleLikeComment(e, x.id)}/>
-                            <span className="dislike-number">{x.dislike} </span>
+                            <span className="dislike-number">{x.dislikeCount} </span>
                             <img src={DislikeIcon} alt={"dislike-icon"} onClick={(e) =>
                                 handleDislikeComment(e, x.id)}/>
                         </div>
