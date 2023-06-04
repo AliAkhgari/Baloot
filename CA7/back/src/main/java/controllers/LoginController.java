@@ -24,7 +24,7 @@ public class LoginController {
     public ResponseEntity<String> login(@RequestBody Map<String, String> input) {
         try {
             String username = input.get("username");
-            String password = input.get("password");
+            String password = String.valueOf(input.get("password").hashCode());
             userService.login(username, password);
             return new ResponseEntity<>("login successfully!", HttpStatus.OK);
         } catch (NotExistentUser e) {
