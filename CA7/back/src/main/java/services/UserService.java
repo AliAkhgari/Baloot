@@ -33,10 +33,18 @@ public class UserService {
             String usersString = Request.makeGetRequest(HOST + USERS_ENDPOINT);
             List<User> userList = objectMapper.readValue(usersString, new TypeReference<>() {
             });
+
+            hashUserPasswords(userList);
+
             userRepository.saveAll(userList);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void hashUserPasswords(List<User> userList) {
+        for (User user : userList)
+            user.setPassword(String.valueOf(user.getPassword().hashCode()));
     }
 
     public User getUserById(String id) throws NotExistentUser {
