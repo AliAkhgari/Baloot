@@ -12,7 +12,7 @@ function ProviderPage() {
     const [provider, setProvider] = useState({});
     const [products, setProducts] = useState([]);
     const dispatch = useDispatch();
-    const username = sessionStorage.getItem("username");
+    const username = localStorage.getItem("username");
 
 
     useEffect(() => {

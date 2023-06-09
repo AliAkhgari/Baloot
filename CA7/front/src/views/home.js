@@ -12,7 +12,7 @@ import {toast} from "react-toastify";
 
 //FIXME: pagination
 const Home = () => {
-    const username = sessionStorage.getItem("username");
+    const username = localStorage.getItem("username");
 
     const [commodities, setCommodities] = useState([]);
     const [commoditiesHtml, setCommoditiesHtml] = useState([]);

@@ -23,7 +23,7 @@ function Product() {
 
     const dispatch = useDispatch();
 
-    const username = sessionStorage.getItem("username");
+    const username = localStorage.getItem("username");
 
 
     useEffect(() => {

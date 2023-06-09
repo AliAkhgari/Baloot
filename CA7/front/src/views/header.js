@@ -110,7 +110,7 @@ const UserInfo = (props) => {
     )
 }
 const Header = ({fetchSearchedCommodities, showSearchbar}) => {
-    const username = sessionStorage.getItem('username');
+    const username = localStorage.getItem('username');
 
     return (
         <div className={"header"}>

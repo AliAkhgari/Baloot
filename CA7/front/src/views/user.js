@@ -24,7 +24,7 @@ import {addToCart, removeFromCart} from "../components/cartItemCount";
 import {toast, ToastContainer} from "react-toastify";
 
 function User() {
-    const username = sessionStorage.getItem('username');
+    const username = localStorage.getItem('username');
     const [user, setUser] = useState({});
     const [buyList, setBuyList] = useState({});
     const [purchaseList, setPurchaseList] = useState({});

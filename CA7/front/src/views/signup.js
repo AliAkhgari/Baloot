@@ -3,6 +3,7 @@ import "../styles/login_signup.css"
 import logo from "../assets/images/logo.png";
 import {toast, ToastContainer} from "react-toastify";
 import Authentication from "../api/authentication";
+import AuthenticationService from "../api/authentication";
 
 const Signup = () => {
     const [address, setAddress] = useState("");
@@ -15,9 +16,12 @@ const Signup = () => {
         e.preventDefault();
         try {
             Authentication.signupForm(address, birth, email, username, password)
-                .then((data) => {
-                    sessionStorage.setItem('username', username);
-                    toast.success(data.data);
+                .then((response) => {
+                    // localStorage.setItem('username', username);
+                    let userJWT = response.headers.token;
+                    let username1 = response.headers.username;
+                    AuthenticationService.setUser(userJWT, username1);
+                    toast.success(response.data);
                     setTimeout(() => {
                         window.location.replace("/");
                     }, 2000);
