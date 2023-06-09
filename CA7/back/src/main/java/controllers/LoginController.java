@@ -6,12 +6,14 @@ import exceptions.NotExistentUser;
 import exceptions.UsernameAlreadyTaken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import services.UserService;
 
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class LoginController {
     private final UserService userService;
@@ -25,8 +27,13 @@ public class LoginController {
         try {
             String username = input.get("username");
             String password = String.valueOf(input.get("password").hashCode());
-            userService.login(username, password);
-            return new ResponseEntity<>("login successfully!", HttpStatus.OK);
+
+            String jwt_token = userService.login(username, password);
+            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+            map.add("token", jwt_token);
+            map.add("username", input.get("username"));
+
+            return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (NotExistentUser e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (IncorrectPassword e) {
@@ -36,7 +43,6 @@ public class LoginController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<String> signup(@RequestBody Map<String, String> input) {
-
         String address = input.get("address");
         String birthDate = input.get("birthDate");
         String email = input.get("email");
@@ -47,8 +53,13 @@ public class LoginController {
         try {
             userService.addUser(newUser);
 
-            return new ResponseEntity<>("signup successfully!", HttpStatus.OK);
-        } catch (UsernameAlreadyTaken e) {
+            String jwt_token = userService.login(username, String.valueOf(password.hashCode()));
+            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+            map.add("token", jwt_token);
+            map.add("username", username);
+
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (UsernameAlreadyTaken | NotExistentUser | IncorrectPassword e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
