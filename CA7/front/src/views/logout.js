@@ -11,8 +11,6 @@ const Logout = () => {
     });
 
     useEffect(() => {
-        sessionStorage.clear();
-        console.log(sessionStorage.getItem("username"));
         dispatch(resetCart());
 
         Authentication.logout();
