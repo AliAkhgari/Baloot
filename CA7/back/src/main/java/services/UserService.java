@@ -91,7 +91,7 @@ public class UserService {
         return Jwts.builder()
                 .claim("username", username)
                 .setId(UUID.randomUUID().toString())
-                .setIssuer("IEMDB_SYSTEM")                                                      // iss claim
+                .setIssuer("Baloot_System")                                                      // iss claim
                 .setIssuedAt(Date.from(Instant.now()))                                          // iat claim
                 .setExpiration(Date.from(Instant.now().plus(24, ChronoUnit.HOURS))) // exp claim
                 .signWith(signature_type)
