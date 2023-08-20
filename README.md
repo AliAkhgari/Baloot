@@ -4,14 +4,6 @@
 ## Overview
 **Baloot** is a web-based project developed as part of the Internet Engineering course at the University of Tehran.
 
-## Features
-
-- **Product Exploration:** Easily navigate through a diverse array of products organized into various categories.
-- **Filter and Sort:** Refine product options using attribute-based filters, allowing for tailored browsing.
-- **Personal Shopping Lists:** Create and manage personalized shopping lists to streamline your shopping experience.
-- **Favorite Items:** Curate a collection of favorite products for quick reference and consideration.
-- **Product Ratings:** Share your experiences by assigning ratings to products, contributing to an informed community.
-
 ## Phases
 
 1. **CA1: Logic Domain, Git, Maven, Unit Testing (JUnit)**
