@@ -1,6 +1,3 @@
-
-# Baloot
-
 ## Overview
 **Baloot** is a web-based project developed as part of the Internet Engineering course at the University of Tehran.
 
