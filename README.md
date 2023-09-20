@@ -1,5 +1,5 @@
 ## Overview
-**Baloot** is a web-based project developed as part of the Internet Engineering course at the University of Tehran.
+**Baloot** is a web-based project developed as part of the Internet Engineering course at the University of Tehran. It encompasses multiple phases, each focusing on web development and software engineering aspects.
 
 ## Project Highlights
 
