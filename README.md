@@ -1,7 +1,7 @@
 ## Overview
 **Baloot** is a web-based project developed as part of the Internet Engineering course at the University of Tehran.
 
-## Phases
+## Project Highlights
 
 1. **CA1: Logic Domain, Git, Maven, Unit Testing (JUnit)**
    <details>This phase delves into the logic domain of the project, utilizing version control with Git, building with Maven, and ensuring code integrity through unit testing with JUnit.</details>
@@ -12,7 +12,7 @@
 
 3. **CA3: Tomcat, Servlet, JSP, MVC**
    <details>
-   In this phase, the project advances to more complex server architecture by employing Tomcat, Servlets, and JavaServer Pages (JSP) within the Model-View-Controller (MVC) framework.
+   The project advances to more complex server architecture in this phase by employing Tomcat, Servlets, and JavaServer Pages (JSP) within the Model-View-Controller (MVC) framework.
 
 4. **CA4: HTML, CSS**
    <details>
